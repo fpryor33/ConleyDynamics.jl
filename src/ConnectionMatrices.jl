@@ -1,5 +1,26 @@
+"""
+    module ConnectionMatrices
+
+Computation of connection matrices over finite fields.
+"""
 module ConnectionMatrices
 
-# Write your package code here.
+using Nemo
+using Graphs
+
+include("./core/composite_types.jl")
+include("./core/convert_matrix_int.jl")
+include("./core/convert_matrix_gfp.jl")
+include("./core/renumber_poset.jl")
+include("./core/admissible_order.jl")
+include("./core/update_low.jl")
+include("./core/homogeneous_columns.jl")
+include("./core/target_columns.jl")
+include("./core/cm_columns.jl")
+include("./core/cm_create.jl")
+include("./core/connection_matrix.jl")
+
+include("./examples/example_MW_fig2.jl")
 
 end
+
