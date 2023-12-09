@@ -6,14 +6,8 @@ export connection_matrix
 Compute a connection matrix for the multivector field `mvf` on the
 Lefschetz complex `lc`.
 
-The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{Int}}`.
-
-# Return Arguments
-* `cmMatr`: connection matrix
-* `cmCols`: columns from `bndmatrix` associated with columns of `cmMatr`
-* `cmPoset`: poset labels for the Morse sets
-* `cmMorseSets`: Morse sets
-* `cmLabels`: labels from `labels` corresponding to columns of `cmMatr`
+The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{Int}}`,
+and the return object is of type `ConleyMorseCM`.
 """
 function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     #
@@ -24,6 +18,7 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     
     bndmatrix = lc.boundary
     labels    = lc.label
+    ppoly     = lc.poincare
 
     # Find an admissible order
 
@@ -35,7 +30,7 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     p = 2
     bndA = convert_matrix_gfp(bndmatrix[adorder,adorder],p)
 
-    # Compute the connection matrix in reordered form
+# Compute the connection matrix in reordered form
 
     cmMatrP, cmColsP, cmRedP = cm_create(bndA, psetvec)
 
@@ -46,7 +41,8 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     cmPoset     = psetvec[cmColsP]
     cmLabels    = labels[cmCols]
 
-    # Determine the Morse sets using the original labels
+    # Determine the Morse sets and their Poincare polynomials
+    # using the original labels
 
     poset_indices = sort(union(cmPoset))
     cmMorseSets = Vector{Vector{typeof(labels[1])}}()
@@ -54,12 +50,26 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
         push!(cmMorseSets,labels[scc[poset_indices[k]]])
     end
 
+    cmPoincare  = Vector{typeof(ppoly[1])}()
+    for k=1:length(poset_indices)
+        ppolytemp = 0 * ppoly[1]
+        for j=1:length(cmPoset)
+            if cmPoset[j] == poset_indices[k]
+                ppolytemp = ppolytemp + ppoly[cmColsP[j]]
+            end
+        end
+        push!(cmPoincare,ppolytemp)
+    end
+
     # Renumber the poset indices in consecutive order
 
     renumber_poset!(cmPoset)
 
     # Return the connection matrix information
+    
+    cm = ConleyMorseCM{typeof(cmMatr),typeof(labels[1]),typeof(ppoly[1])}(
+                cmMatr, cmCols, cmPoset, cmLabels, cmMorseSets, cmPoincare)
 
-    return cmMatr, cmCols, cmPoset, cmMorseSets, cmLabels
+    return cm
 end
 
