@@ -1,7 +1,7 @@
 export connection_matrix
 
 """
-    cmMatr, cmCols, cmPoset, cmMorseSets, cmLabels = connection_matrix(lc, mvf)
+    cm = connection_matrix(lc, mvf)
 
 Compute a connection matrix for the multivector field `mvf` on the
 Lefschetz complex `lc`.
@@ -55,7 +55,7 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
         ppolytemp = 0 * ppoly[1]
         for j=1:length(cmPoset)
             if cmPoset[j] == poset_indices[k]
-                ppolytemp = ppolytemp + ppoly[cmColsP[j]]
+                ppolytemp = ppolytemp + ppoly[cmCols[j]]
             end
         end
         push!(cmPoincare,ppolytemp)
