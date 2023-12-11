@@ -7,6 +7,7 @@ module ConnectionMatrices
 
 using Nemo
 using Graphs
+using Combinatorics
 
 include("./core/composite_types.jl")
 include("./core/convert_matrix_int.jl")
@@ -19,7 +20,7 @@ include("./core/target_columns.jl")
 include("./core/cm_columns.jl")
 include("./core/cm_create.jl")
 include("./core/connection_matrix.jl")
-
+include("./core/create_simplicial_complex.jl")
 include("./examples/example_MW_fig2.jl")
 
 end
