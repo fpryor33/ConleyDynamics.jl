@@ -45,7 +45,7 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     # using the original labels
 
     poset_indices = sort(union(cmPoset))
-    cmMorseSets = Vector{Vector{typeof(labels[1])}}()
+    cmMorseSets = Vector{Vector{String}}()
     for k = 1:length(poset_indices)
         push!(cmMorseSets,labels[scc[poset_indices[k]]])
     end
@@ -67,7 +67,7 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
 
     # Return the connection matrix information
     
-    cm = ConleyMorseCM{typeof(cmMatr),typeof(labels[1]),typeof(ppoly[1])}(
+    cm = ConleyMorseCM{typeof(cmMatr),typeof(ppoly[1])}(
                 cmMatr, cmCols, cmPoset, cmLabels, cmMorseSets, cmPoincare)
 
     return cm

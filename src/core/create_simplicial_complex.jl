@@ -1,16 +1,17 @@
 export create_simplicial_complex
 
 """
-    lc = create_simplicial_complex(labels, simplices)
+    lc = create_simplicial_complex(labels::Vector{String},
+                                   simplices::Vector{Vector{Int}})
 
 Initialize a Lefschetz complex from a simplicial complex.
 
-The vector `labels` contains a `String` label for every vertex,
-while `simplices` is of type `Vector{Vector{Int}}` and contains
-all the highest-dimensional simplices necessary to define the
-simplicial complex.
+The vector `labels` contains a label for every vertex, while
+`simplices` contains all the highest-dimensional simplices necessary
+to define the simplicial complex.
 """
-function create_simplicial_complex(labels, simplices)
+function create_simplicial_complex(labels::Vector{String},
+                                   simplices::Vector{Vector{Int}})
     #
     # Create a Lefschetz complex struct for a simplicial complex.
     #
@@ -94,7 +95,7 @@ function create_simplicial_complex(labels, simplices)
     
     # Create the Lefschetz complex
 
-    lc = LefschetzComplex{String,typeof(t)}(nsimp,B,labelsvec,labelindexdict,ppvec)
+    lc = LefschetzComplex{typeof(t)}(nsimp,B,labelsvec,labelindexdict,ppvec)
 
     # Return the Lefschetz complex
 
