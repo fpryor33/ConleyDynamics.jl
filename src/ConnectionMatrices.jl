@@ -22,6 +22,7 @@ include("./core/cm_create.jl")
 include("./core/connection_matrix.jl")
 include("./core/create_simplicial_complex.jl")
 include("./core/convert_mvf.jl")
+include("./core/convert_simplices.jl")
 include("./examples/example_MW_fig2.jl")
 
 end
