@@ -87,7 +87,7 @@ function create_simplicial_complex(labels::Vector{String},
         for m=1:length(csimp)
             csimptmp = deepcopy(csimp)
             deleteat!(csimptmp,m)
-            bsimp = labelindexdict[join(sclabels[csimptmp])]
+            bsimp = labelindexdict[join(sort(sclabels[csimptmp]))]
             B[bsimp,k] = coeff
             coeff = -coeff
         end
