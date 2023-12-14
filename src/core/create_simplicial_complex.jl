@@ -102,3 +102,26 @@ function create_simplicial_complex(labels::Vector{String},
     return lc
 end
 
+"""
+    lc = create_simplicial_complex(labels::Vector{String},
+                                   simplices::Vector{Vector{String}})
+
+Initialize a Lefschetz complex from a simplicial complex.
+
+The vector `labels` contains a label for every vertex, while
+`simplices` contains all the highest-dimensional simplices necessary
+to define the simplicial complex.
+"""
+function create_simplicial_complex(labels::Vector{String},
+                                   simplices::Vector{Vector{String}})
+    #
+    # Create a Lefschetz complex struct for a simplicial complex.
+    #
+    # This is an alternative method for simplices represented
+    # in String format.
+    #
+    newsimplices = convert_simplices(simplices, labels)
+    lc = create_simplicial_complex(labels, newsimplices)
+    return lc
+end
+

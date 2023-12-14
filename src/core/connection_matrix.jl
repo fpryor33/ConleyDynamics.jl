@@ -73,3 +73,24 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     return cm
 end
 
+"""
+    cm = connection_matrix(lc, mvf)
+
+Compute a connection matrix for the multivector field `mvf` on the
+Lefschetz complex `lc`.
+
+The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{String}}`,
+and the return object is of type `ConleyMorseCM`.
+"""
+function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{String}})
+    #
+    # Compute the connection matrix
+    #
+    # This is an alternative method for multivector fields with
+    # a String representation.
+    #
+    newmvf = convert_mvf(mvf, lc)
+    cm = connection_matrix(lc, newmvf)
+    return cm
+end
+
