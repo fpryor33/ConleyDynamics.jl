@@ -115,8 +115,10 @@ function example_MW_fig02(mvftype=0)
         throw(DomainError(mvftype, "mvftype must be 0, 1, 2, or 3"))
     end
 
+    strmvf = convert_mvf(mvf, lc)
+
     # Return the example data
 
-    return lc, mvf
+    return lc, strmvf
 end
 

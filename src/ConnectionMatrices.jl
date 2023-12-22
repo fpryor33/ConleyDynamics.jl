@@ -8,6 +8,7 @@ module ConnectionMatrices
 using Nemo
 using Graphs
 using Combinatorics
+using Random
 
 include("./core/composite_types.jl")
 include("./core/convert_matrix_int.jl")
@@ -21,6 +22,7 @@ include("./core/cm_columns.jl")
 include("./core/cm_create.jl")
 include("./core/connection_matrix.jl")
 include("./core/create_simplicial_complex.jl")
+include("./core/permute_lefschetz_complex.jl")
 include("./core/convert_mvf.jl")
 include("./core/convert_simplices.jl")
 
