@@ -8,6 +8,26 @@ from Figure 2 in the connection matrix paper by *Mrozek & Wanner*.
 
 Depending on the value of `mvftype`, return the periodic orbit (0=default)
 or one of the three gradient (1,2,3) examples.
+
+# Examples
+```jldoctest
+julia> lc, mvf = example_MW_fig2(0);
+
+julia> cm = connection_matrix(lc, mvf);
+
+julia> cm.cm
+[0   0   0   1   1   0   0   0]
+[0   0   0   1   1   0   0   0]
+[0   0   0   0   0   0   0   0]
+[0   0   0   0   0   0   1   0]
+[0   0   0   0   0   0   1   0]
+[0   0   0   0   0   0   0   1]
+[0   0   0   0   0   0   0   0]
+[0   0   0   0   0   0   0   0]
+
+julia> print(cm.labels)
+["A", "C", "CE", "AC", "BD", "DF", "ABC", "EFG"]
+```
 """
 function example_MW_fig2(mvftype=0)
     #
