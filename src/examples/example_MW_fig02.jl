@@ -1,7 +1,7 @@
-export example_MW_fig2
+export example_MW_fig02
 
 """
-    lcomplex, mvf = example_MW_fig2(mvftype)
+    lcomplex, mvf = example_MW_fig02(mvftype)
 
 Create the simplicial complex and multivector field for the example
 from Figure 2 in the connection matrix paper by *Mrozek & Wanner*.
@@ -11,7 +11,7 @@ or one of the three gradient (1,2,3) examples.
 
 # Examples
 ```jldoctest
-julia> lc, mvf = example_MW_fig2(0);
+julia> lc, mvf = example_MW_fig02(0);
 
 julia> cm = connection_matrix(lc, mvf);
 
@@ -29,7 +29,7 @@ julia> print(cm.labels)
 ["A", "C", "CE", "AC", "BD", "DF", "ABC", "EFG"]
 ```
 """
-function example_MW_fig2(mvftype=0)
+function example_MW_fig02(mvftype=0)
     #
     # Create the combinatorial vector field information for the example in
     # Figure 2 of the connection matrix paper by Mrozek & Wanner. The function

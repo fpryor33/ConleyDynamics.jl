@@ -1,7 +1,7 @@
-export example_MW_fig4
+export example_MW_fig04
 
 """
-    lc1, lc2, mvf = example_MW_fig4()
+    lc1, lc2, mvf = example_MW_fig04()
 
 Create two representations of the Lefschetz complex and
 the multivector field for the example from Figure 4 in
@@ -13,7 +13,7 @@ matrices.
 
 # Examples
 ```jldoctest
-julia> lc1, lc2, mvf = example_MW_fig4();
+julia> lc1, lc2, mvf = example_MW_fig04();
 
 julia> cm1 = connection_matrix(lc1, mvf);
 
@@ -32,7 +32,7 @@ julia> cm2.cm
 [0   0   0   0]
 ```
 """
-function example_MW_fig4()
+function example_MW_fig04()
     #
     # Create two representations of the Lefschetz complex
     # and the multivector field for the example from 
