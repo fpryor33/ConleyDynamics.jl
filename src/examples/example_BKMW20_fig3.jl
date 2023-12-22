@@ -3,9 +3,30 @@ export example_BKMW20_fig3
 """
     lcomplex, mvf = example_BKMW20_fig3()
 
-Create the simplicial complex and multivector field for the example
-from Figure 3 in the FoCM 2020 paper by *Batko, Kaczynski, Mrozek,
-and Wanner*.
+Create the simplicial complex and multivector field
+for the example from Figure 3 in the FoCM 2020 paper
+by *Batko, Kaczynski, Mrozek, and Wanner*.
+
+# Examples
+```jldoctest
+julia> lc, mvf = example_BKMW20_fig3();
+
+julia> cm = connection_matrix(lc, mvf);
+
+julia> cm.cm
+[0   0   0   0   1   0   1   0   0]
+[0   0   0   0   0   1   0   0   0]
+[0   0   0   0   1   1   1   0   0]
+[0   0   0   0   0   0   0   0   1]
+[0   0   0   0   0   0   0   1   0]
+[0   0   0   0   0   0   0   0   0]
+[0   0   0   0   0   0   0   1   0]
+[0   0   0   0   0   0   0   0   0]
+[0   0   0   0   0   0   0   0   0]
+
+julia> print(cm.labels)
+["D", "E", "F", "GJ", "BF", "EF", "HI", "ADE", "FGJ"]
+```
 """
 function example_BKMW20_fig3()
     # Create the simplicial complex and multivector field for the example
