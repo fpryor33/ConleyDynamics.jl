@@ -1,18 +1,37 @@
-export cm_create!, cm_create
+export cm_create! 
 
 """
     cmatrix, cmatrix_cols = cm_create!(matrix, psetvec)
+    cmatrix, cmatrix_cols, basis = cm_create!(matrix, psetvec;
+                                              returnbasis=true)
 
 Compute the connection matrix.
 
 Assumes that `matrix` is upper triangular and filtered according
-to `psetvec`. Modifies the argument `matrix`.
+to `psetvec`. Modifies the argument `matrix`. If the optional
+argument `returnbasis=true` is given, then the function also
+returns the basis transformation matrix. The columns of `basis`
+are the basis vectors which lead to the reduced matrix
+representation.
 """
-function cm_create!(matrix, psetvec)
+function cm_create!(matrix, psetvec; returnbasis=False)
     #
     # Compute the connection matrix
     #
+
+    # Create the identity matrix for basis computation
+
     numcolumns = size(matrix, 2)
+    if returnbasis
+        basis = deepcopy(matrix)
+        basis = 0 * basis
+        for i=1:numcolumns
+            basis[i,i] = 1
+        end
+    end
+
+    # Initialize the main computation
+
     lowvec = zeros(Int,numcolumns)
     update_low!(matrix, lowvec, startindex=1)
 
@@ -33,6 +52,9 @@ function cm_create!(matrix, psetvec)
 
                     if found_s
                         add_column!(matrix,1,s,j)
+                        if returnbasis
+                            add_column!(basis,1,s,j)
+                        end
                         add_row!(matrix,1,j,s)
                         update_low!(matrix, lowvec, startindex=j)
                     end
@@ -43,24 +65,11 @@ function cm_create!(matrix, psetvec)
 
     cmatrix_cols = cm_columns(matrix, lowvec, psetvec)
     cmatrix      = matrix[cmatrix_cols, cmatrix_cols]
-    return cmatrix, cmatrix_cols
-end
-
-"""
-    cmatrix, cmatrix_cols, matrixB = cm_create(matrix, psetvec)
-
-Compute the connection matrix.
-
-Assumes that `matrix` is upper triangular and filtered according
-to `psetvec`. Does not modify the argument `matrix`, but returns
-the modified matrix in `matrixB`.
-"""
-function cm_create(matrix, psetvec)
-    #
-    # Compute the connection matrix without destroying the input
-    #
-    matrixB = deepcopy(matrix)
-    cmatrix, cmatrix_cols = cm_create!(matrixB, psetvec)
-    return cmatrix, cmatrix_cols, matrixB
+    
+    if returnbasis
+        return cmatrix, cmatrix_cols, basis
+    else
+        return cmatrix, cmatrix_cols
+    end
 end
 

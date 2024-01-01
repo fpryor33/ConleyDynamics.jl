@@ -2,14 +2,19 @@ export connection_matrix
 
 """
     cm = connection_matrix(lc, mvf)
+    cm, cmbasis = connection_matrix(lc, mvf; returnbasis=true)
 
 Compute a connection matrix for the multivector field `mvf` on the
 Lefschetz complex `lc`.
 
 The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{Int}}`,
-and the return object is of type `ConleyMorseCM`.
+and the return object is of type `ConleyMorseCM`. If the optional argument
+`returnbasis::Bool=true` is given, then the function returns a dictionary 
+which gives the basis for the connection matrix columns in terms of the
+original labels.
 """
-function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
+function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
+                           returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #
@@ -30,9 +35,14 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     p = 2
     bndA = convert_matrix_gfp(bndmatrix[adorder,adorder],p)
 
-# Compute the connection matrix in reordered form
+    # Compute the connection matrix in reordered form
 
-    cmMatrP, cmColsP, cmRedP = cm_create(bndA, psetvec)
+    cmRedP = deepcopy(bndA)
+    if returnbasis
+        cmMatrP, cmColsP, cmBasisP = cm_create!(cmRedP, psetvec; returnbasis=true)
+    else
+        cmMatrP, cmColsP = cm_create!(cmRedP, psetvec)
+    end
 
     # Compute first few return variables
     
@@ -40,6 +50,22 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     cmCols      = adorder[cmColsP]
     cmPoset     = psetvec[cmColsP]
     cmLabels    = labels[cmCols]
+
+    # If desired, determine the basis dictionary
+
+    if returnbasis
+        basisdict = Dict{String,Vector{String}}()
+        for k=1:length(cmColsP)
+            basisStr = labels[cmCols[k]]
+            basisVec = Vector{String}()
+            for m=size(bndmatrix,2):-1:1
+                if !(cmBasisP[m,cmColsP[k]]==0)
+                    push!(basisVec,labels[adorder[m]])
+                end
+            end
+            basisdict[basisStr] = basisVec
+        end
+    end
 
     # Determine the Morse sets and their Poincare polynomials
     # using the original labels
@@ -70,19 +96,28 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}})
     cm = ConleyMorseCM{typeof(cmMatr),typeof(ppoly[1])}(
                 cmMatr, cmCols, cmPoset, cmLabels, cmMorseSets, cmPoincare)
 
-    return cm
+    if returnbasis
+        return cm, basisdict
+    else
+        return cm
+    end
 end
 
 """
     cm = connection_matrix(lc, mvf)
+    cm, cmbasis = connection_matrix(lc, mvf; returnbasis=true)
 
 Compute a connection matrix for the multivector field `mvf` on the
 Lefschetz complex `lc`.
 
 The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{String}}`,
-and the return object is of type `ConleyMorseCM`.
+and the return object is of type `ConleyMorseCM`. If the optional argument
+`returnbasis::Bool=true` is given, then the function returns a dictionary 
+which gives the basis for the connection matrix columns in terms of the
+original labels.
 """
-function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{String}})
+function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{String}};
+                           returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #
@@ -90,7 +125,12 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{String}})
     # a String representation.
     #
     newmvf = convert_mvf(mvf, lc)
-    cm = connection_matrix(lc, newmvf)
-    return cm
+    if returnbasis
+        cm, cmbasis = connection_matrix(lc, newmvf; returnbasis=true)
+        return cm, cmbasis
+    else
+        cm = connection_matrix(lc, newmvf)
+        return cm
+    end
 end
 
