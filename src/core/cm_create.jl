@@ -14,7 +14,7 @@ returns the basis transformation matrix. The columns of `basis`
 are the basis vectors which lead to the reduced matrix
 representation.
 """
-function cm_create!(matrix, psetvec; returnbasis=False)
+function cm_create!(matrix, psetvec; returnbasis=false)
     #
     # Compute the connection matrix
     #
