@@ -1,7 +1,7 @@
 export example_critical_simplex
 
 """
-    lc, mvf = example_critical_simplex()
+    lc, mvf = example_critical_simplex(dim)
 
 Create a simplicial complex of dimension `dim` as well as
 a multivector field on it in which every cell is critical.

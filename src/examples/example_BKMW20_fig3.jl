@@ -1,7 +1,7 @@
 export example_BKMW20_fig3
 
 """
-    lcomplex, mvf = example_BKMW20_fig3()
+    lc, mvf = example_BKMW20_fig3()
 
 Create the simplicial complex and multivector field
 for the example from Figure 3 in the FoCM 2020 paper

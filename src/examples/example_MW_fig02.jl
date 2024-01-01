@@ -1,7 +1,7 @@
 export example_MW_fig02
 
 """
-    lcomplex, mvf = example_MW_fig02(mvftype)
+    lc, mvf = example_MW_fig02(mvftype)
 
 Create the simplicial complex and multivector field for the example
 from Figure 2 in the connection matrix paper by *Mrozek & Wanner*.

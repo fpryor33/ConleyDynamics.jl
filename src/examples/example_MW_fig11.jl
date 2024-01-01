@@ -1,7 +1,7 @@
 export example_MW_fig11
 
 """
-    lcomplex, mvf = example_MW_fig11(mvftype)
+    lc, mvf = example_MW_fig11(mvftype)
 
 Create the Lefschetz complex and multivector field for the example
 from Figure 11 in the connection matrix paper by *Mrozek & Wanner*.
