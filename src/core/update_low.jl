@@ -23,7 +23,7 @@ function update_low!(matrix, lowvec; startindex=1)
         foundit = false
         k = numrows
         while (!foundit) && (k >= 1)
-            if matrix[k,j] != 0
+            if !(matrix[k,j] == 0)
                 foundit = true
             else
                 k -= 1

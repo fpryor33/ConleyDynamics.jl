@@ -39,7 +39,7 @@ function cm_create!(matrix, psetvec; returnbasis=false)
         jlow = lowvec[j]
         if jlow > 0
             for i = jlow:-1:1
-                if matrix[i,j] == 1
+                if !(matrix[i,j] == 0)
                     s = 1
                     found_s = false
                     while (!found_s) & (s <= numcolumns)
@@ -51,11 +51,12 @@ function cm_create!(matrix, psetvec; returnbasis=false)
                     end
 
                     if found_s
-                        add_column!(matrix,1,s,j)
+                        gamma = matrix[i,j] / matrix[i,s]
+                        matrix[:,j] = matrix[:,j] .- gamma .* matrix[:,s]
                         if returnbasis
-                            add_column!(basis,1,s,j)
+                            basis[:,j] = basis[:,j] .- gamma .* basis[:,s]
                         end
-                        add_row!(matrix,1,j,s)
+                        matrix[s,:] = matrix[s,:] .+ gamma .* matrix[j,:]
                         update_low!(matrix, lowvec, startindex=j)
                     end
                 end
