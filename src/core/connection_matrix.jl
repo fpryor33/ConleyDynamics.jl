@@ -1,20 +1,20 @@
 export connection_matrix
 
 """
-    cm = connection_matrix(lc, mvf)
-    cm, cmbasis = connection_matrix(lc, mvf; returnbasis=true)
+    cm = connection_matrix(lc, mvf; p=2)
+    cm, cmbasis = connection_matrix(lc, mvf; p=2, returnbasis=true)
 
 Compute a connection matrix for the multivector field `mvf` on the
-Lefschetz complex `lc`.
+Lefschetz complex `lc` over a finite field with `p` elements.
 
 The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{Int}}`,
 and the return object is of type `ConleyMorseCM`. If the optional argument
 `returnbasis::Bool=true` is given, then the function returns a dictionary 
 which gives the basis for the connection matrix columns in terms of the
-original labels.
+original labels. If `p` is omitted, then `p=2` is used.
 """
 function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
-                           returnbasis::Bool=false)
+                           p::Int=2, returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #
@@ -32,7 +32,6 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
     # Convert the boundary matrix to finite field format
     # For now we hardcode the characteristic of the finite field
 
-    p = 2
     bndA = convert_matrix_gfp(bndmatrix[adorder,adorder],p)
 
     # Compute the connection matrix in reordered form
@@ -104,20 +103,20 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 end
 
 """
-    cm = connection_matrix(lc, mvf)
-    cm, cmbasis = connection_matrix(lc, mvf; returnbasis=true)
+    cm = connection_matrix(lc, mvf; p=2)
+    cm, cmbasis = connection_matrix(lc, mvf; p=2, returnbasis=true)
 
 Compute a connection matrix for the multivector field `mvf` on the
-Lefschetz complex `lc`.
+Lefschetz complex `lc` over a finite field with `p` elements.
 
 The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{String}}`,
 and the return object is of type `ConleyMorseCM`. If the optional argument
 `returnbasis::Bool=true` is given, then the function returns a dictionary 
 which gives the basis for the connection matrix columns in terms of the
-original labels.
+original labels. If `p` is omitted, then `p=2` is used.
 """
 function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{String}};
-                           returnbasis::Bool=false)
+                           p::Int=2, returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #
@@ -126,10 +125,10 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{String}};
     #
     newmvf = convert_mvf(mvf, lc)
     if returnbasis
-        cm, cmbasis = connection_matrix(lc, newmvf; returnbasis=true)
+        cm, cmbasis = connection_matrix(lc, newmvf; p=p, returnbasis=true)
         return cm, cmbasis
     else
-        cm = connection_matrix(lc, newmvf)
+        cm = connection_matrix(lc, newmvf; p=p)
         return cm
     end
 end
