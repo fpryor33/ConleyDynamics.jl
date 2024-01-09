@@ -52,11 +52,11 @@ function cm_create!(matrix, psetvec; returnbasis=false)
 
                     if found_s
                         gamma = matrix[i,j] / matrix[i,s]
-                        matrix[:,j] = matrix[:,j] .- gamma .* matrix[:,s]
+                        @views matrix[:,j] = matrix[:,j] .- gamma .* matrix[:,s]
                         if returnbasis
-                            basis[:,j] = basis[:,j] .- gamma .* basis[:,s]
+                            @views basis[:,j] = basis[:,j] .- gamma .* basis[:,s]
                         end
-                        matrix[s,:] = matrix[s,:] .+ gamma .* matrix[j,:]
+                        @views matrix[s,:] = matrix[s,:] .+ gamma .* matrix[j,:]
                         update_low!(matrix, lowvec, startindex=j)
                     end
                 end
