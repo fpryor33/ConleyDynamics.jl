@@ -26,6 +26,9 @@ include("./core/permute_lefschetz_complex.jl")
 include("./core/convert_mvf.jl")
 include("./core/convert_simplices.jl")
 
+include("./sparse/type_sparse.jl")
+include("./sparse/sparse_from_lists.jl")
+
 include("./examples/example_MW_fig01.jl")
 include("./examples/example_MW_fig02.jl")
 include("./examples/example_MW_fig03.jl")
