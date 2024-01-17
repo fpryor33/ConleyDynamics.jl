@@ -112,7 +112,7 @@ function example_MW_fig02(mvftype=0)
         push!(mvf,[3,12])       # C - CD
         push!(mvf,[4,14])       # D - DE
     else
-        throw(DomainError(mvftype, "mvftype must be 0, 1, 2, or 3"))
+        error("mvftype must be 0, 1, 2, or 3!")
     end
 
     strmvf = convert_mvf(mvf, lc)

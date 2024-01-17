@@ -83,7 +83,7 @@ function example_MW_fig11(mvftype=0)
         push!(mvf,["C","BC"])
         push!(mvf,["AC","ABC"])
     else
-        throw(DomainError(mvftype, "mvftype must be 0, 1, or 2"))
+        error("mvftype must be 0, 1, or 2!")
     end
 
     # Return the example data

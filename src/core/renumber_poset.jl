@@ -22,7 +22,7 @@ function renumber_poset!(poset)
     end
 
     if !is_increasing
-        throw(DomainError(poset, "poset must be increasing"))
+        error("Poset must be increasing!")
     end
 
     # Renumber the poset

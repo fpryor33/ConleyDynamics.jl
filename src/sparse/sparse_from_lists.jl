@@ -1,20 +1,25 @@
 export sparse_from_lists
 
 """
-    SparseMatrix{T}
+    sm = sparse_from_lists(nr, nc, tzero, tone, r, c, vals)
 
-Composite data type for a sparse matrix with entries of type `T`.
+Create sparse matrix from lists describing the entries.
 
-The struct has the following fields:
-* `const nrow::Int`:
-* `const ncol::Int`:
-* `const zero::T`:
-* `const one::T`:
-* `entries::Vector{Vector{T}}`:
-* `columns::Vector{Vector{Int}}`:
-* `rows::Vector{Vector{Int}}`:
+The vectors `r`, `c`, and `vals` have to have the same length
+and the matric has entry `vals[k]` at `(r[k],c[k])`. Zero
+entries will be ignored, and multiple entries for the same
+matrix position raise an error.
+
+The input arguments have the following meaning:
+* `nr::Int`: Number of rows
+* `nc::Int`: Number of columns
+* `tzero::T`: Number 0 of type `T`
+* `tone::T`:  Number 1 of type `T`
+* `r::Vector{Int}`: Vector of row indices
+* `c::Vector{Int}`: Vector of column indices
+* `vals::Vector{T}`: Vector of matrix entries
 """
-function sparse_from_lists(nr::Int, nc::Int, typezero, typeone,
+function sparse_from_lists(nr::Int, nc::Int, tzero, tone,
                            r::Vector{Int}, c::Vector{Int}, vals)
     #
     # Create a sparse matrix from a list of row indices, column indices,
@@ -23,27 +28,26 @@ function sparse_from_lists(nr::Int, nc::Int, typezero, typeone,
 
     # Initialize the row, column, and entry vectors
 
-    entries = Vector{Vector{typeof(vals[1])}}()
-    columns = Vector{Vector{Int}}()
-    rows = Vector{Vector{Int}}()
-
-    for k=1:nc
-        push!(entries,Vector{typeof(vals[1])}([]))
-        push!(columns,Vector{Int}([]))
-    end
-
-    for k=1:nr
-        push!(rows,Vector{Int}([]))
-    end
+    entries = [Vector{typeof(vals[1])}([]) for _ in 1:nc]
+    columns = [Vector{Int}([]) for _ in 1:nc]
+    rows    = [Vector{Int}([]) for _ in 1:nr]
 
     # Loop through the nonzero values and incorporate them
     
-    nzindices = findall(x -> !(x==typezero), vals)
+    nzindices = findall(x -> !(x==tzero), vals)
 
     for k in nzindices
         push!(entries[c[k]],vals[k])
         push!(columns[c[k]],r[k])
         push!(rows[r[k]],c[k])
+    end
+
+    # Check whether the entries are all unique
+
+    for k=1:length(columns)
+        if length(columns[k]) > length(unique(columns[k]))
+            error("Duplicate sparse matrix entries!")
+        end
     end
 
     # Sort the representations
@@ -60,7 +64,7 @@ function sparse_from_lists(nr::Int, nc::Int, typezero, typeone,
 
     # Create the sparse matrix object
 
-    sm = SparseMatrix{typeof(vals[1])}(nr, nc, typezero, typeone,
+    sm = SparseMatrix{typeof(vals[1])}(nr, nc, tzero, tone,
                                        entries, columns, rows)
 
     # Return the struct

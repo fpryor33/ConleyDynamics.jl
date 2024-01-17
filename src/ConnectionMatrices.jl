@@ -27,7 +27,9 @@ include("./core/convert_mvf.jl")
 include("./core/convert_simplices.jl")
 
 include("./sparse/type_sparse.jl")
+include("./sparse/basic_sparse_functions.jl")
 include("./sparse/sparse_from_lists.jl")
+include("./sparse/sparse_remove.jl")
 
 include("./examples/example_MW_fig01.jl")
 include("./examples/example_MW_fig02.jl")
