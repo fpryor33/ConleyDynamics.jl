@@ -30,6 +30,7 @@ include("./sparse/type_sparse.jl")
 include("./sparse/basic_sparse_functions.jl")
 include("./sparse/sparse_from_lists.jl")
 include("./sparse/sparse_remove.jl")
+include("./sparse/sparse_add_along_row.jl")
 
 include("./examples/example_MW_fig01.jl")
 include("./examples/example_MW_fig02.jl")
