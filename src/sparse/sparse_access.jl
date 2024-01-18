@@ -1,0 +1,71 @@
+export sparse_get_entry, sparse_set_entry!
+
+"""
+    value = sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
+
+Get the sparse matrix entry at location `(ri,ci)`.
+"""
+function sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
+    #
+    # Get matrix[ri,ci]
+    #
+
+    # Find the location of (ri,ci) in column ci
+
+    index_in_col = findfirst(x -> x==ri, matrix.columns[ci])
+
+    # Determine the value and return it
+
+    if index_in_col == nothing
+        return matrix.zero
+    else
+        return matrix.entries[ci][index_in_col]
+    end
+end
+
+"""
+    sparse_set_entry!(matrix::SparseMatrix, ri::Int, ci::Int, val)
+
+Set the sparse matrix entry at location `(ri,ci)` to `val`.
+"""
+function sparse_set_entry!(matrix::SparseMatrix, ri::Int, ci::Int, val)
+    #
+    # Set matrix[ri,ci] = val
+    #
+
+    # Determine the location of ri in the column ci, if it exists
+
+    index_in_col = findfirst(x -> x==ri, matrix.columns[ci])
+
+    # Incorporate the value into the matrix
+
+    if val == matrix.zero
+        # If the entry was present, it has to be removed
+        if !(index_in_col == nothing)
+            sparse_remove!(matrix, ri, ci)
+        end
+    elseif !(index_in_col == nothing)
+        # Entry present, just needs to be updated
+        matrix.entries[ci][index_in_col] = val
+    else
+        # Insert ci into row ri
+        insert_index_row = findfirst(x -> x>ci, matrix.rows[ri])
+        if insert_index_row == nothing
+            push!(matrix.rows[ri], ci)
+        else
+            insert!(matrix.rows[ri], insert_index_row, ci)
+        end
+
+        # Insert ri into column ci and add the new entry
+        insert_index_col = findfirst(x -> x>ri, matrix.columns[ci])
+        if insert_index_col == nothing
+            push!(matrix.columns[ci], ri)
+            push!(matrix.entries[ci], val)
+        else
+            insert!(matrix.columns[ci], insert_index_col, ri)
+            insert!(matrix.entries[ci], insert_index_col, val)
+        end
+    end
+    return
+end
+

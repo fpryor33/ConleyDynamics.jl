@@ -1,9 +1,9 @@
 export sparse_add_along_row!
 
 """
-    sparse_add_along_row!(matrix::SparseMatrix, ri::Int, ci::Int)
+    sparse_add_along_row!(matrix::SparseMatrix, ri::Int, ci1::Int, ci2::Int, c)
 
-Remove the sparse matrix entry at location `(ri,ci)`.
+Replace `matrix[ri,ci1]` by `matrix[ri,ci1] + c * matrix[ri,ci2]`.
 """
 function sparse_add_along_row!(matrix::SparseMatrix, ri::Int, ci1::Int, ci2::Int, c)
     #
