@@ -16,7 +16,7 @@ function sparse_add_along_row!(matrix::SparseMatrix, ri::Int, ci1::Int, ci2::Int
 
     # If matrix[ri,ci2] == 0 do nothing
 
-    if !(index_in_col2 == nothing)
+    if index_in_col2 == nothing
         return
     end
 
@@ -27,14 +27,16 @@ function sparse_add_along_row!(matrix::SparseMatrix, ri::Int, ci1::Int, ci2::Int
     new_value1 = c * matrix.entries[ci2][index_in_col2]
 
     if !(index_in_col1 == nothing)
-        new_value1 = new_value1 + matrix.entries[ci1][index_in_col1]
+        new_value1 += matrix.entries[ci1][index_in_col1]
     end
 
     # Second, incorporate the updated value into the matrix
 
     if new_value1 == matrix.zero
-        # Entry became 0, has to be removed
-        sparse_remove!(matrix, ri, ci1)
+        # Entry became 0, has to be removed, if present
+        if !(index_in_col1 == nothing)
+            sparse_remove!(matrix, ri, ci1)
+        end
     elseif !(index_in_col1 == nothing)
         # Entry present, just needs to be update
         matrix.entries[ci1][index_in_col1] = new_value1
