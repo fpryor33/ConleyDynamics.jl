@@ -1,4 +1,4 @@
-export sparse_size, sparse_low, sparse_identity
+export sparse_size, sparse_low, sparse_identity, sparse_show
 
 """
     n = sparse_size(matrix::SparseMatrix, dim::Int)
@@ -58,5 +58,24 @@ function sparse_identity(n::Int, tone)
 
     sm = sparse_from_lists(n, n, tone-tone, tone, r, r, vals)
     return sm
+end
+
+"""
+    sparse_show(sm::SparseMatrix)
+
+Display the sparse matrix `sm`.
+"""
+function sparse_show(sm::SparseMatrix)
+    #
+    # Display a sparse matrix
+    #
+
+    for k=1:sm.nrow
+        print("[", sparse_get_entry(sm,k,1))
+        for m=2:sm.ncol
+            print(",", sparse_get_entry(sm,k,m))
+        end
+        println("]")
+    end
 end
 
