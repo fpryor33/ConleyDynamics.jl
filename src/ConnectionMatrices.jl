@@ -31,6 +31,7 @@ include("./sparse/sparse_basic_functions.jl")
 include("./sparse/sparse_from_lists.jl")
 include("./sparse/sparse_access.jl")
 include("./sparse/sparse_remove.jl")
+include("./sparse/sparse_permute.jl")
 include("./sparse/sparse_elementary_op.jl")
 
 include("./examples/example_MW_fig01.jl")
