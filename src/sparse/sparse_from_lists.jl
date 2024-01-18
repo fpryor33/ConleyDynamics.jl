@@ -1,4 +1,4 @@
-export sparse_from_lists
+export sparse_from_lists, lists_from_sparse
 
 """
     sm = sparse_from_lists(nr, nc, tzero, tone, r, c, vals)
@@ -62,13 +62,49 @@ function sparse_from_lists(nr::Int, nc::Int, tzero, tone,
         sort!(rows[k])
     end
 
-    # Create the sparse matrix object
+    # Create and return the sparse matrix object
 
     sm = SparseMatrix{typeof(vals[1])}(nr, nc, tzero, tone,
                                        entries, columns, rows)
-
-    # Return the struct
-
     return sm
+end
+
+"""
+    nr, nc, tzero, tone, r, c, vals = lists_from_sparse(sm::SparseMatrix)
+
+Create list representation from sparse matrix.
+
+The output variables are exactly what is needed to create
+a sparse matrix object using `sparse_from_lists`.
+"""
+function lists_from_sparse(sm::SparseMatrix)
+    #
+    # Create list representation from sparse matrix
+    #
+
+    # Extract the constant fields of the struct
+
+    nr = sm.nrow
+    nc = sm.ncol
+    tzero = sm.zero
+    tone  = sm.one
+
+    # Create the lists
+
+    r = Vector{Int}([])
+    c = Vector{Int}([])
+    vals = Vector{typeof(tzero)}([])
+
+    for k=1:nc
+        for m=1:length(sm.columns[k])
+            push!(r,sm.columns[k][m])
+            push!(c,k)
+            push!(vals,sm.entries[k][m])
+        end
+    end
+
+    # Return the results
+
+    return nr, nc, tzero, tone, r, c, vals
 end
 

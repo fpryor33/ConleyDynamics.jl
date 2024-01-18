@@ -1,4 +1,5 @@
 export sparse_get_entry, sparse_set_entry!
+export sparse_get_column
 
 """
     value = sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
@@ -67,5 +68,30 @@ function sparse_set_entry!(matrix::SparseMatrix, ri::Int, ci::Int, val)
         end
     end
     return
+end
+
+"""
+    value = sparse_get_column(matrix::SparseMatrix, ci::Int)
+
+Get the ci-th column of the sparse matrix.
+"""
+function sparse_get_column(matrix::SparseMatrix, ci::Int)
+    #
+    # Get matrix[:,ci]
+    #
+
+    # Initialize the empty column vector
+
+    column = fill(matrix.zero, matrix.nrow)
+
+    # Add the nonzero elements
+
+    for k=1:length(matrix.columns[ci])
+        column[matrix.columns[ci][k]] = matrix.entries[ci][k]
+    end
+
+    # Return the column
+
+    return column
 end
 

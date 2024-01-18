@@ -1,4 +1,4 @@
-export sparse_size, sparse_low
+export sparse_size, sparse_low, sparse_identity
 
 """
     n = sparse_size(matrix::SparseMatrix, dim::Int)
@@ -35,5 +35,28 @@ function sparse_low(matrix::SparseMatrix, col::Int)
     else
         return last(matrix.columns[col])
     end
+end
+
+"""
+    sm = sparse_identity(n::Int, tone)
+
+Create a sparse identity matrix with n rows and columns, and with
+diagonal entry `tone`.
+"""
+function sparse_identity(n::Int, tone)
+    #
+    # Create a sparse identity matrix with n rows and columns,
+    # and with diagonal entry tone.
+    #
+
+    # Initialize the variables and lists
+
+    r = Vector{Int}(1:n)
+    vals = fill(tone,n)
+
+    # Create the sparse identity and return it
+
+    sm = sparse_from_lists(n, n, tone-tone, tone, r, r, vals)
+    return sm
 end
 
