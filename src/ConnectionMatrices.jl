@@ -10,10 +10,16 @@ using Graphs
 using Combinatorics
 using Random
 
+# Load the type definitions
+
+include("./sparse/sparse_type.jl")
+include("./cmcore/composite_types.jl")
+
+# Load the methods
+
 include("./cmcore/admissible_order.jl")
 include("./cmcore/cm_columns.jl")
 include("./cmcore/cm_create.jl")
-include("./cmcore/composite_types.jl")
 include("./cmcore/connection_matrix.jl")
 include("./cmcore/homogeneous_columns.jl")
 include("./cmcore/renumber_poset.jl")
@@ -27,7 +33,6 @@ include("./utils/convert_simplices.jl")
 include("./utils/create_simplicial_complex.jl")
 include("./utils/permute_lefschetz_complex.jl")
 
-include("./sparse/sparse_type.jl")
 include("./sparse/sparse_basic_functions.jl")
 include("./sparse/sparse_from_lists.jl")
 include("./sparse/sparse_from_full.jl")

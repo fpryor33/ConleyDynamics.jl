@@ -14,7 +14,7 @@ The struct has the following fields:
 """
 struct LefschetzComplex{Tpoincare}
     ncells::Int
-    boundary::Matrix{Int}
+    boundary::Union{Matrix{Int},SparseMatrix{Int}}
     label::Vector{String}
     index::Dict{String,Int}
     poincare::Vector{Tpoincare}
