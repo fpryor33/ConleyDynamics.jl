@@ -54,13 +54,11 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 
     if returnbasis
         basisdict = Dict{String,Vector{String}}()
-        for k=1:length(cmColsP)
+        for k=1:length(cmBasisP)
             basisStr = labels[cmCols[k]]
             basisVec = Vector{String}()
-            for m=size(bndmatrix,2):-1:1
-                if !(cmBasisP[m,cmColsP[k]]==0)
-                    push!(basisVec,labels[adorder[m]])
-                end
+            for m=1:length(cmBasisP[k])
+                push!(basisVec,labels[adorder[cmBasisP[k][m]]])
             end
             basisdict[basisStr] = basisVec
         end

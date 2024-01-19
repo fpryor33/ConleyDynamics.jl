@@ -2,17 +2,17 @@ export cm_create!
 
 """
     cmatrix, cmatrix_cols = cm_create!(matrix, psetvec)
-    cmatrix, cmatrix_cols, basis = cm_create!(matrix, psetvec;
-                                              returnbasis=true)
+    cmatrix, cmatrix_cols, basisvecs = cm_create!(matrix, psetvec;
+                                                  returnbasis=true)
 
 Compute the connection matrix.
 
 Assumes that `matrix` is upper triangular and filtered according
 to `psetvec`. Modifies the argument `matrix`. If the optional
 argument `returnbasis=true` is given, then the function also
-returns the basis transformation matrix. The columns of `basis`
-are the basis vectors which lead to the reduced matrix
-representation.
+returns information about the computed basis. The k-th entry of
+`basisvecs` is a vector containing the columns making up the
+k-th basis vector, which corresponds to column `cmatrix_cols[k]`.
 """
 function cm_create!(matrix, psetvec; returnbasis=false)
     #
@@ -68,7 +68,24 @@ function cm_create!(matrix, psetvec; returnbasis=false)
     cmatrix      = matrix[cmatrix_cols, cmatrix_cols]
     
     if returnbasis
-        return cmatrix, cmatrix_cols, basis
+
+        # Create a vector of basis vectors
+
+        basisvecs = Vector{Vector{Int}}()
+
+        for k=1:length(cmatrix_cols)
+            bvec = Vector{Int}()
+            for m = size(basis,2):-1:1
+                if !(basis[m,cmatrix_cols[k]]==0)
+                    push!(bvec,m)
+                end
+            end
+            push!(basisvecs,bvec)
+        end
+
+        # Return the results
+
+        return cmatrix, cmatrix_cols, basisvecs
     else
         return cmatrix, cmatrix_cols
     end
