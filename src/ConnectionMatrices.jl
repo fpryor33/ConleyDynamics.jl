@@ -26,6 +26,7 @@ include("./cmcore/renumber_poset.jl")
 include("./cmcore/target_columns.jl")
 include("./cmcore/update_low.jl")
 
+include("./utils/convert_lefschetz_sparse.jl")
 include("./utils/convert_matrix_gfp.jl")
 include("./utils/convert_matrix_int.jl")
 include("./utils/convert_mvf.jl")

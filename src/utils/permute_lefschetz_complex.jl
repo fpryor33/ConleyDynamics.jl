@@ -33,9 +33,14 @@ function permute_lefschetz_complex(lc::LefschetzComplex,
     # Create the permuted data
 
     ncells2   = ncells1
-    boundary2 = boundary1[perm,perm]
     label2    = label1[perm]
     poincare2 = poincare1[perm]
+
+    if typeof(boundary1) == Matrix{Int}
+        boundary2 = boundary1[perm,perm]
+    else
+        boundary2 = sparse_permute(boundary1, perm, perm)
+    end
 
     # Create the permuted dictionary
     
