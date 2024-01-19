@@ -27,12 +27,12 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 
     # Find an admissible order
 
-    adorder, psetvec, scc = admissible_order(bndmatrix, mvf)
+    adorder, adbnd, psetvec, scc = admissible_order(bndmatrix, mvf)
 
     # Convert the boundary matrix to finite field format
     # For now we hardcode the characteristic of the finite field
 
-    bndA = convert_matrix_gfp(bndmatrix[adorder,adorder],p)
+    bndA = convert_matrix_gfp(adbnd,p)
 
     # Compute the connection matrix in reordered form
 

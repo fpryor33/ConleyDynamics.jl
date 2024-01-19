@@ -1,4 +1,4 @@
-export LefschetzComplex, ConleyMorseCM
+export LefschetzComplex, ConleyMorseCM, MultiVectorField
 
 """
     LefschetzComplex{Tpoincare}
@@ -41,4 +41,11 @@ struct ConleyMorseCM{Tmatrix,Tpoincare}
     morsesets::Vector{Vector{String}}
     poincare::Vector{Tpoincare}
 end
+
+"""
+    MultiVectorField = Union{Vector{Vector{Int}},Vector{Vector{String}}}
+
+Type of a multivector field.
+"""
+MultiVectorField = Union{Vector{Vector{Int}},Vector{Vector{String}}}
 

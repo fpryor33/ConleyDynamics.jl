@@ -1,13 +1,15 @@
 export admissible_order
 
 """
-    admiorder, sccnumber, scc = admissible_order(bndmatrix, mvf)
+    admiorder, admibnd, sccnumber, scc = admissible_order(bndmatrix, mvf)
 
 Find an admissible order based on the boundary matrix and the multivector field.
 
-The vector sccnumber contains the strongly connected component for each column.
+The vector `sccnumber` contains the strongly connected component for each column,
+and the matrix `admibnd` is the reordered boundary matrix corresponding to the
+order given by `admiorder`.
 """
-function admissible_order(bndmatrix, mvf)
+function admissible_order(bndmatrix::Matrix{Int}, mvf::Vector{Vector{Int}})
     #
     # Find an admissible order based on the boundary matrix and the multivector
     # field
@@ -52,8 +54,12 @@ function admissible_order(bndmatrix, mvf)
         append!(sccnumber,scc[k] .* 0 .+ scccount)
     end
 
+    # Create the reordered boundary matrix
+
+    admibnd = bndmatrix[admiorder,admiorder]
+
     # Return the results
 
-    return admiorder, sccnumber, scc
+    return admiorder, admibnd, sccnumber, scc
 end
 
