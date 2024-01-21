@@ -74,7 +74,7 @@ function sparse_show(sm::SparseMatrix)
     for k=1:sm.nrow
         print("[", sparse_get_entry(sm,k,1))
         for m=2:sm.ncol
-            print(",", sparse_get_entry(sm,k,m))
+            print("   ", sparse_get_entry(sm,k,m))
         end
         println("]")
     end
