@@ -1,5 +1,5 @@
 export sparse_get_entry, sparse_set_entry!
-export sparse_get_column
+export sparse_get_column, sparse_get_nz_column
 
 """
     value = sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
@@ -93,5 +93,20 @@ function sparse_get_column(matrix::SparseMatrix, ci::Int)
     # Return the column
 
     return column
+end
+
+"""
+    value = sparse_get_nz_column(matrix::SparseMatrix, ci::Int)
+
+Get the row indizes for the nonzero entries in the ci-th column
+of the sparse matrix.
+"""
+function sparse_get_nz_column(matrix::SparseMatrix, ci::Int)
+    #
+    # Get all k for which matrix[k,ci]<>0
+    #
+
+    nzcol = deepcopy(matrix.columns[ci])
+    return nzcol
 end
 
