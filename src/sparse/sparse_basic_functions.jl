@@ -1,4 +1,5 @@
 export sparse_size, sparse_low, sparse_identity, sparse_show
+export sparse_fullness, sparse_sparsity
 
 """
     n = sparse_size(matrix::SparseMatrix, dim::Int)
@@ -77,5 +78,37 @@ function sparse_show(sm::SparseMatrix)
         end
         println("]")
     end
+end
+
+"""
+    sparse_fullness(sm::SparseMatrix)
+
+Display the fullness of the sparse matrix `sm`.
+"""
+function sparse_fullness(sm::SparseMatrix)
+    #
+    # Display the fullness of a sparse matrix
+    #
+
+    nz = 0
+    for k=1:sm.ncol
+        nz += length(sm.columns[k])
+    end
+    fullness = Float64(nz) / (Float64(sm.ncol) * Float64(sm.nrow))
+    
+    return fullness
+end
+
+"""
+    sparse_sparsity(sm::SparseMatrix)
+
+Display the sparsity of the sparse matrix `sm`.
+"""
+function sparse_sparsity(sm::SparseMatrix)
+    #
+    # Display the sparsity of a sparse matrix
+    #
+
+    return 1.0 - sparse_fullness(sm)
 end
 
