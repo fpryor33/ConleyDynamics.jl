@@ -80,7 +80,9 @@ function create_simplicial_complex(labels::Vector{String},
     nsimp  = length(labelsvec)
     nsimp0 = length(sclabels)
 
-    B = zeros(Int,nsimp,nsimp)
+    Br = Vector{Int}()
+    Bc = Vector{Int}()
+    Bv = Vector{Int}()
     for k=nsimp0+1:nsimp
         csimp = labelvertexdict[labelsvec[k]]
         coeff = 1
@@ -88,10 +90,14 @@ function create_simplicial_complex(labels::Vector{String},
             csimptmp = deepcopy(csimp)
             deleteat!(csimptmp,m)
             bsimp = labelindexdict[join(sort(sclabels[csimptmp]))]
-            B[bsimp,k] = coeff
+            push!(Br,bsimp)   # Row index
+            push!(Bc,k)       # Column index
+            push!(Bv,coeff)   # Matrix entry
             coeff = -coeff
         end
     end
+
+    B = sparse_from_lists(nsimp,nsimp,Int(0),Int(1),Br,Bc,Bv)
     
     # Create the Lefschetz complex
 
