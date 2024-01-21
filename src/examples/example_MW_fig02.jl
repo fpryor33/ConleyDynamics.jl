@@ -86,8 +86,9 @@ function example_MW_fig02(mvftype=0)
 
     # Construct the Lefschetz complex struct
     
-    lc = LefschetzComplex{typeof(t)}(nc, bndmatrix,
-                                     labelvec, indexdict, ppvec)
+    lcf = LefschetzComplex{typeof(t)}(nc, bndmatrix,
+                                      labelvec, indexdict, ppvec)
+    lc = convert_lefschetz_sparse(lcf)
 
     # Create the common part of the combinatorial vector fields
     
