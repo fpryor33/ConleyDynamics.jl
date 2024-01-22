@@ -128,7 +128,7 @@ function cm_create!(matrix::SparseMatrix, psetvec; returnbasis=false)
         jlow = sparse_low(matrix,j)
         if jlow > 0
             for i = jlow:-1:1
-                if !(sparse_get_entry(matrix,i,j) == tzero)
+                if !(matrix[i,j] == tzero)
                     s = 1
                     found_s = false
                     while (!found_s) & (s <= numcolumns)
@@ -140,7 +140,7 @@ function cm_create!(matrix::SparseMatrix, psetvec; returnbasis=false)
                     end
 
                     if found_s
-                        gamma = sparse_get_entry(matrix,i,j) / sparse_get_entry(matrix,i,s)
+                        gamma = matrix[i,j] / matrix[i,s]
                         sparse_add_column!(matrix,j,s,-gamma)
                         if returnbasis
                             sparse_add_column!(basis,j,s,-gamma)

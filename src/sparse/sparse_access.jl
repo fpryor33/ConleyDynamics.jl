@@ -24,6 +24,10 @@ function sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
     end
 end
 
+function Base.getindex(matrix::SparseMatrix, ri::Int, ci::Int)
+    return sparse_get_entry(matrix, ri, ci)
+end
+
 """
     sparse_set_entry!(matrix::SparseMatrix, ri::Int, ci::Int, val)
 
@@ -67,6 +71,11 @@ function sparse_set_entry!(matrix::SparseMatrix, ri::Int, ci::Int, val)
             insert!(matrix.entries[ci], insert_index_col, val)
         end
     end
+    return
+end
+
+function Base.setindex!(matrix::SparseMatrix, val, ri::Int, ci::Int)
+    sparse_set_entry!(matrix, ri, ci, val)
     return
 end
 

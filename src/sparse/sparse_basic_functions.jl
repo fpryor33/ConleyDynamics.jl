@@ -72,9 +72,26 @@ function sparse_show(sm::SparseMatrix)
     #
 
     for k=1:sm.nrow
-        print("[", sparse_get_entry(sm,k,1))
+        print("[", sm[k,1])
         for m=2:sm.ncol
-            print("   ", sparse_get_entry(sm,k,m))
+            print("   ", sm[k,m])
+        end
+        println("]")
+    end
+end
+
+function sparse_show(sm::SparseMatrix{Int})
+    #
+    # Display an integer sparse matrix
+    #
+
+    for k=1:sm.nrow
+        print("[")
+        for m=1:sm.ncol
+            str2 = string(sm[k,m])
+            str1len = 4 - length(str2)
+            str1 = ^(" ",str1len)
+            print(str1,str2)
         end
         println("]")
     end

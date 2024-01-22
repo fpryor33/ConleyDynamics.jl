@@ -23,7 +23,7 @@ function sparse_minor(sm::SparseMatrix, rvec::Vector{Int}, cvec::Vector{Int})
 
     for k=1:newnr
         for m=1:newnc
-            smvalue = sparse_get_entry(sm,rvec[k],cvec[m])
+            smvalue = sm[rvec[k],cvec[m]]
             if !(smvalue == sm.zero)
                 push!(r,k)
                 push!(c,m)
