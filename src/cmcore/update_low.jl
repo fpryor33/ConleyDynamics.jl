@@ -8,7 +8,7 @@ Compute the indices of the lowest nonzero entries in each column of `matrix`.
 The indices are stored in `lowvec`. If `startindex > 1`, then only the values
 starting with column `startindex` are updated.
 """
-function update_low!(matrix, lowvec; startindex=1)
+function update_low!(matrix::Matrix, lowvec::Vector{Int}; startindex::Int=1)
     #
     # Compute the indices of the lowest nonzero
     # entries in each column of the matrix. The

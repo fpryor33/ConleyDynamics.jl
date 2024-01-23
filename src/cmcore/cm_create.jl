@@ -14,7 +14,8 @@ returns information about the computed basis. The k-th entry of
 `basisvecs` is a vector containing the columns making up the
 k-th basis vector, which corresponds to column `cmatrix_cols[k]`.
 """
-function cm_create!(matrix, psetvec; returnbasis=false)
+function cm_create!(matrix::Matrix, psetvec::Vector{Int};
+                    returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #
@@ -26,7 +27,7 @@ function cm_create!(matrix, psetvec; returnbasis=false)
         basis = deepcopy(matrix)
         basis = 0 * basis
         for i=1:numcolumns
-            basis[i,i] = 1
+            basis[i,i] = basis[i,i] + 1
         end
     end
 
@@ -105,7 +106,8 @@ returns information about the computed basis. The k-th entry of
 `basisvecs` is a vector containing the columns making up the
 k-th basis vector, which corresponds to column `cmatrix_cols[k]`.
 """
-function cm_create!(matrix::SparseMatrix, psetvec; returnbasis=false)
+function cm_create!(matrix::SparseMatrix, psetvec::Vector{Int};
+                    returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #

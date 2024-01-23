@@ -5,7 +5,8 @@ export cm_columns
 
 Create a vector of column indices for the connection matrix.
 """
-function cm_columns(matrix, lowvec, psetvec)
+function cm_columns(matrix::Matrix, lowvec::Vector{Int},
+                    psetvec::Vector{Int})
     #
     # Create a vector of column indices for the connection matrix
     #
@@ -28,7 +29,7 @@ end
 
 Create a vector of column indices for the connection matrix.
 """
-function cm_columns(matrix::SparseMatrix, psetvec)
+function cm_columns(matrix::SparseMatrix, psetvec::Vector{Int})
     #
     # Create a vector of column indices for the connection matrix
     #

@@ -11,16 +11,8 @@ function convert_matrix_gfp(matrix::Matrix{Int}, p)
     #
     m,n = size(matrix)
     FF = GF(p)
-    MM = matrix_space(FF, m, n)
-    gfpmatrix = MM(matrix)
+    gfpmatrix = [FF(matrix[i,j]) for i=1:m, j=1:n]
     return gfpmatrix
-
-    # Ideally I would like to use
-    #    gfpmatrix = [FF(matrix[i,j]) for i=1:m, j=1:n]
-    # to obtain a matrix of type Matrix{T}. But this causes
-    # issues, since then I cannot create a 1 from the type
-    # of the entries when I need to construct an identity
-    # matrix.
 end
 
 """

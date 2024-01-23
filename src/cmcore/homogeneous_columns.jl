@@ -5,7 +5,8 @@ export homogeneous_columns, is_homogeneous
  
 Determine which columns of `matrix` are homogenenous columns.
 """
-function homogeneous_columns(matrix, lowvec, psetvec)
+function homogeneous_columns(matrix::Matrix, lowvec::Vector{Int},
+                             psetvec::Vector{Int})
     #
     # Determine which columns are homogenous columns
     #
@@ -24,7 +25,7 @@ end
  
 Determine which columns of `matrix` are homogenenous columns.
 """
-function homogeneous_columns(matrix::SparseMatrix, psetvec)
+function homogeneous_columns(matrix::SparseMatrix, psetvec::Vector{Int})
     #
     # Determine which columns are homogenous columns
     #
@@ -43,7 +44,8 @@ end
 
 Decide whether a column of `matrix` is homogeneous.
 """
-function is_homogeneous(matrix, lowvec, psetvec, cindex)
+function is_homogeneous(matrix::Matrix, lowvec::Vector{Int},
+                        psetvec::Vector{Int}, cindex::Int)
     #
     # Decide whether a column is homogeneous. The function expects that the
     # vector lowvec contains the correct low entries of the matrix.
@@ -65,7 +67,8 @@ end
 
 Decide whether a column of `matrix` is homogeneous.
 """
-function is_homogeneous(matrix::SparseMatrix, psetvec, cindex)
+function is_homogeneous(matrix::SparseMatrix, psetvec::Vector{Int},
+                        cindex::Int)
     #
     # Decide whether a column is homogeneous.
     #

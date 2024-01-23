@@ -5,7 +5,8 @@ export target_columns
 
 Determine which columns of `matrix` are target columns.
 """
-function target_columns(matrix, lowvec, psetvec)
+function target_columns(matrix::Matrix, lowvec::Vector{Int},
+                        psetvec::Vector{Int})
     #
     # Determine which columns are target columns
     #
@@ -26,7 +27,7 @@ end
 
 Determine which columns of `matrix` are target columns.
 """
-function target_columns(matrix::SparseMatrix, psetvec)
+function target_columns(matrix::SparseMatrix, psetvec::Vector{Int})
     #
     # Determine which columns are target columns
     #

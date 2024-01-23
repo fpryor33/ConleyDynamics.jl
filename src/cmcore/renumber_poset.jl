@@ -5,7 +5,7 @@ export renumber_poset!
 
 Renumber the poset given by the increasing integer vector `poset`.
 """
-function renumber_poset!(poset)
+function renumber_poset!(poset::Vector{Int})
     #
     # Renumber the poset vector
     #
