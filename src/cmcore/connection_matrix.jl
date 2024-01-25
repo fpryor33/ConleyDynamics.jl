@@ -21,9 +21,10 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 
     # Copy boundary and label data
     
+    lcdim     = lc.dim
     bndmatrix = lc.boundary
-    labels    = lc.label
-    ppoly     = lc.poincare
+    labels    = lc.labels
+    celldims  = lc.dimensions
 
     # Find an admissible order
 
@@ -73,12 +74,12 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
         push!(cmMorseSets,labels[scc[poset_indices[k]]])
     end
 
-    cmPoincare  = Vector{typeof(ppoly[1])}()
+    cmPoincare  = Vector{Vector{Int}}()
     for k=1:length(poset_indices)
-        ppolytemp = 0 * ppoly[1]
+        ppolytemp = fill(Int(0),lcdim+1)
         for j=1:length(cmPoset)
             if cmPoset[j] == poset_indices[k]
-                ppolytemp = ppolytemp + ppoly[cmCols[j]]
+                ppolytemp[celldims[cmCols[j]]+1] += 1
             end
         end
         push!(cmPoincare,ppolytemp)
@@ -90,7 +91,7 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 
     # Return the connection matrix information
     
-    cm = ConleyMorseCM{typeof(cmMatr),typeof(ppoly[1])}(
+    cm = ConleyMorseCM{typeof(cmMatr)}(
                 cmMatr, cmCols, cmPoset, cmLabels, cmMorseSets, cmPoincare)
 
     if returnbasis

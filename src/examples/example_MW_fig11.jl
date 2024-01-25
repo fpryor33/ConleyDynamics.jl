@@ -16,11 +16,12 @@ julia> lc, mvf = example_MW_fig11(1);
 julia> cm = connection_matrix(lc, mvf);
 
 julia> cm.cm
-[0   0   1   1   1]
-[0   0   1   0   0]
-[0   0   0   0   0]
-[0   0   0   0   0]
-[0   0   0   0   0]
+5×5 Matrix{Nemo.fpFieldElem}:
+ 0  0  1  1  1
+ 0  0  1  0  0
+ 0  0  0  0  0
+ 0  0  0  0  0
+ 0  0  0  0  0
 ```
 """
 function example_MW_fig11(mvftype=0)
@@ -45,10 +46,9 @@ function example_MW_fig11(mvftype=0)
 
     indexdict = Dict{String,Int}([(labelvec[k],k) for k in 1:length(labelvec)])
 
-    # Create the vector of Poincare polynomials
+    # Create the vector of simplex dimensions
     
-    PP, t = ZZ["t"]
-    ppvec = [t^0, t^0, t^0, t, t, t, t, t, t^2]
+    sdvec = [0, 0, 0, 1, 1, 1, 1, 1, 2]
 
     # Create the boundary matrix
 
@@ -68,8 +68,8 @@ function example_MW_fig11(mvftype=0)
 
     # Construct the Lefschetz complex struct
     
-    lc = LefschetzComplex{typeof(t)}(nc, bndmatrix,
-                                     labelvec, indexdict, ppvec)
+    lc = LefschetzComplex(nc, Int(2), bndmatrix,
+                          labelvec, indexdict, sdvec)
 
     # Create the common part of the combinatorial vector fields
     

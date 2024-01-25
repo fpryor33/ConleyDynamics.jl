@@ -1,27 +1,29 @@
 export LefschetzComplex, ConleyMorseCM, MultiVectorField
 
 """
-    LefschetzComplex{Tpoincare}
+    LefschetzComplex
 
 Collect the Lefschetz complex information in a struct.
 
 The struct has the following fields:
 * `ncells::Int``: number of cells
+* `dim::Int`: dimension of the complex
 * `boundary::Matrix{Int}`: boundary matrix, columns give the cell boundaries
-* `label::Vector{String}`: vector of labels associated with cell indices
-* `index::Dict{String,Int}`: dictionary for finding cell index from label
-* `poincare::Vector{Tpoincare}`: vector of Poincare polynomials for the cells
+* `labels::Vector{String}`: vector of labels associated with cell indices
+* `indices::Dict{String,Int}`: dictionary for finding cell index from label
+* `dimensions::Vector{Int}`: vector cell dimensions
 """
-struct LefschetzComplex{Tpoincare}
+struct LefschetzComplex
     ncells::Int
+    dim::Int
     boundary::Union{Matrix{Int},SparseMatrix{Int}}
-    label::Vector{String}
-    index::Dict{String,Int}
-    poincare::Vector{Tpoincare}
+    labels::Vector{String}
+    indices::Dict{String,Int}
+    dimensions::Vector{Int}
 end
 
 """
-    ConleyMorseCM{Tmatrix,Tpoincare}
+    ConleyMorseCM{Tmatrix}
 
 Collect the connection matrix information in a struct.
 
@@ -31,15 +33,16 @@ The struct has the following fields:
 * `poset::Vector{Int}`: poset indices for the connection matrix columns
 * `labels::Vector{String}`: labels for the connection matrix columns
 * `morsesets::Vector{Vector{String}}`: vector of Morse sets in original complex
-* `poincare::Vector{Tpoincare}`: vector of Poincare polynomials for the Morse sets
+* `poincare::Vector{Vector{Int}}`: vector of Poincare polynomial coefficients
+  for the Morse sets. The k-th entry is the coefficient of t^(k-1).
 """
-struct ConleyMorseCM{Tmatrix,Tpoincare}
+struct ConleyMorseCM{Tmatrix}
     cm::Tmatrix
     columns::Vector{Int}
     poset::Vector{Int}
     labels::Vector{String}
     morsesets::Vector{Vector{String}}
-    poincare::Vector{Tpoincare}
+    poincare::Vector{Vector{Int}}
 end
 
 """

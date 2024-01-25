@@ -13,7 +13,7 @@ julia> lc, mvf = example_MW_fig01();
 
 julia> cm = connection_matrix(lc, mvf);
 
-julia> cm.cm
+julia> sparse_show(cm.cm)
 [0   0   0]
 [0   0   1]
 [0   0   0]

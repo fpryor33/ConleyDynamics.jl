@@ -65,13 +65,12 @@ function create_simplicial_complex(labels::Vector{String},
     labelsvec = reduce(vcat,labelsbydim)
     labelindexdict = Dict{String,Int}(labelsvec[j] => j for j=1:length(labelsvec))
 
-    # Create the Poincare polynomials for the simplices
+    # Create the vector of dimensions for the simplices
 
-    PP, t = ZZ["t"]
-    ppvec = Vector{typeof(t)}()
+    sdimvec = Vector{Int}()
     for k=0:scdim
         for m=1:length(labelsbydim[k+1])
-            push!(ppvec,t^k)
+            push!(sdimvec,k)
         end
     end
 
@@ -101,7 +100,7 @@ function create_simplicial_complex(labels::Vector{String},
     
     # Create the Lefschetz complex
 
-    lc = LefschetzComplex{typeof(t)}(nsimp,B,labelsvec,labelindexdict,ppvec)
+    lc = LefschetzComplex(nsimp,scdim,B,labelsvec,labelindexdict,sdimvec)
 
     # Return the Lefschetz complex
 

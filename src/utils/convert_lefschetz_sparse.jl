@@ -12,11 +12,12 @@ function convert_lefschetz_sparse(lc::LefschetzComplex)
 
     # Copy the data from the original complex
 
-    ncells1   = lc.ncells
-    boundary1 = lc.boundary
-    label1    = lc.label
-    index1    = lc.index
-    poincare1 = lc.poincare
+    ncells1     = lc.ncells
+    dim1        = lc.dim
+    boundary1   = lc.boundary
+    labels1     = lc.labels
+    indices1    = lc.indices
+    dimensions1 = lc.dimensions
 
     # Create the sparse boundary matrix
 
@@ -24,8 +25,8 @@ function convert_lefschetz_sparse(lc::LefschetzComplex)
 
     # Create and return the sparse Lefschetz complex
 
-    lc2 = LefschetzComplex{typeof(poincare1[1])}(ncells1,
-                           boundary2, label1, index1, poincare1)
+    lc2 = LefschetzComplex(ncells1, dim1, boundary2,
+                           labels1, indices1, dimensions1)
     return lc2
 end
 

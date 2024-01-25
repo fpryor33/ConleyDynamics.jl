@@ -16,7 +16,7 @@ function convert_mvf(mvf::Vector{Vector{Int}}, lc::LefschetzComplex)
     for k=1:length(mvf)
         push!(newmvf,Vector{String}())
         for m=1:length(mvf[k])
-            push!(newmvf[k],lc.label[mvf[k][m]])
+            push!(newmvf[k],lc.labels[mvf[k][m]])
         end
     end
 
@@ -39,7 +39,7 @@ function convert_mvf(mvf::Vector{Vector{String}}, lc::LefschetzComplex)
     for k=1:length(mvf)
         push!(newmvf,Vector{Int}())
         for m=1:length(mvf[k])
-            push!(newmvf[k],lc.index[mvf[k][m]])
+            push!(newmvf[k],lc.indices[mvf[k][m]])
         end
     end
 

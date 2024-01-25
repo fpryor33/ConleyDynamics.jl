@@ -25,16 +25,18 @@ function permute_lefschetz_complex(lc::LefschetzComplex,
 
     # Copy the data from the original complex
 
-    ncells1   = lc.ncells
-    boundary1 = lc.boundary
-    label1    = lc.label
-    poincare1 = lc.poincare
+    ncells1     = lc.ncells
+    lcdim1      = lc.dim
+    boundary1   = lc.boundary
+    labels1     = lc.labels
+    dimensions1 = lc.dimensions
 
     # Create the permuted data
 
-    ncells2   = ncells1
-    label2    = label1[perm]
-    poincare2 = poincare1[perm]
+    ncells2     = ncells1
+    lcdim2      = lcdim1
+    labels2     = labels1[perm]
+    dimensions2 = dimensions1[perm]
 
     if typeof(boundary1) == Matrix{Int}
         boundary2 = boundary1[perm,perm]
@@ -44,12 +46,12 @@ function permute_lefschetz_complex(lc::LefschetzComplex,
 
     # Create the permuted dictionary
     
-    index2 = Dict{String,Int}([(label2[k],k) for k in 1:length(label2)])
+    indices2 = Dict{String,Int}([(labels2[k],k) for k in 1:length(labels2)])
 
     # Create the permuted Lefschetz complex
 
-    lc2 = LefschetzComplex{typeof(poincare2[1])}(ncells2,
-                           boundary2, label2, index2, poincare2)
+    lc2 = LefschetzComplex(ncells2, lcdim2, boundary2,
+                           labels2, indices2, dimensions2)
     
     # Return the permuted Lefschetz complex
 

@@ -28,9 +28,17 @@ function sparse_from_lists(nr::Int, nc::Int, tzero, tone,
 
     # Initialize the row, column, and entry vectors
 
-    entries = [Vector{typeof(vals[1])}([]) for _ in 1:nc]
+    entries = [Vector{typeof(tzero)}([]) for _ in 1:nc]
     columns = [Vector{Int}([]) for _ in 1:nc]
     rows    = [Vector{Int}([]) for _ in 1:nr]
+
+    # If the lists have length zero, return the zero matrix
+
+    if length(r)==0
+        sm = SparseMatrix{typeof(tzero)}(nr, nc, tzero, tone,
+                                         entries, columns, rows)
+        return sm
+    end
 
     # Loop through the nonzero values and incorporate them
     
@@ -64,8 +72,8 @@ function sparse_from_lists(nr::Int, nc::Int, tzero, tone,
 
     # Create and return the sparse matrix object
 
-    sm = SparseMatrix{typeof(vals[1])}(nr, nc, tzero, tone,
-                                       entries, columns, rows)
+    sm = SparseMatrix{typeof(tzero)}(nr, nc, tzero, tone,
+                                     entries, columns, rows)
     return sm
 end
 

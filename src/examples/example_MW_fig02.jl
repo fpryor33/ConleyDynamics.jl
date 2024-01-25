@@ -54,10 +54,9 @@ function example_MW_fig02(mvftype=0)
 
     indexdict = Dict{String,Int}([(labelvec[k],k) for k in 1:length(labelvec)])
 
-    # Create the vector of Poincare polynomials
+    # Create the vector of simplex dimensions
     
-    PP, t = ZZ["t"]
-    ppvec = [t^(length(labelvec[k])-1) for k=1:length(labelvec)]
+    sdvec = [Int(length(labelvec[k])-1) for k=1:length(labelvec)]
 
     # Create the boundary matrix
 
@@ -86,8 +85,8 @@ function example_MW_fig02(mvftype=0)
 
     # Construct the Lefschetz complex struct
     
-    lcf = LefschetzComplex{typeof(t)}(nc, bndmatrix,
-                                      labelvec, indexdict, ppvec)
+    lcf = LefschetzComplex(nc, maximum(sdvec), bndmatrix,
+                           labelvec, indexdict, sdvec)
     lc = convert_lefschetz_sparse(lcf)
 
     # Create the common part of the combinatorial vector fields

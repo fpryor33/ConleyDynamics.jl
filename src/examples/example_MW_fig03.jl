@@ -12,7 +12,7 @@ julia> lc, mvf = example_MW_fig03();
 
 julia> cm = connection_matrix(lc, mvf);
 
-julia> cm.cm
+julia> sparse_show(cm.cm)
 [0   0   0   0]
 [0   0   0   0]
 [0   0   0   0]
@@ -43,10 +43,9 @@ function example_MW_fig03()
 
     indexdict = Dict{String,Int}([(labelvec[k],k) for k in 1:length(labelvec)])
 
-    # Create the vector of Poincare polynomials
+    # Create the vector of simplex dimensions
     
-    PP, t = ZZ["t"]
-    ppvec = [t^0, t, t, t, t, t, t, t, t^2, t^2]
+    sdvec = [0, 1, 1, 1, 1, 1, 1, 1, 2, 2]
 
     # Create the boundary matrix
 
@@ -66,8 +65,8 @@ function example_MW_fig03()
 
     # Construct the Lefschetz complex struct
     
-    lcf = LefschetzComplex{typeof(t)}(nc, bndmatrix,
-                                      labelvec, indexdict, ppvec)
+    lcf = LefschetzComplex(nc, Int(2), bndmatrix,
+                           labelvec, indexdict, sdvec)
     lc = convert_lefschetz_sparse(lcf)
 
     # Create the common part of the combinatorial vector fields

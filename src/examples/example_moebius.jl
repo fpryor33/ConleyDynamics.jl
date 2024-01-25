@@ -22,13 +22,13 @@ julia> cmp2 = connection_matrix(lc2, mvf2; p=2);
 
 julia> cmp7 = connection_matrix(lc2, mvf2; p=7);
 
-julia> cmp2.cm
+julia> sparse_show(cmp2.cm)
 [0   0   0   0]
 [0   0   0   1]
 [0   0   0   0]
 [0   0   0   0]
 
-julia> cmp7.cm
+julia> sparse_show(cmp7.cm)
 [0   0   0   0]
 [0   0   0   1]
 [0   0   0   2]
