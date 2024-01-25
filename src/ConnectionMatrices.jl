@@ -44,6 +44,7 @@ include("./sparse/sparse_remove.jl")
 include("./sparse/sparse_permute.jl")
 include("./sparse/sparse_minor.jl")
 include("./sparse/sparse_elementary_op.jl")
+include("./sparse/sparse_is_sut.jl")
 
 include("./examples/example_MW_fig01.jl")
 include("./examples/example_MW_fig02.jl")
