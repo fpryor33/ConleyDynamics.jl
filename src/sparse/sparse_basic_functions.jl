@@ -1,5 +1,6 @@
-export sparse_size, sparse_low, sparse_identity, sparse_show
+export sparse_size, sparse_low, sparse_identity
 export sparse_fullness, sparse_sparsity
+export sparse_show
 
 """
     n = sparse_size(matrix::SparseMatrix, dim::Int)
@@ -62,6 +63,38 @@ function sparse_identity(n::Int, tone)
 end
 
 """
+    sparse_fullness(sm::SparseMatrix)
+
+Display the fullness of the sparse matrix `sm`.
+"""
+function sparse_fullness(sm::SparseMatrix)
+    #
+    # Display the fullness of a sparse matrix
+    #
+
+    nz = 0
+    for k=1:sm.ncol
+        nz += length(sm.columns[k])
+    end
+    fullness = Float64(nz) / (Float64(sm.ncol) * Float64(sm.nrow))
+    
+    return fullness
+end
+
+"""
+    sparse_sparsity(sm::SparseMatrix)
+
+Display the sparsity of the sparse matrix `sm`.
+"""
+function sparse_sparsity(sm::SparseMatrix)
+    #
+    # Display the sparsity of a sparse matrix
+    #
+
+    return 1.0 - sparse_fullness(sm)
+end
+
+"""
     sparse_show(sm::SparseMatrix)
 
 Display the sparse matrix `sm`.
@@ -98,34 +131,38 @@ function sparse_show(sm::SparseMatrix{Int})
 end
 
 """
-    sparse_fullness(sm::SparseMatrix)
+    Base.show(io::IO, sm::SparseMatrix)
 
-Display the fullness of the sparse matrix `sm`.
+Display the sparse matrix `sm`.
 """
-function sparse_fullness(sm::SparseMatrix)
+function Base.show(io::IO, sm::SparseMatrix)
     #
-    # Display the fullness of a sparse matrix
+    # Display a sparse matrix
     #
 
-    nz = 0
-    for k=1:sm.ncol
-        nz += length(sm.columns[k])
+    for k=1:sm.nrow
+        print(io, "\n[", sm[k,1])
+        for m=2:sm.ncol
+            print(io, "   ", sm[k,m])
+        end
+        print(io, "]")
     end
-    fullness = Float64(nz) / (Float64(sm.ncol) * Float64(sm.nrow))
-    
-    return fullness
 end
 
-"""
-    sparse_sparsity(sm::SparseMatrix)
-
-Display the sparsity of the sparse matrix `sm`.
-"""
-function sparse_sparsity(sm::SparseMatrix)
+function Base.show(io::IO, sm::SparseMatrix{Int})
     #
-    # Display the sparsity of a sparse matrix
+    # Display an integer sparse matrix
     #
 
-    return 1.0 - sparse_fullness(sm)
+    for k=1:sm.nrow
+        print(io, "\n[")
+        for m=1:sm.ncol
+            str2 = string(sm[k,m])
+            str1len = 4 - length(str2)
+            str1 = ^(" ",str1len)
+            print(io, str1, str2)
+        end
+        print(io, "]")
+    end
 end
 
