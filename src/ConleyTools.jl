@@ -37,6 +37,7 @@ include("./utils/convert_mvf.jl")
 include("./utils/convert_simplices.jl")
 include("./utils/create_simplicial_complex.jl")
 include("./utils/permute_lefschetz_complex.jl")
+include("./utils/lefschetz_closure.jl")
 
 include("./sparse/sparse_basic_functions.jl")
 include("./sparse/sparse_from_lists.jl")
