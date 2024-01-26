@@ -1,9 +1,9 @@
 """
-    module ConnectionMatrices
+    module ConleyTools
 
-Computation of connection matrices over finite fields.
+Collection of tools for computational Conley theory.
 """
-module ConnectionMatrices
+module ConleyTools
 
 using Nemo
 using Graphs
