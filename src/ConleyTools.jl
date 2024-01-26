@@ -29,6 +29,7 @@ include("./cmcore/update_low.jl")
 include("./homology/ph_reduce.jl")
 include("./homology/persistent_homology.jl")
 include("./homology/homology.jl")
+include("./homology/relative_homology.jl")
 
 include("./utils/convert_lefschetz_sparse.jl")
 include("./utils/convert_matrix_gfp.jl")
