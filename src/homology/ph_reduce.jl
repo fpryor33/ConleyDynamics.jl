@@ -1,23 +1,28 @@
 export ph_reduce! 
 
 """
-    cmatrix, cmatrix_cols = cm_create!(matrix, psetvec)
-    cmatrix, cmatrix_cols, basisvecs = cm_create!(matrix, psetvec;
-                                                  returnbasis=true)
+    phsingles, phpairs = ph_reduce!(matrix::SparseMatrix)
+    phsingles, phpairs, basis = ph_reduce!(matrix::SparseMatrix;
+                                           returnbasis=true)
 
-Compute the connection matrix.
+Apply the persistence reduction algorithm to the matrix.
 
-Assumes that `matrix` is upper triangular and filtered according
-to `psetvec`. Modifies the argument `matrix`. If the optional
+The function assumes that `matrix` is strictly upper triangular.
+It returns the starting columns for infinite length persistence
+intervals in `phsingles`, and the birth- and death-columns for
+finite length persistence intervals in `phpairs`. If the optional
 argument `returnbasis=true` is given, then the function also
-returns information about the computed basis. The k-th entry of
-`basisvecs` is a vector containing the columns making up the
-k-th basis vector, which corresponds to column `cmatrix_cols[k]`.
+returns the computed basis matrix B with `reduced = matrix * B`.
 """
 function ph_reduce!(matrix::SparseMatrix; returnbasis::Bool=false)
     #
     # Apply the persistence reduction algorithm to the matrix
     #
+
+    if !sparse_is_sut(matrix)
+        error("The matrix has to be strictly upper triangular!")
+        return
+    end
 
     # Extract the zero and one elements
 
