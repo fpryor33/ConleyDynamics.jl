@@ -1,6 +1,6 @@
 #
 # Start this with the following command:
-#    julia --color=yes --project=. make.jl
+#    julia --color=yes --project make.jl
 #
 
 push!(LOAD_PATH,"../src/")
