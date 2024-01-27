@@ -1,9 +1,9 @@
 """
-    module ConleyTools
+    module ConleyDynamics
 
 Collection of tools for computational Conley theory.
 """
-module ConleyTools
+module ConleyDynamics
 
 using Nemo
 using Graphs

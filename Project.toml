@@ -1,4 +1,4 @@
-name = "ConleyTools"
+name = "ConleyDynamics"
 uuid = "94d474ba-9a8a-4612-aaf4-76c1836fe059"
 authors = ["Thomas Wanner <twanner@gmu.edu>"]
 version = "1.0.0-DEV"
