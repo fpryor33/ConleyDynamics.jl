@@ -6,7 +6,20 @@
 push!(LOAD_PATH,"../src/")
 
 using Documenter, ConleyDynamics
+# For pdf file generation use instead:
+# using DocumenterLaTeX, Documenter, ConleyDynamics
 
-# makedocs(sitename="ConleyDynamics.jl")
-makedocs(sitename="ConleyDynamics.jl", format = Documenter.HTML(prettyurls = false))
+makedocs(sitename="ConleyDynamics.jl",
+         format = Documenter.HTML(prettyurls = false),
+         # For pdf file generation use instead:
+         # format = LaTeX(platform = "docker"),
+         pages = [
+                  "Home" => "index.md",
+                  "Manual" => Any[
+                      "Guide" => "guide.md",
+                      "Examples" => "examples.md",
+                      ],
+                 ],
+         authors = "Thomas Wanner"
+        )
 

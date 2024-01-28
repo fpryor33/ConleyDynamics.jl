@@ -6,7 +6,7 @@ export LefschetzComplex, ConleyMorseCM, MultiVectorField
 Collect the Lefschetz complex information in a struct.
 
 The struct has the following fields:
-* `ncells::Int``: number of cells
+* `ncells::Int`: number of cells
 * `dim::Int`: dimension of the complex
 * `boundary::Matrix{Int}`: boundary matrix, columns give the cell boundaries
 * `labels::Vector{String}`: vector of labels associated with cell indices
