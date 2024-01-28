@@ -16,6 +16,20 @@ A Julia package for studying combinatorial multivector fields using Conley theor
 
 ![Variation 3](assets/examples/connectionex3.png)
 
+
+```@raw html
+  <img src="assets/examples/connectionex0.png" alt=""
+   title="Variation 0a" width="250"/>
+  <img src="assets/examples/connectionex1.png" alt=""
+   title="Variation 1a" width="250"/>
+  <p>
+  <img src="assets/examples/connectionex2.png" alt=""
+   title="Variation 2a" width="250"/>
+  <img src="assets/examples/connectionex3.png" alt=""
+   title="Variation 3a" width="250"/>
+```
+
+
 ```@docs
 example_MW_fig01()
 example_MW_fig02()
