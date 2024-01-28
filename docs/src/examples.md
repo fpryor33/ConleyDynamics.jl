@@ -16,6 +16,8 @@ example_moebius()
 
 ## Nonunique connection matrices
 
+![An example with nonunique connection matrices](assets/examples/multiconn.png)
+
 ```@docs
 example_nonunique()
 ```
