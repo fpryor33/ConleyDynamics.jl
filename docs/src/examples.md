@@ -1,40 +1,54 @@
 # Examples
 
-*Conley index and multivector fields for Julia.*
+In the following we discuss a number of connection matrix examples.
 
-A Julia package for studying combinatorial multivector fields using Conley theory
+## Critical flow on a simplex
 
-!!! note
-
-    This package and the documentation is still very much work in progress!
-
-![The original vector field](assets/examples/connectionex0.png)
-
-![Variation 1](assets/examples/connectionex1.png)
-
-![Variation 2](assets/examples/connectionex2.png)
-
-![Variation 3](assets/examples/connectionex3.png)
-
-
-```@raw html
-  <img src="assets/examples/connectionex0.png" alt=""
-   title="Variation 0a" width="250"/>
-  <img src="assets/examples/connectionex1.png" alt=""
-   title="Variation 1a" width="250"/>
-  <p>
-  <img src="assets/examples/connectionex2.png" alt=""
-   title="Variation 2a" width="250"/>
-  <img src="assets/examples/connectionex3.png" alt=""
-   title="Variation 3a" width="250"/>
+```@docs
+example_critical_simplex(::Int)
 ```
 
+## Combinatorial flows on a cylinder and a Moebius strip
+
+```@docs
+example_moebius()
+```
+
+## Nonunique connection matrices
+
+```@docs
+example_nonunique()
+```
+
+## Examples from MW-2023
+
+The following examples are taken from the paper
+*Connection matrices in combinatorial topological dynamics*
+by Marian Mrozek & Thomas Wanner (*Preprint*, submitted for
+publication, 115 pp, 2023).
+
+![Four sample combinatorial vector fields](assets/examples/connectionex.png)
+
+```@docs
+example_MW_fig02()
+```
 
 ```@docs
 example_MW_fig01()
-example_MW_fig02()
 example_MW_fig03()
 example_MW_fig04()
 example_MW_fig11()
+```
+
+## Examples from BKMW-2020
+
+The following examples are taken from the paper *Linking combinatorial
+and classical dynamics: Conley index and Morse decompositions* by
+Bogdan Batko, Tomasz Kaczynski, Marian Mrozek, and Thomas Wanner
+(*Foundations of Computational Mathematics* 20(5), pp. 967-1012, 2020).
+
+```@docs
+example_BKMW20_fig1()
+example_BKMW20_fig3()
 ```
 
