@@ -7,5 +7,6 @@ push!(LOAD_PATH,"../src/")
 
 using Documenter, ConleyDynamics
 
-# makedocs(sitename="ConleyDynamics Documentation")
-makedocs(sitename="ConleyDynamics Documentation", format = Documenter.HTML(prettyurls = false))
+# makedocs(sitename="ConleyDynamics.jl")
+makedocs(sitename="ConleyDynamics.jl", format = Documenter.HTML(prettyurls = false))
+
