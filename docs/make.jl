@@ -5,14 +5,13 @@
 
 push!(LOAD_PATH,"../src/")
 
-using Documenter, ConleyDynamics
-# For pdf file generation use instead:
-# using DocumenterLaTeX, Documenter, ConleyDynamics
+using Documenter
+using ConleyDynamics
 
 makedocs(sitename="ConleyDynamics.jl",
          format = Documenter.HTML(prettyurls = false),
          # For pdf file generation use instead:
-         # format = LaTeX(platform = "docker"),
+         # format = Documenter.LaTeX(platform = "docker"),
          pages = [
                   "Home" => "index.md",
                   "Manual" => Any[
