@@ -4,4 +4,9 @@ Here we need a basic introduction..
 
 We can also include Latex, as in ``u_t = -\Delta(\epsilon^2 \Delta u + f(u))``.
 
+## SM 1
+
+## SM 2
+
+## SM 3
 

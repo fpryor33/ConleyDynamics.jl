@@ -13,15 +13,21 @@ makedocs(sitename="ConleyDynamics.jl",
          # For pdf file generation use instead:
          # format = Documenter.LaTeX(platform = "docker"),
          pages = [
-                  "Home" => "index.md",
+                  "Overview" => "index.md",
                   "Manual" => Any[
-                      "Guide" =>               "man/guide.md",
-                      "Examples" =>            "man/examples.md",
-                      "Data Structures" =>     "man/datastruct.md",
-                      "Connection Matrices" => "man/connections.md",
-                      "Homology" =>            "man/homology.md",
-                      "Sparse Matrices" =>     "man/sparse.md"
+                      "man/guide.md",
+                      "man/examples.md",
+                      "man/datastruct.md",
+                      "man/connections.md",
+                      "man/homology.md",
+                      "man/sparse.md"
                       ],
+                  "Core API" => Any[
+                      "apicore/utils.md",
+                      "apicore/cmcore.md",
+                      "apicore/homology.md",
+                      "apicore/sparse.md"
+                     ],
                  ],
          authors = "Thomas Wanner"
         )

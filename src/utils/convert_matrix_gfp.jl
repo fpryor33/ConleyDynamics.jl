@@ -1,11 +1,11 @@
 export convert_matrix_gfp
 
 """
-    gfpmatrix = convert_matrix_gfp(matrix::Matrix{Int}, p)
+    gfpmatrix = convert_matrix_gfp(matrix::Matrix{Int}, p::Int)
 
 Convert an integer matrix to a finite field matrix over GF(p).
 """
-function convert_matrix_gfp(matrix::Matrix{Int}, p)
+function convert_matrix_gfp(matrix::Matrix{Int}, p::Int)
     #
     # Convert an integer matrix to a finite field matrix over GF(p).
     #
@@ -16,11 +16,11 @@ function convert_matrix_gfp(matrix::Matrix{Int}, p)
 end
 
 """
-    gfpmatrix = convert_matrix_gfp(matrix::SparseMatrix{Int}, p)
+    gfpmatrix = convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
 
 Convert a sparse integer matrix to a finite field sparse matrix over GF(p).
 """
-function convert_matrix_gfp(matrix::SparseMatrix{Int}, p)
+function convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
     #
     # Convert an integer matrix to a finite field matrix over GF(p).
     #

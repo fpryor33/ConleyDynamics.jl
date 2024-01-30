@@ -7,7 +7,7 @@ We can also include Latex, as in ``u_t = -\Delta(\epsilon^2 \Delta u + f(u))``.
 ## Creating Lefschetz Complexes
 
 
-# Computing Homology and Persistence
+## Computing Homology and Persistence
 
 
 
@@ -15,7 +15,7 @@ We can also include Latex, as in ``u_t = -\Delta(\epsilon^2 \Delta u + f(u))``.
 
 
 
-# Working with Sparse Matrices
+## Working with Sparse Matrices
 
 
 
