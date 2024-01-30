@@ -15,8 +15,12 @@ makedocs(sitename="ConleyDynamics.jl",
          pages = [
                   "Home" => "index.md",
                   "Manual" => Any[
-                      "Guide" => "guide.md",
-                      "Examples" => "examples.md",
+                      "Guide" =>               "man/guide.md",
+                      "Examples" =>            "man/examples.md",
+                      "Data Structures" =>     "man/datastruct.md",
+                      "Connection Matrices" => "man/connections.md",
+                      "Homology" =>            "man/homology.md",
+                      "Sparse Matrices" =>     "man/sparse.md"
                       ],
                  ],
          authors = "Thomas Wanner"

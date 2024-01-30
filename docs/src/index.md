@@ -10,33 +10,31 @@ A Julia package for studying combinatorial multivector fields using Conley theor
 
 ## Package Features
 
-- Implements data structures for Lefschetz complexes, in particular simplicial
-  and cubical complexes.
+- Data structures for Lefschetz complexes, in particular simplicial and
+  cubical complexes.
 - Classical Forman combinatorial vector fields and multivector fields are
   supported.
 - Computation of connection matrices and Conley-Morse graphs.
 - Basic homology algorithms over finite fields, including persistent homology
   and relative homology.
-- Includes a sparse matrix implementation geared towards computations over
-  finite fields.
+- Algorithms rely on a built-in sparse matrix implementation geared towards
+  computations over finite fields.
 
-We can also include Latex, as in ``u_t = -\Delta(\epsilon^2 \Delta u + f(u))``.
+The [Package Guide](@ref) provides a tutorial explaining how to get started
+using ConleyDynamics, and further examples can be found on the [Examples](@ref)
+page.
 
-```@docs
-LefschetzComplex
+## Manual Outline
+
+```@contents
+Pages = [
+    "man/guide.md",
+    "man/examples.md",
+    "man/datastruct.md",
+    "man/connections.md",
+    "man/homology.md",
+    "man/sparse.md",
+]
+Depth = 1
 ```
-
-Here is another entry:
-
-```@docs
-ConleyMorseCM
-```
-
-And another one:
-
-```@docs
-SparseMatrix
-```
-
-
 

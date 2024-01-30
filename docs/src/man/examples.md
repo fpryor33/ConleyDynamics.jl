@@ -16,7 +16,7 @@ example_moebius()
 
 ## Nonunique connection matrices
 
-![An example with nonunique connection matrices](assets/examples/multiconn.png)
+![An example with nonunique connection matrices](img/multiconn.png)
 
 ```@docs
 example_nonunique()
@@ -29,7 +29,7 @@ The following examples are taken from the paper
 by Marian Mrozek & Thomas Wanner (*Preprint*, submitted for
 publication, 115 pp, 2023).
 
-![Four sample combinatorial vector fields](assets/examples/connectionex.png)
+![Four sample combinatorial vector fields](img/connectionex.png)
 
 ```@docs
 example_MW_fig02()
