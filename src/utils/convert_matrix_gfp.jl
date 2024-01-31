@@ -10,8 +10,14 @@ function convert_matrix_gfp(matrix::Matrix{Int}, p::Int)
     # Convert an integer matrix to a finite field matrix over GF(p).
     #
     m,n = size(matrix)
-    FF = GF(p)
-    gfpmatrix = [FF(matrix[i,j]) for i=1:m, j=1:n]
+    if (p > 0)
+        FF = GF(p)
+        gfpmatrix = [FF(matrix[i,j]) for i=1:m, j=1:n]
+    elseif (p == 0)
+        gfpmatrix = [Rational{Int}(matrix[i,j]) for i=1:m, j=1:n]
+    else
+        error("Wrong characteristic p!")
+    end
     return gfpmatrix
 end
 
@@ -31,14 +37,23 @@ function convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
 
     # Convert zero, one, and the matrix entries to GF(p)
 
-    FF = GF(p)
-
-    gfpzero = FF(tzero)
-    gfpone  = FF(tone)
-
-    gfpvals = Vector{typeof(gfpzero)}()
-    for k=1:length(vals)
-        push!(gfpvals,FF(vals[k]))
+    if (p > 0)
+        FF = GF(p)
+        gfpzero = FF(tzero)
+        gfpone  = FF(tone)
+        gfpvals = Vector{typeof(gfpzero)}()
+        for k=1:length(vals)
+            push!(gfpvals,FF(vals[k]))
+        end
+    elseif (p == 0)
+        gfpzero = Rational{Int}(tzero)
+        gfpone  = Rational{Int}(tone)
+        gfpvals = Vector{Rational{Int}}()
+        for k=1:length(vals)
+            push!(gfpvals,Rational{Int}(vals[k]))
+        end
+    else
+        error("Wrong characteristic p!")
     end
 
     # Create and return the sparse GFP(p) matrix
