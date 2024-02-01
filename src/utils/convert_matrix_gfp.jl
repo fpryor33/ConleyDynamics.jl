@@ -3,7 +3,8 @@ export convert_matrix_gfp
 """
     gfpmatrix = convert_matrix_gfp(matrix::Matrix{Int}, p::Int)
 
-Convert an integer matrix to a finite field matrix over GF(p).
+Convert an integer matrix to a finite field matrix over `GF(p)`.
+For the choice `p=0` the rationals are used.
 """
 function convert_matrix_gfp(matrix::Matrix{Int}, p::Int)
     #
@@ -24,7 +25,8 @@ end
 """
     gfpmatrix = convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
 
-Convert a sparse integer matrix to a finite field sparse matrix over GF(p).
+Convert a sparse integer matrix to a finite field sparse matrix
+over `GF(p)`. For the choice `p=0` the rationals are used.
 """
 function convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
     #
@@ -39,15 +41,15 @@ function convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
 
     if (p > 0)
         FF = GF(p)
-        gfpzero = FF(tzero)
-        gfpone  = FF(tone)
+        gfpzero = FF(0)
+        gfpone  = FF(1)
         gfpvals = Vector{typeof(gfpzero)}()
         for k=1:length(vals)
             push!(gfpvals,FF(vals[k]))
         end
     elseif (p == 0)
-        gfpzero = Rational{Int}(tzero)
-        gfpone  = Rational{Int}(tone)
+        gfpzero = Rational{Int}(0)
+        gfpone  = Rational{Int}(1)
         gfpvals = Vector{Rational{Int}}()
         for k=1:length(vals)
             push!(gfpvals,Rational{Int}(vals[k]))
