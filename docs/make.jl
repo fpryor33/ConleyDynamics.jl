@@ -16,13 +16,14 @@ makedocs(sitename="ConleyDynamics.jl",
                   "Overview" => "index.md",
                   "Manual" => Any[
                       "man/guide.md",
-                      "man/examples.md",
-                      "man/datastruct.md",
+                      "man/lefschetz.md",
                       "man/connections.md",
                       "man/homology.md",
-                      "man/sparse.md"
+                      "man/sparse.md",
+                      "man/examples.md"
                       ],
                   "Core API" => Any[
+                      "apicore/datastruct.md",
                       "apicore/utils.md",
                       "apicore/cmcore.md",
                       "apicore/homology.md",

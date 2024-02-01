@@ -27,10 +27,6 @@ Morse theory in a discrete combinatorial setting.
 - Algorithms rely on a built-in sparse matrix implementation geared towards
   computations over finite fields.
 
-The [Package Guide](@ref) provides a tutorial explaining how to get started
-using ConleyDynamics, and further examples can be found on the [Examples](@ref)
-page.
-
 ## Installation
 
 To use ConleyDynamics please install Julia 1.10 or higher. See
@@ -48,12 +44,18 @@ julia> using Pkg; Pkg.add("ConleyDynamics")
 ```@contents
 Pages = [
     "man/guide.md",
-    "man/examples.md",
-    "man/datastruct.md",
+    "man/lefschetz.md",
     "man/connections.md",
     "man/homology.md",
     "man/sparse.md",
+    "man/examples.md",
 ]
 Depth = 1
 ```
+
+The [Tutorial](@ref) briefly explains how to get started with ConleyDynamics.
+More details, including on the underlying mathematics, are provided in the
+following four sections, which cover Lefschetz complexes, connection matrices,
+homology, and sparse matrices, respectively.  Finally, a discussion of all
+included examples can be found in the [Examples](@ref) section.
 

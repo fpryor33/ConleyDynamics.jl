@@ -1,8 +1,16 @@
-# Package Guide
+# Tutorial
 
-Here we need a basic introduction..
+We begin by discussion an elementary example from Mrozek & Wanner[^1].
 
-We can also include Latex, as in ``u_t = -\Delta(\epsilon^2 \Delta u + f(u))``.
+
+
+
+
+
+![The logo multivector field](img/multivectorex.png)
+
+
+Here I reference the paper again[^1].
 
 ## Creating Lefschetz Complexes
 
@@ -16,6 +24,13 @@ We can also include Latex, as in ``u_t = -\Delta(\epsilon^2 \Delta u + f(u))``.
 
 
 ## Working with Sparse Matrices
+
+
+
+[^1]:
+    Marian Mrozek, Thomas Wanner: [Connection matrices in combinatorial
+    topological dynamics](https://arxiv.org/abs/2103.04269),
+    *Preprint*, submitted for publication, 115 pp, 2023.
 
 
 
