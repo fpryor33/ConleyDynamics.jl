@@ -12,5 +12,5 @@ Morse theory in a discrete combinatorial setting.
 The detailed documentation can be found
 [here](https://almost6heads.github.io/ConleyDynamics.jl/dev).
 
-![](docs/src/assets/logo.png)
+![](docs/src/man/img/multivectorex.png)
 

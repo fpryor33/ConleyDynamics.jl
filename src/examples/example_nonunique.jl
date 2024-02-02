@@ -29,8 +29,8 @@ julia> sparse_show(cm1.cm)
 [0   0   0   0   0   0   0   0   0]
 
 julia> print(cm1.labels)
-["B", "G", "GI", "BI", "DE", "FG", "AFH", "CDI", "GHI"]
-julia> sparse.show(cm2.cm)
+["1", "6", "68", "18", "34", "56", "057", "238", "678"]
+julia> sparse_show(cm2.cm)
 [0   0   0   1   0   1   0   0   0]
 [0   0   0   1   0   1   0   0   0]
 [0   0   0   0   0   0   1   0   1]
@@ -42,7 +42,7 @@ julia> sparse.show(cm2.cm)
 [0   0   0   0   0   0   0   0   0]
 
 julia> print(cm2.labels)
-["B", "H", "GH", "BI", "DE", "FG", "AFH", "CDI", "GHI"]
+["1", "7", "67", "18", "34", "56", "057", "238", "678"]
 ```
 """
 function example_nonunique()
@@ -51,7 +51,7 @@ function example_nonunique()
 
     # Initialize the simplicial complex in natural order
     
-    labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+    labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
     intsimplices = [[1,2,8],[2,8,9],[2,3,9],
                     [1,6,8],[6,7,8],[7,8,9],[4,7,9],[3,4,9],
                     [5,6,7],[4,5,7]]
@@ -59,10 +59,10 @@ function example_nonunique()
 
     # Create the multivector field using string labels
 
-    mvf = [["A","AB"], ["C","BC"], ["D","CD"], ["E","EF"], ["F","AF"],
-           ["G","GI"], ["I","HI"], ["H","GH"],
-           ["AH","ABH"], ["BH","BHI"], ["CI","BCI"], ["DI","DGI"],
-           ["DG","DEG"], ["EG","EFG"], ["FH","FGH"]]
+    mvf = [["0","01"], ["2","12"], ["3","23"], ["4","45"], ["5","05"],
+           ["6","68"], ["8","78"], ["7","67"],
+           ["07","017"], ["17","178"], ["28","128"], ["38","368"],
+           ["36","346"], ["46","456"], ["57","567"]]
 
     # Create the first simplicial complex
     
@@ -71,7 +71,7 @@ function example_nonunique()
 
     # Create the second simplicial complex, via vertex reordering
 
-    labels2 = ["A", "B", "C", "D", "E", "F", "H", "I", "G"]
+    labels2 = ["0", "1", "2", "3", "4", "5", "7", "8", "6"]
     lc2 = create_simplicial_complex(labels2, strsimplices)
 
     # Return the example data

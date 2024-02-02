@@ -24,11 +24,8 @@ function create_simplicial_complex(labels::Vector{String},
     sclabels = deepcopy(labels)
     scsimplices = deepcopy(simplices)
 
-    # lablenvec = unique(length.(sclabels))
     if length(unique(length.(sclabels))) > 1
         error("All labels need to have the same length!")
-    # else
-    #     lablen = lablenvec[1]
     end
 
     # Sort the simplex vertices in ascending order
@@ -58,7 +55,7 @@ function create_simplicial_complex(labels::Vector{String},
         for m=2:cdim+1
             for faceindices in combinations(csimp,m)
                 sortedfaceindices = sort(faceindices)
-                facelab = join(sclabels[sortedfaceindices])
+                facelab = join(sort(sclabels[sortedfaceindices]))
                 push!(labelsets[m-1],facelab)
                 labelvertexdict[facelab] = sortedfaceindices
             end
@@ -100,7 +97,7 @@ function create_simplicial_complex(labels::Vector{String},
         for m=1:length(csimp)
             csimptmp = deepcopy(csimp)
             deleteat!(csimptmp,m)
-            bsimp = labelindexdict[join(sclabels[csimptmp])]
+            bsimp = labelindexdict[join(sort(sclabels[csimptmp]))]
             push!(Br,bsimp)   # Row index
             push!(Bc,k)       # Column index
             push!(Bv,coeff)   # Matrix entry
