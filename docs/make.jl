@@ -1,6 +1,8 @@
 #
-# To create the html documentation, use the following command:
-#    julia --color=yes --project make.jl
+# To create the html documentation locally, use
+# the following command:
+# 
+#    julia --color=yes --project make.jl --local-html
 #
 # For the Latex pdf documentation, use instead:
 #
@@ -30,7 +32,13 @@ pageslist = ["Overview" => "index.md",
                   ],
             ]
 
-if "--latex-pdf" in ARGS
+if "--local-html" in ARGS
+     makedocs(sitename="ConleyDynamics.jl",
+        format = Documenter.HTML(prettyurls = false),
+        pages = pageslist,
+        authors = "Thomas Wanner"
+        )
+elseif "--latex-pdf" in ARGS
     makedocs(sitename="ConleyDynamics.jl",
         format = Documenter.LaTeX(platform = "docker"),
         pages = pageslist,
@@ -38,7 +46,7 @@ if "--latex-pdf" in ARGS
         )
 else
     makedocs(sitename="ConleyDynamics.jl",
-        format = Documenter.HTML(prettyurls = false),
+        format = Documenter.HTML(),
         pages = pageslist,
         authors = "Thomas Wanner"
         )
@@ -46,5 +54,4 @@ else
         repo = "github.com/almost6heads/ConleyDynamics.jl.git",
         )
 end
-
 
