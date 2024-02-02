@@ -1,6 +1,10 @@
 #
-# Start this with the following command:
+# To create the html documentation, use the following command:
 #    julia --color=yes --project make.jl
+#
+# For the Latex pdf documentation, use instead:
+#
+#    julia --color=yes --project make.jl --latex-pdf
 #
 
 push!(LOAD_PATH,"../src/")
@@ -8,28 +12,36 @@ push!(LOAD_PATH,"../src/")
 using Documenter
 using ConleyDynamics
 
-makedocs(sitename="ConleyDynamics.jl",
-         format = Documenter.HTML(prettyurls = false),
-         # For pdf file generation use instead:
-         # format = Documenter.LaTeX(platform = "docker"),
-         pages = [
-                  "Overview" => "index.md",
-                  "Manual" => Any[
-                      "man/guide.md",
-                      "man/lefschetz.md",
-                      "man/connections.md",
-                      "man/homology.md",
-                      "man/sparse.md",
-                      "man/examples.md"
-                      ],
-                  "Core API" => Any[
-                      "apicore/datastruct.md",
-                      "apicore/utils.md",
-                      "apicore/cmcore.md",
-                      "apicore/homology.md",
-                      "apicore/sparse.md"
-                     ],
-                 ],
-         authors = "Thomas Wanner"
+pageslist = ["Overview" => "index.md",
+             "Manual" => Any[
+                 "man/guide.md",
+                 "man/lefschetz.md",
+                 "man/connections.md",
+                 "man/homology.md",
+                 "man/sparse.md",
+                 "man/examples.md"
+                  ],
+             "Core API" => Any[
+                 "apicore/datastruct.md",
+                 "apicore/utils.md",
+                 "apicore/cmcore.md",
+                 "apicore/homology.md",
+                 "apicore/sparse.md"
+                  ],
+            ]
+
+if "--latex-pdf" in ARGS
+    makedocs(sitename="ConleyDynamics.jl",
+        format = Documenter.LaTeX(platform = "docker"),
+        pages = pageslist,
+        authors = "Thomas Wanner"
         )
+else
+    makedocs(sitename="ConleyDynamics.jl",
+        format = Documenter.HTML(prettyurls = false),
+        pages = pageslist,
+        authors = "Thomas Wanner"
+        )
+end
+
 
