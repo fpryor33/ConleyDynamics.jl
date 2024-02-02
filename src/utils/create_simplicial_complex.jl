@@ -8,16 +8,34 @@ Initialize a Lefschetz complex from a simplicial complex.
 
 The vector `labels` contains a label for every vertex, while
 `simplices` contains all the highest-dimensional simplices necessary
-to define the simplicial complex.
+to define the simplicial complex. Every simplex is represented as
+a vector of `Int`, with entries corresponding to the vertex indices.
+
+Note that the labels all have to have the same character length!
 """
 function create_simplicial_complex(labels::Vector{String},
                                    simplices::Vector{Vector{Int}})
     #
     # Create a Lefschetz complex struct for a simplicial complex.
     #
-    
+
+    # Check whether the labels all have the same length
+
     sclabels = deepcopy(labels)
     scsimplices = deepcopy(simplices)
+
+    # lablenvec = unique(length.(sclabels))
+    if length(unique(length.(sclabels))) > 1
+        error("All labels need to have the same length!")
+    # else
+    #     lablen = lablenvec[1]
+    end
+
+    # Sort the simplex vertices in ascending order
+    
+    for k=1:length(scsimplices)
+        sort!(scsimplices[k])
+    end
 
     # Find the dimension of the simplicial complex
 
@@ -31,11 +49,7 @@ function create_simplicial_complex(labels::Vector{String},
     # dimension. In addition, create a dictionary which relates
     # the face labels to the index sequences.
     
-    labelsets = Vector{Set{String}}()
-    for k=1:scdim
-        push!(labelsets,Set{String}())
-    end
-
+    labelsets = [Set{String}() for _ in 1:scdim]
     labelvertexdict = Dict{String,Vector{Int}}()
 
     for k=1:length(scsimplices)
@@ -43,19 +57,17 @@ function create_simplicial_complex(labels::Vector{String},
         cdim = length(csimp) - 1
         for m=2:cdim+1
             for faceindices in combinations(csimp,m)
-                facelab = join(sort(sclabels[faceindices]))
+                sortedfaceindices = sort(faceindices)
+                facelab = join(sclabels[sortedfaceindices])
                 push!(labelsets[m-1],facelab)
-                labelvertexdict[facelab] = sort(faceindices)
+                labelvertexdict[facelab] = sortedfaceindices
             end
         end
     end
     
     # Order the simplex labels and create label to index dictionary
 
-    labelsbydim = Vector{Vector{String}}()
-    for k=0:scdim
-        push!(labelsbydim,Vector{String}())
-    end
+    labelsbydim = [Vector{String}() for _ in 0:scdim]
 
     append!(labelsbydim[1],sclabels)
     for k=1:scdim
@@ -84,11 +96,11 @@ function create_simplicial_complex(labels::Vector{String},
     Bv = Vector{Int}()
     for k=nsimp0+1:nsimp
         csimp = labelvertexdict[labelsvec[k]]
-        coeff = 1
+        coeff = Int(1)
         for m=1:length(csimp)
             csimptmp = deepcopy(csimp)
             deleteat!(csimptmp,m)
-            bsimp = labelindexdict[join(sort(sclabels[csimptmp]))]
+            bsimp = labelindexdict[join(sclabels[csimptmp])]
             push!(Br,bsimp)   # Row index
             push!(Bc,k)       # Column index
             push!(Bv,coeff)   # Matrix entry
