@@ -42,6 +42,9 @@ else
         pages = pageslist,
         authors = "Thomas Wanner"
         )
+    deploydocs(
+        repo = "github.com/almost6heads/ConleyDynamics.jl.git",
+        )
 end
 
 
