@@ -1,6 +1,6 @@
 # Tutorial
 
-In this tutorial we explain the basic usage of the main components
+This tutorial explains the basic usage of the main components
 of ConleyDynamics. It is not meant to be exhaustive, since more 
 details will be provided in the more indiviualized sections. Also,
 precise mathematical definitions will be delayed until then.
