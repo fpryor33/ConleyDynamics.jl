@@ -50,9 +50,11 @@ requires two objects:
     vertex labels. Not using a fixed label size could lead to 
     ambiguities, and will therefore raise an error message.
 
+![A first simplicial complex](img/tutorialsimplex.png)
+
 The following first example creates a simple simplicial complex.
-It consists of six vertices which we label by the first six
-letters.
+The complex is shown in the above figure, and it has six
+vertices which we label by the first six letters.
 
 ```@example T1
 using ..ConleyDynamics # hide
@@ -82,50 +84,69 @@ of `K` is the largest simplex dimensions, and can be seen via
 println(sc.dim)
 ```
 
-
-
+The `sc` struct also contains a vector of labels, which in this case
+takes the form
 
 ```@example T1
 println(sc.labels)
 ```
 
-```@example T1
-println(sc.dimensions)
-```
-
-
-
-```@example T1
-println(sc.indices)
-```
-
-
-
-```@example T1
-println(sc.boundary)
-```
-
-
-
-
+Finally, the Lefschetz complex data structure for our simplicial
+complex ``K`` also includes the dimensions for the corresponding
+cells in the integer vector `sc.dimensions`, a dictionary `sc.indices`
+which associates each simplex label with its integer index, and the
+boundary map `sc.boundary` which will be described in more detail
+in [Lefschetz Complexes](@ref).
 
 ## Computing Homology and Persistence
 
+Any simplicial complex, and in fact any Lefschetz complex, has an
+associated *homology*. Informally, the latter describes the connectivity
+structure of the object described by the simplicial complex. More 
+precisely, the homology consists in our case of a sequence of integers,
+called the *Betti numbers*, which are indexed by dimension. There are
+Betti numbers ``\beta_k(K)`` for every ``k = 0,\ldots,\dim K``. The
+0-dimensional Betti number ``\beta_0(K)`` gives the number of
+connected components of ``K``, while ``\beta_1(K)`` counts the
+number of independent loops that can be found in ``K``. Finally,
+``\beta_2(K)`` equals the number of cavities. In our case, we
+have
+
+```@example T1
+homology(sc)
+```
+
+This means that the simplicial complex ``K`` has one component, as
+well as one loop, and no cavities. The function `homology` returns 
+a vector of integers, whose k-th entry is ``\beta_{k-1}(K)``.
+
+ConleyDynamics also allows for the computation of *relative 
+homology*.
+
 
 
 ```@example T1
-homology(sc,p=0)
+relative_homology(sc, [1,6])
 ```
 
+
 ```@example T1
-relative_homology(sc, [1,6], p=0)
+relative_homology(sc, ["DE","DF","EF"])
 ```
+
+
+
 
 ```@example T1
 filtration = [1,1,1,2,2,2,1,1,1,3,2,2,2,4]
-phsingles, phpairs = persistent_homology(sc, filtration, p=2)
+phsingles, phpairs = persistent_homology(sc, filtration)
 ```
 
+
+## Forman Vector Fields and Connecting Orbits
+
+
+![A first Forman vector field](img/tutorialforman.png)
 
 
 ## Finding Connection Matrices
