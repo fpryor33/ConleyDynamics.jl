@@ -13,20 +13,21 @@ or one of the three gradient (1,2,3) examples.
 ```jldoctest
 julia> lc, mvf = example_MW_fig02(0);
 
-julia> cm = connection_matrix(lc, mvf);
-
-julia> cm.cm
-[0   0   0   1   1   0   0   0]
-[0   0   0   1   1   0   0   0]
-[0   0   0   0   0   0   0   0]
-[0   0   0   0   0   0   1   0]
-[0   0   0   0   0   0   1   0]
-[0   0   0   0   0   0   0   1]
-[0   0   0   0   0   0   0   0]
-[0   0   0   0   0   0   0   0]
+julia> cm = connection_matrix(lc, mvf; p=0);
 
 julia> print(cm.labels)
 ["A", "C", "CE", "AC", "BD", "DF", "ABC", "EFG"]
+
+julia> full_from_sparse(cm.cm)
+8×8 Matrix{Rational{Int64}}:
+ 0  0  0  -1  -1  0   0  0
+ 0  0  0   1   1  0   0  0
+ 0  0  0   0   0  0   0  0
+ 0  0  0   0   0  0  -1  0
+ 0  0  0   0   0  0   1  0
+ 0  0  0   0   0  0   0  1
+ 0  0  0   0   0  0   0  0
+ 0  0  0   0   0  0   0  0
 ```
 """
 function example_MW_fig02(mvftype=0)

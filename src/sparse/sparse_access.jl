@@ -1,6 +1,7 @@
 export sparse_get_entry, sparse_set_entry!
 export sparse_get_column, sparse_get_nz_column
-
+export getindex, setindex!
+       
 """
     value = sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
 
@@ -24,6 +25,11 @@ function sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
     end
 end
 
+"""
+    Base.getindex(matrix::SparseMatrix, ri::Int, ci::Int)
+
+Get the sparse matrix entry at location `(ri,ci)`.
+"""
 function Base.getindex(matrix::SparseMatrix, ri::Int, ci::Int)
     return sparse_get_entry(matrix, ri, ci)
 end
@@ -74,6 +80,11 @@ function sparse_set_entry!(matrix::SparseMatrix, ri::Int, ci::Int, val)
     return
 end
 
+"""
+    Base.setindex!(matrix::SparseMatrix, val, ri::Int, ci::Int)
+
+Set the sparse matrix entry at location `(ri,ci)` to `val`.
+"""
 function Base.setindex!(matrix::SparseMatrix, val, ri::Int, ci::Int)
     sparse_set_entry!(matrix, ri, ci, val)
     return

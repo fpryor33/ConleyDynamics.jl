@@ -32,25 +32,26 @@ pageslist = ["Overview" => "index.md",
                   ],
             ]
 
-# DocMeta.setdocmeta!(ConleyDynamics, :DocTestSetup,
-#                     :(using ConleyDynamics); recursive=true)
+DocMeta.setdocmeta!(ConleyDynamics, :DocTestSetup,
+                    :(using ConleyDynamics); recursive=true)
 
 if "--local-html" in ARGS
      makedocs(sitename="ConleyDynamics.jl",
-#         modules=[ConleyDynamics],
+        modules=[ConleyDynamics],
         format = Documenter.HTML(prettyurls = false),
         pages = pageslist,
         authors = "Thomas Wanner"
         )
 elseif "--latex-pdf" in ARGS
     makedocs(sitename="ConleyDynamics.jl",
+        modules=[ConleyDynamics],
         format = Documenter.LaTeX(platform = "docker"),
         pages = pageslist,
         authors = "Thomas Wanner"
         )
 else
     makedocs(sitename="ConleyDynamics.jl",
-#         modules=[ConleyDynamics],
+        modules=[ConleyDynamics],
         format = Documenter.HTML(),
         pages = pageslist,
         authors = "Thomas Wanner"

@@ -1,5 +1,12 @@
 # Examples
 
+```@meta
+DocTestSetup = quote
+    push!(LOAD_PATH,"../../../src/")
+    using ConleyDynamics
+end
+```
+
 In the following we discuss a number of connection matrix examples.
 
 ## Critical flow on a simplex

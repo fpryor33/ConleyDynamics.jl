@@ -113,6 +113,11 @@ function sparse_show(sm::SparseMatrix)
     end
 end
 
+"""
+    sparse_show(sm::SparseMatrix{Int})
+
+Display the sparse matrix `sm`.
+"""
 function sparse_show(sm::SparseMatrix{Int})
     #
     # Display an integer sparse matrix
@@ -149,6 +154,11 @@ function Base.show(io::IO, sm::SparseMatrix)
     end
 end
 
+"""
+    Base.show(io::IO, sm::SparseMatrix{Int})
+
+Display the sparse matrix `sm`.
+"""
 function Base.show(io::IO, sm::SparseMatrix{Int})
     #
     # Display an integer sparse matrix

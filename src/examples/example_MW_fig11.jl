@@ -13,15 +13,15 @@ or one of the two combinatorial vector field (1,2) examples.
 ```jldoctest
 julia> lc, mvf = example_MW_fig11(1);
 
-julia> cm = connection_matrix(lc, mvf);
+julia> cm = connection_matrix(lc, mvf; p=0);
 
 julia> cm.cm
-5×5 Matrix{Nemo.fpFieldElem}:
- 0  0  1  1  1
- 0  0  1  0  0
- 0  0  0  0  0
- 0  0  0  0  0
- 0  0  0  0  0
+5×5 Matrix{Rational{Int64}}:
+ 0  0  1  -1  -1
+ 0  0  1   0   0
+ 0  0  0   0   0
+ 0  0  0   0   0
+ 0  0  0   0   0
 ```
 """
 function example_MW_fig11(mvftype=0)

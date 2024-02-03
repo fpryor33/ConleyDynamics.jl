@@ -15,19 +15,19 @@ matrices.
 ```jldoctest
 julia> lc1, lc2, mvf = example_MW_fig04();
 
-julia> cm1 = connection_matrix(lc1, mvf);
+julia> cm1 = connection_matrix(lc1, mvf; p=0);
 
-julia> cm2 = connection_matrix(lc2, mvf);
+julia> cm2 = connection_matrix(lc2, mvf; p=0);
 
 julia> cm1.cm
-4×4 Matrix{Nemo.fpFieldElem}:
+4×4 Matrix{Rational{Int64}}:
  0  0  0  0
  0  0  0  1
  0  0  0  1
  0  0  0  0
 
 julia> cm2.cm
-4×4 Matrix{Nemo.fpFieldElem}:
+4×4 Matrix{Rational{Int64}}:
  0  0  0  0
  0  0  0  0
  0  0  0  1

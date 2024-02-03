@@ -3,10 +3,20 @@
 The package relies on three basic composite data structures that
 encompass more complicated objects.
 
-## Representation of a LefschetzComplex 
+```@docs
+ConleyDynamics
+```
+
+## Representation of a Lefschetz Complex 
 
 ```@docs
 LefschetzComplex
+```
+
+## Representation of a Multivector Field
+
+```@docs
+MultiVectorField
 ```
 
 ## Representation of a Conley-Morse Graph
