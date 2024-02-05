@@ -121,18 +121,38 @@ well as one loop, and no cavities. The function `homology` returns
 a vector of integers, whose k-th entry is ``\beta_{k-1}(K)``.
 
 ConleyDynamics also allows for the computation of *relative 
-homology*.
-
-
+homology*. In the case of relative homology, together with the
+simplicial complex ``K`` one has to specify a closed subcomplex
+``K_0``. Intuitively, the relative homology ``H_*(K,K_0)`` is
+the homology of a new space, which is obtained from ``K`` by
+identitying ``K_0`` to a single point, and then decreasing the
+Betti number in dimension 0 by 1. Consider for example the 
+following command.
 
 ```@example T1
 relative_homology(sc, [1,6])
 ```
 
+In this case, the subcomplex ``K_0`` consists of the two vertices
+`A` and `F`, and so these are glued together. This leads to zero
+Betti numbers in dimension 0 and 2 (remember that in dimension 0
+one subtracts 1), and a one-dimensional Betti number of 2. The latter
+is increased by one since we obtain a second loop by moving from
+`A` to `F = A` along the bottom three edges of ``K``. Another
+example is the following:
 
 ```@example T1
 relative_homology(sc, ["DE","DF","EF"])
 ```
+
+In this case, the subcomplex ``K_0`` consists of the edges `DE`,
+`DF`, and `EF` -- together will the three vertices `D`, `E`, and
+`F` which are automatically added by `relative_homology`. Identifying
+them all to one point creates a hollow two-dimensional sphere, and
+the relative Betti numbers reflect that fact.
+
+
+
 
 
 
