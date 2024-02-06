@@ -100,17 +100,16 @@ in [Lefschetz Complexes](@ref).
 
 ## Computing Homology and Persistence
 
-Any simplicial complex, and in fact any Lefschetz complex, has an
-associated *homology*. Informally, the latter describes the connectivity
-structure of the object described by the simplicial complex. More 
-precisely, the homology consists in our case of a sequence of integers,
-called the *Betti numbers*, which are indexed by dimension. There are
-Betti numbers ``\beta_k(K)`` for every ``k = 0,\ldots,\dim K``. The
-0-dimensional Betti number ``\beta_0(K)`` gives the number of
-connected components of ``K``, while ``\beta_1(K)`` counts the
-number of independent loops that can be found in ``K``. Finally,
-``\beta_2(K)`` equals the number of cavities. In our case, we
-have
+Any simplicial complex, and in fact any Lefschetz complex, has
+an associated *homology*. Informally, the latter describes the
+connectivity structure of the simplicial complex. More precisely,
+the homology consists of a sequence of integers, called the *Betti
+numbers*, which are indexed by dimension. There are Betti numbers
+``\beta_k(K)`` for every ``k = 0,\ldots,\dim K``. The zero-dimensional
+Betti number ``\beta_0(K)`` gives the number of connected components
+of ``K``, while ``\beta_1(K)`` counts the number of independent
+loops that can be found in ``K``. Finally, ``\beta_2(K)`` equals
+the number of cavities. In our case, we have
 
 ```@example T1
 homology(sc)
@@ -125,43 +124,87 @@ homology*. In the case of relative homology, together with the
 simplicial complex ``K`` one has to specify a closed subcomplex
 ``K_0``. Intuitively, the relative homology ``H_*(K,K_0)`` is
 the homology of a new space, which is obtained from ``K`` by
-identitying ``K_0`` to a single point, and then decreasing the
-Betti number in dimension 0 by 1. Consider for example the 
-following command.
+identifying ``K_0`` to a single point, and then decreasing the
+zero-dimensional Betti number by 1. Consider for example the 
+following command:
 
 ```@example T1
 relative_homology(sc, [1,6])
 ```
 
 In this case, the subcomplex ``K_0`` consists of the two vertices
-`A` and `F`, and so these are glued together. This leads to zero
-Betti numbers in dimension 0 and 2 (remember that in dimension 0
-one subtracts 1), and a one-dimensional Betti number of 2. The latter
-is increased by one since we obtain a second loop by moving from
-`A` to `F = A` along the bottom three edges of ``K``. Another
-example is the following:
+`A` and `F`, which are therefore glued together. This leads to zero
+Betti numbers in dimension 0 and 2 (remember that the zero-dimensional
+Betti number is decreased by 1!), and a one-dimensional Betti number
+of 2. The latter is increased by one since we obtain a second loop by
+moving from `A` to `F = A` along the edges `AB`, `BD`, and `DF`.
+Another example is the following:
 
 ```@example T1
 relative_homology(sc, ["DE","DF","EF"])
 ```
 
 In this case, the subcomplex ``K_0`` consists of the edges `DE`,
-`DF`, and `EF` -- together will the three vertices `D`, `E`, and
+`DF`, and `EF` -- together with the three vertices `D`, `E`, and
 `F` which are automatically added by `relative_homology`. Identifying
 them all to one point creates a hollow two-dimensional sphere, and
 the relative Betti numbers reflect that fact.
 
+As the above two examples demonstrate, the subcomplex can be specified
+either as a list of simplex indices, or through the simplex labels.
+Moreover, the specfied subspace simplex list is automatically extended
+by `relative_homology` to include all simplex faces, i.e., it computes
+the simplicial closure to arrive at a closed subcomplex.
 
+In addition to regular and relative homology, ConleyDynamics can also
+compute *persistent homology*. In this case, one has to specify a 
+*filtration* of closed Lefschetz complexes
 
+```math
+  K_1 \subset K_2 \subset \ldots \subset K_m .
+```
 
-
-
+Then persistent homology tracks the appearance and disappearance
+(also often called the birth and death) of topological features
+as one moves through the complexes in the filtration. In
+ConleyDynamics, one can specify a Lefschetz complex filtration
+by assigning the integer ``k`` to each simplex that first appears
+in ``K_k``. Moreover, it is expected that ``K_m = K``. Then the
+persistent homology is computed via the following command:
 
 ```@example T1
 filtration = [1,1,1,2,2,2,1,1,1,3,2,2,2,4]
 phsingles, phpairs = persistent_homology(sc, filtration)
 ```
 
+The function returns the *persistence intervals*, which give
+the birth and death indices of each topological feature in each
+dimension. There are two types of intervals:
+
+- Intervals of the form ``[a,\infty)`` correspond to topological
+  features that first appear in ``K_a`` and are still present
+  in the final complex. The starting indices of such features
+  in dimension `k` are contained in the list `phsingles[k+1]`.
+- Intervals of the form ``[a,b)`` correspond to topological
+  features that first appear in ``K_a`` and first disappear
+  in ``K_b``. The corresponding pairs `(a,b)` in dimension
+  `k` are contained in the list `phsingles[k+1]`.
+
+In our above example, one observes intervals ``[1,\infty)``
+in dimensions zero and one -- and these correspond to a
+connected component and the loop generated by the edges
+`AB`, `AC`, and `BC`. These appear first in ``K_1`` and are
+still present in ``K_4``. The interval ``[2,3)`` in dimension
+zero represents the new component created by ``K_2``, and it
+disappears through merging with the older component from
+``K_1`` when the edge `BD` is introduced with ``K_3``.
+Similarly, the interval ``[2,4)`` in dimension one is the
+loop created by the triangle `DE`, `DF`, and `EF` in ``K_2``,
+which disappears with the introduction of the triangle `DEF`
+in ``K_4``. Note that the interval death times respect the
+*elder rule*: When for example a component disappears through
+merging, the younger interval gets killed, and the older one
+continues to live. Similarly in higher dimensions.
 
 ## Forman Vector Fields and Connecting Orbits
 
