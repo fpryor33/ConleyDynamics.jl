@@ -9,6 +9,7 @@ using Nemo
 using Graphs
 using Combinatorics
 using Random
+using Printf
 
 # Load the type definitions
 
@@ -37,6 +38,7 @@ include("./utils/convert_matrix_int.jl")
 include("./utils/convert_mvf.jl")
 include("./utils/convert_simplices.jl")
 include("./utils/create_simplicial_complex.jl")
+include("./utils/create_simplicial_rectangle.jl")
 include("./utils/permute_lefschetz_complex.jl")
 include("./utils/lefschetz_closure.jl")
 

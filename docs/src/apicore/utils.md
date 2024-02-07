@@ -5,6 +5,7 @@
 ```@docs
 create_simplicial_complex(::Vector{String},::Vector{Vector{Int}})
 create_simplicial_complex(::Vector{String},::Vector{Vector{String}})
+create_simplicial_rectangle(::Int,::Int)
 convert_simplices(::Vector{Vector{Int}},::Vector{String})
 convert_simplices(::Vector{Vector{String}},::Vector{String})
 ```
