@@ -10,6 +10,8 @@ using Graphs
 using Combinatorics
 using Random
 using Printf
+using Luxor
+using Colors
 
 # Load the type definitions
 
@@ -65,6 +67,8 @@ include("./examples/example_BKMW20_fig3.jl")
 include("./examples/example_nonunique.jl")
 include("./examples/example_critical_simplex.jl")
 include("./examples/example_moebius.jl")
+
+include("./plots/plot_planar_simplicial.jl")
 
 end
 

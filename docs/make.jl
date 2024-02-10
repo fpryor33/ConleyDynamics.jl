@@ -26,6 +26,7 @@ pageslist = ["Overview" => "index.md",
              "Core API" => Any[
                  "apicore/datastruct.md",
                  "apicore/utils.md",
+                 "apicore/plots.md",
                  "apicore/cmcore.md",
                  "apicore/homology.md",
                  "apicore/sparse.md"
