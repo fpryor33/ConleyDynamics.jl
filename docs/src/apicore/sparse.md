@@ -23,8 +23,6 @@ sparse_fullness(sm::SparseMatrix)
 sparse_sparsity(sm::SparseMatrix)
 sparse_show(sm::SparseMatrix)
 sparse_show(sm::SparseMatrix{Int})
-Base.show(io::IO, sm::SparseMatrix)
-Base.show(io::IO, sm::SparseMatrix{Int})
 ```
 
 ## Elementary Matrix Operations

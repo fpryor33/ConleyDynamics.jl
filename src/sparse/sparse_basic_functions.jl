@@ -135,44 +135,44 @@ function sparse_show(sm::SparseMatrix{Int})
     end
 end
 
-"""
-    Base.show(io::IO, sm::SparseMatrix)
-
-Display the sparse matrix `sm`.
-"""
-function Base.show(io::IO, sm::SparseMatrix)
-    #
-    # Display a sparse matrix
-    #
-
-    for k=1:sm.nrow
-        print(io, "\n[", sm[k,1])
-        for m=2:sm.ncol
-            print(io, "   ", sm[k,m])
-        end
-        print(io, "]")
-    end
-end
-
-"""
-    Base.show(io::IO, sm::SparseMatrix{Int})
-
-Display the sparse matrix `sm`.
-"""
-function Base.show(io::IO, sm::SparseMatrix{Int})
-    #
-    # Display an integer sparse matrix
-    #
-
-    for k=1:sm.nrow
-        print(io, "\n[")
-        for m=1:sm.ncol
-            str2 = string(sm[k,m])
-            str1len = 4 - length(str2)
-            str1 = ^(" ",str1len)
-            print(io, str1, str2)
-        end
-        print(io, "]")
-    end
-end
+# """
+#     Base.show(io::IO, sm::SparseMatrix)
+# 
+# Display the sparse matrix `sm`.
+# """
+# function Base.show(io::IO, sm::SparseMatrix)
+#     #
+#     # Display a sparse matrix
+#     #
+# 
+#     for k=1:sm.nrow
+#         print(io, "\n[", sm[k,1])
+#         for m=2:sm.ncol
+#             print(io, "   ", sm[k,m])
+#         end
+#         print(io, "]")
+#     end
+# end
+#
+# """
+#     Base.show(io::IO, sm::SparseMatrix{Int})
+# 
+# Display the sparse matrix `sm`.
+# """
+# function Base.show(io::IO, sm::SparseMatrix{Int})
+#     #
+#     # Display an integer sparse matrix
+#     #
+# 
+#     for k=1:sm.nrow
+#         print(io, "\n[")
+#         for m=1:sm.ncol
+#             str2 = string(sm[k,m])
+#             str1len = 4 - length(str2)
+#             str1 = ^(" ",str1len)
+#             print(io, str1, str2)
+#         end
+#         print(io, "]")
+#     end
+# end
 

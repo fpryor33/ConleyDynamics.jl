@@ -41,6 +41,7 @@ include("./utils/create_simplicial_complex.jl")
 include("./utils/create_simplicial_rectangle.jl")
 include("./utils/permute_lefschetz_complex.jl")
 include("./utils/lefschetz_closure.jl")
+include("./utils/lefschetz_skeleton.jl")
 include("./utils/lefschetz_subcomplex.jl")
 
 include("./sparse/sparse_basic_functions.jl")

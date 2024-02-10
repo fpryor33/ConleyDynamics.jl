@@ -15,7 +15,7 @@ julia> lc, mvf = example_MW_fig11(1);
 
 julia> cm = connection_matrix(lc, mvf; p=0);
 
-julia> cm.cm
+julia> full_from_sparse(cm.cm)
 5×5 Matrix{Rational{Int64}}:
  0  0  1  -1  -1
  0  0  1   0   0
@@ -68,8 +68,9 @@ function example_MW_fig11(mvftype=0)
 
     # Construct the Lefschetz complex struct
     
-    lc = LefschetzComplex(nc, Int(2), bndmatrix,
-                          labelvec, indexdict, sdvec)
+    lcf = LefschetzComplex(nc, Int(2), bndmatrix,
+                           labelvec, indexdict, sdvec)
+    lc = convert_lefschetz_sparse(lcf)
 
     # Create the common part of the combinatorial vector fields
     

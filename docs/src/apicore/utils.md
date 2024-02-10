@@ -15,6 +15,8 @@ convert_simplices(::Vector{Vector{String}},::Vector{String})
 ```@docs
 lefschetz_closure(::LefschetzComplex,::Vector{Int})
 lefschetz_closure(::LefschetzComplex,::Vector{String})
+lefschetz_skeleton(::LefschetzComplex,::Vector{Int},::Int)
+lefschetz_skeleton(::LefschetzComplex,::Vector{String},::Int)
 lefschetz_subcomplex(::LefschetzComplex,::Vector{Int})
 lefschetz_subcomplex(::LefschetzComplex,::Vector{String})
 permute_lefschetz_complex(::LefschetzComplex,::Vector{Int})
