@@ -33,7 +33,7 @@ function ph_reduce!(matrix::SparseMatrix; returnbasis::Bool=false)
 
     numcolumns = sparse_size(matrix, 2)
     if returnbasis
-        basis = sparse_identity(numcolumns, tone)
+        basis = sparse_identity(numcolumns, tone, p=matrix.char)
     end
 
     # Initialize the main computation
@@ -52,10 +52,11 @@ function ph_reduce!(matrix::SparseMatrix; returnbasis::Bool=false)
                 partofinterval[j] = true
             else
                 s = lowtocolumn[columnlow]
-                gamma = matrix[columnlow,j] / matrix[columnlow,s]
-                sparse_add_column!(matrix,j,s,-gamma)
+                gamma1 = matrix[columnlow,j]
+                gamma2 = matrix[columnlow,s]
+                sparse_add_column!(matrix,j,s,-gamma1,gamma2)
                 if returnbasis
-                    sparse_add_column!(basis,j,s,-gamma)
+                    sparse_add_column!(basis,j,s,-gamma1,gamma2)
                 end
             end
         end

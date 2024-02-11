@@ -28,20 +28,24 @@ sparse_show(sm::SparseMatrix{Int})
 ## Elementary Matrix Operations
 
 ```@docs
-sparse_add_column!(matrix::SparseMatrix, ci1::Int, ci2::Int, c)
-sparse_add_row!(matrix::SparseMatrix, ri1::Int, ri2::Int, c)
+sparse_add_column!(matrix::SparseMatrix, ci1::Int, ci2::Int, cn, cd)
+sparse_add_column!(::SparseMatrix{Int}, ::Int, ::Int, ::Int, ::Int)
+sparse_add_row!(matrix::SparseMatrix, ri1::Int, ri2::Int, cn, cd)
+sparse_add_row!(::SparseMatrix{Int}, ::Int, ::Int, ::Int, ::Int)
 sparse_permute(sm::SparseMatrix, pr::Vector{Int}, pc::Vector{Int})
 sparse_remove!(matrix::SparseMatrix, ri::Int, ci::Int)
 sparse_multiply(A::SparseMatrix,B::SparseMatrix)
+sparse_multiply(A::SparseMatrix{Int},B::SparseMatrix{Int})
 Base.:*(::SparseMatrix,::SparseMatrix)
+Base.:*(::SparseMatrix{Int},::SparseMatrix{Int})
 ```
 
 ## Conversion Functions
 
 ```@docs
-sparse_from_full(matrix::Matrix{Int})
+sparse_from_full(matrix::Matrix{Int}; p::Int)
 full_from_sparse(sm::SparseMatrix)
-sparse_from_lists(nr::Int, nc::Int, tzero, tone, r::Vector{Int}, c::Vector{Int}, vals)
+sparse_from_lists(nr::Int, nc::Int, tchar::Int, tzero, tone, r::Vector{Int}, c::Vector{Int}, vals)
 lists_from_sparse(sm::SparseMatrix)
 ```
 

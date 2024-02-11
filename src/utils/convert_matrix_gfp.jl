@@ -11,21 +11,33 @@ function convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
     # Convert an integer matrix to a finite field matrix over GF(p).
     #
 
+    # If the sparse matrix already has p>0, either raise an
+    # error or pass the matrix through
+
+    if matrix.char > 0
+        if matrix.char == p
+            return matrix
+        else
+            error("Cannot convert matrix from GF(q) to GF(p)!")
+        end
+    end
+
     # Convert sparse matrix to lists
 
-    nr, nc, tzero, tone, r, c, vals = lists_from_sparse(matrix)
+    nr, nc, tchar, tzero, tone, r, c, vals = lists_from_sparse(matrix)
 
     # Convert zero, one, and the matrix entries to GF(p)
 
     if (p > 0)
-        FF = GF(p)
-        gfpzero = FF(0)
-        gfpone  = FF(1)
-        gfpvals = Vector{typeof(gfpzero)}()
+        gfpchar = p
+        gfpzero = Int(0)
+        gfpone  = Int(1)
+        gfpvals = Vector{Int}()
         for k=1:length(vals)
-            push!(gfpvals,FF(vals[k]))
+            push!(gfpvals,vals[k]) # mod will be done by sparse_from_lists
         end
     elseif (p == 0)
+        gfpchar = 0
         gfpzero = Rational{Int}(0)
         gfpone  = Rational{Int}(1)
         gfpvals = Vector{Rational{Int}}()
@@ -38,7 +50,7 @@ function convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
 
     # Create and return the sparse GFP(p) matrix
 
-    gfpmatrix = sparse_from_lists(nr, nc, gfpzero, gfpone, r, c, gfpvals)
+    gfpmatrix = sparse_from_lists(nr, nc, gfpchar, gfpzero, gfpone, r, c, gfpvals)
     return gfpmatrix
 end
 

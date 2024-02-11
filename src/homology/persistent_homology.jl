@@ -3,20 +3,22 @@ export persistent_homology
 """
     phsingles, phpairs = persistent_homology(lc::LefschetzComplex,
                                              filtration::Vector{Int};
-                                             p::Int=2)
+                                             p::Int=-1)
 
 Complete the persistent homology of a Lefschetz complex filtration.
 
 The function assumes that the order given by the filtration values
 is admissible, i.e., the permuted boundary matrix is strictly
 upper triangular. The persistence computation is performed over the
-finite field `GF(p)`. The function returns the starting filtration
-values for infinite length persistence intervals in `phsingles`, and
-the birth- and death-filtration values for finite length persistence
-intervals in `phpairs`.
+finite field `GF(p)` (for prime `p`) or over the rationals (for `p=0`).
+The function returns the starting filtration values for infinite length
+persistence intervals in `phsingles`, and the birth- and death-filtration
+values for finite length persistence intervals in `phpairs`. If the
+Lefschetz complex boundary matrix already has been specialized to a field,
+then the optional argument `p` can be omitted.
 """
 function persistent_homology(lc::LefschetzComplex, filtration::Vector{Int};
-                             p::Int=2)
+                             p::Int=-1)
     #
     # Compute the persistent homology of a Lefschetz complex filtration
     #
@@ -41,7 +43,21 @@ function persistent_homology(lc::LefschetzComplex, filtration::Vector{Int};
 
     # Convert to finite field and compute the persistence
 
-    bndpermgfp = convert_matrix_gfp(bndperm, p)
+    if (bndperm isa SparseMatrix{Int}) && (bndperm.char == 0)
+        if (p == -1)
+            error("Homology over Z is not supported, specify p!")
+        elseif (p >= 0)
+            bndpermgfp = convert_matrix_gfp(bndperm, p)
+        else
+            error("Wrong characteristic p!")
+        end
+    else
+        bndpermgfp = bndperm
+        if !(bndperm.char == p) && !(p == -1)
+            println("WARNING: Using inherent characteristic of the complex boundary!")
+        end
+    end
+
     permsingles, permpairs = ph_reduce!(bndpermgfp)
 
     # Extract the correct persistence intervals based on

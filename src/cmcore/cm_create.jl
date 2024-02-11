@@ -22,6 +22,7 @@ function cm_create!(matrix::SparseMatrix, psetvec::Vector{Int};
 
     # Extract the zero and one elements
 
+    tchar = matrix.char
     tzero = matrix.zero
     tone  = matrix.one
 
@@ -29,7 +30,7 @@ function cm_create!(matrix::SparseMatrix, psetvec::Vector{Int};
 
     numcolumns = sparse_size(matrix, 2)
     if returnbasis
-        basis = sparse_identity(numcolumns, tone)
+        basis = sparse_identity(numcolumns, tone, p=tchar)
     end
 
     # Initialize the main computation
@@ -50,12 +51,13 @@ function cm_create!(matrix::SparseMatrix, psetvec::Vector{Int};
                     end
 
                     if found_s
-                        gamma = matrix[i,j] / matrix[i,s]
-                        sparse_add_column!(matrix,j,s,-gamma)
+                        gamma1 = matrix[i,j]
+                        gamma2 = matrix[i,s]
+                        sparse_add_column!(matrix,j,s,-gamma1,gamma2)
                         if returnbasis
-                            sparse_add_column!(basis,j,s,-gamma)
+                            sparse_add_column!(basis,j,s,-gamma1,gamma2)
                         end
-                        sparse_add_row!(matrix,s,j,gamma)
+                        sparse_add_row!(matrix,s,j,gamma1,gamma2)
                     end
                 end
             end

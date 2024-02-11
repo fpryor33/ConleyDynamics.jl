@@ -85,7 +85,7 @@ function plot_planar_simplicial(sc::LefschetzComplex,
             elseif cdim == 1
                 k1 = cellvertices[k][1]
                 k2 = cellvertices[k][2]
-                push!(barycs, Luxor.midpoint(points[k1],points[k2]))
+                push!(barycs, midpoint(points[k1],points[k2]))
             elseif cdim == 2
                 k1 = cellvertices[k][1]
                 k2 = cellvertices[k][2]
@@ -135,7 +135,7 @@ function plot_planar_simplicial(sc::LefschetzComplex,
                 k2 = cellvertices[k][2]
                 k3 = cellvertices[k][3]
                 setcolor("steelblue1")
-                Luxor.poly([points[k1],points[k2],points[k3]],
+                poly([points[k1],points[k2],points[k3]],
                            action = :fill; close=true)
             end
         end

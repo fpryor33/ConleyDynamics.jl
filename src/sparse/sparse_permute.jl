@@ -15,7 +15,7 @@ function sparse_permute(sm::SparseMatrix, pr::Vector{Int}, pc::Vector{Int})
 
     # Convert the matrix to list format
 
-    nr, nc, tzero, tone, r, c, vals = lists_from_sparse(sm)
+    nr, nc, tchar, tzero, tone, r, c, vals = lists_from_sparse(sm)
 
     # Compute the inverse permutations
 
@@ -29,7 +29,7 @@ function sparse_permute(sm::SparseMatrix, pr::Vector{Int}, pc::Vector{Int})
 
     # Create and return new sparse matrix
 
-    smp = sparse_from_lists(nr, nc, tzero, tone, newr, newc, vals)
+    smp = sparse_from_lists(nr, nc, tchar, tzero, tone, newr, newc, vals)
     return smp
 end
 

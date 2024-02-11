@@ -10,10 +10,10 @@ and the matrix `admibnd` is the reordered boundary matrix corresponding to the
 order given by `admiorder`.
 
 # Return values:
-- `admiorder`: Admissible order
-- `admibnd`: Reordered boundary matrix
-- `sccnumber`: Strongly connected component index of column
-- `scc`: Strongly connected components
+* `admiorder`: Admissible order
+* `admibnd`: Reordered boundary matrix
+* `sccnumber`: Strongly connected component index of column
+* `scc`: Strongly connected components
 """
 function admissible_order(bndmatrix::SparseMatrix, mvf::Vector{Vector{Int}})
     #
@@ -23,7 +23,7 @@ function admissible_order(bndmatrix::SparseMatrix, mvf::Vector{Vector{Int}})
     
     # Create the digraph based on the boundary matrix
 
-    nr, nc, tzero, tone, r, c, vals = lists_from_sparse(bndmatrix)
+    nr, nc, tchar, tzero, tone, r, c, vals = lists_from_sparse(bndmatrix)
     edgelist = Edge.([(c[k],r[k]) for k in 1:length(c)])
     dg = SimpleDiGraph(edgelist)
 

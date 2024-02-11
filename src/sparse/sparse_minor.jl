@@ -34,7 +34,7 @@ function sparse_minor(sm::SparseMatrix, rvec::Vector{Int}, cvec::Vector{Int})
 
     # Create and return new sparse matrix
 
-    msm = sparse_from_lists(newnr, newnc, sm.zero, sm.one, r, c, vals)
+    msm = sparse_from_lists(newnr, newnc, sm.char, sm.zero, sm.one, r, c, vals)
     return msm
 end
 

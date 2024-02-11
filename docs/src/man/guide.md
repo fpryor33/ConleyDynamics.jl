@@ -112,7 +112,7 @@ loops that can be found in ``K``. Finally, ``\beta_2(K)`` equals
 the number of cavities. In our case, we have
 
 ```@example T1
-homology(sc)
+homology(sc, p=0)
 ```
 
 This means that the simplicial complex ``K`` has one component, as
@@ -129,7 +129,7 @@ zero-dimensional Betti number by 1. Consider for example the
 following command:
 
 ```@example T1
-relative_homology(sc, [1,6])
+relative_homology(sc, [1,6], p=0)
 ```
 
 In this case, the subcomplex ``K_0`` consists of the two vertices
@@ -141,7 +141,7 @@ moving from `A` to `F = A` along the edges `AB`, `BD`, and `DF`.
 Another example is the following:
 
 ```@example T1
-relative_homology(sc, ["DE","DF","EF"])
+relative_homology(sc, ["DE","DF","EF"], p=0)
 ```
 
 In this case, the subcomplex ``K_0`` consists of the edges `DE`,
@@ -174,7 +174,7 @@ persistent homology is computed via the following command:
 
 ```@example T1
 filtration = [1,1,1,2,2,2,1,1,1,3,2,2,2,4]
-phsingles, phpairs = persistent_homology(sc, filtration)
+phsingles, phpairs = persistent_homology(sc, filtration, p=0)
 ```
 
 The function returns the *persistence intervals*, which give

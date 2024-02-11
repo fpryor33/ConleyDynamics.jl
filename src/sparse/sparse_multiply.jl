@@ -23,6 +23,10 @@ function sparse_multiply(A::SparseMatrix, B::SparseMatrix)
         error("The sparse matrices need to have the same type!")
     end
 
+    if !(typeof(A.char) == typeof(B.char))
+        error("The sparse matrices have to be over the same field!")
+    end
+
     # Perform the matrix product
 
     r = Vector{Int}()
@@ -49,7 +53,7 @@ function sparse_multiply(A::SparseMatrix, B::SparseMatrix)
 
     # Construct and return the sparse product matrix
 
-    sm = sparse_from_lists(A.nrow, B.ncol, A.zero, A.one, r, c, v)
+    sm = sparse_from_lists(A.nrow, B.ncol, A.char, A.zero, A.one, r, c, v)
     return sm
 end
 

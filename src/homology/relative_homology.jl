@@ -3,20 +3,23 @@ export relative_homology
 """
     betti = relative_homology(lc::LefschetzComplex,
                               subc::Union{Vector{Int},Vector{String}};
-                              p::Int=2)
+                              p::Int)
 
 Compute the relative homology of a Lefschetz complex with
 respect to a subcomplex.
 
 The subcomplex is the closure of the cells in `subc`, which
 can be given either as indices or labels. The homology is
-computed over the finite field `GF(p)` and is returned as a
-vector `betti` of Betti numbers, where `betti[k]` is the
-Betti number in dimension `k-1`.
+computed over the rationals (for `p=0`) or the finite field
+`GF(p)` (for prime `p`) and is returned as a vector `betti`
+of Betti numbers, where `betti[k]` is the Betti number in
+dimension `k-1`. If the Lefschetz complex boundary matrix
+already has been specialized to a field, the optional
+argument `p` can be omitted.
 """
 function relative_homology(lc::LefschetzComplex,
                            subc::Union{Vector{Int},Vector{String}};
-                           p::Int=2)
+                           p::Int=-1)
     #
     # Compute the homology of a Lefschetz complex
     #

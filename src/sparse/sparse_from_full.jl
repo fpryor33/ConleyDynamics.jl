@@ -1,11 +1,13 @@
 export sparse_from_full, full_from_sparse
 
 """
-    sm = sparse_from_full(matrix::Matrix{Int})
+    sparse_from_full(matrix::Matrix{Int}; p::Int=0)
 
-Create sparse matrix from full matrix.
+Create integer sparse matrix from full matrix. If the
+optional argument `p` is specified and positive, then
+the matrix is interpreted over `GF(p)`.
 """
-function sparse_from_full(matrix::Matrix{Int})
+function sparse_from_full(matrix::Matrix{Int}; p::Int=0)
     #
     # Create sparse matrix from full matrix
 
@@ -35,12 +37,12 @@ function sparse_from_full(matrix::Matrix{Int})
 
     # Create the sparse matrix and return it
 
-    sm = sparse_from_lists(nr, nc, tzero, tone, r, c, vals)
+    sm = sparse_from_lists(nr, nc, p, tzero, tone, r, c, vals)
     return sm
 end
 
 """
-    fm = full_from_sparse(sm::SparseMatrix)
+    full_from_sparse(sm::SparseMatrix)
 
 Create full matrix from sparse matrix.
 """
@@ -55,7 +57,7 @@ function full_from_sparse(sm::SparseMatrix)
 
     # Extract the nonzero elements
 
-    nr, nc, tzero, tone, r, c, vals = lists_from_sparse(sm)
+    nr, nc, tchar, tzero, tone, r, c, vals = lists_from_sparse(sm)
 
     # Set the nonzero elements
 

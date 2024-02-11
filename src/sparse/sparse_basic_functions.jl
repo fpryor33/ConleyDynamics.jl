@@ -3,7 +3,7 @@ export sparse_fullness, sparse_sparsity
 export sparse_show
 
 """
-    n = sparse_size(matrix::SparseMatrix, dim::Int)
+    sparse_size(matrix::SparseMatrix, dim::Int)
 
 Number of rows (`dim=1`) or columns (`dim=2`) of a sparse matrix.
 """
@@ -22,7 +22,7 @@ function sparse_size(matrix::SparseMatrix, dim::Int)
 end
 
 """
-    n = sparse_low(matrix::SparseMatrix, col::Int)
+    sparse_low(matrix::SparseMatrix, col::Int)
 
 Row index of the lowest nonzero matrix entry in column `col`.
 """
@@ -40,16 +40,23 @@ function sparse_low(matrix::SparseMatrix, col::Int)
 end
 
 """
-    sm = sparse_identity(n::Int, tone)
+    sparse_identity(n::Int, tone; p::Int=0)
 
 Create a sparse identity matrix with n rows and columns, and with
-diagonal entry `tone`.
+diagonal entry `tone`. The optional argument `p` specifies the
+field characteristic if `typeof(tone)==Int`.
 """
-function sparse_identity(n::Int, tone)
+function sparse_identity(n::Int, tone; p::Int=0)
     #
     # Create a sparse identity matrix with n rows and columns,
     # and with diagonal entry tone.
     #
+
+    # Check for p consistency
+
+    if (!(tone isa Int)) & (!(p == 0))
+        error("Characteristic p should be nonzero only for type Int!")
+    end
 
     # Initialize the variables and lists
 
@@ -58,7 +65,7 @@ function sparse_identity(n::Int, tone)
 
     # Create the sparse identity and return it
 
-    sm = sparse_from_lists(n, n, tone-tone, tone, r, r, vals)
+    sm = sparse_from_lists(n, n, p, tone-tone, tone, r, r, vals)
     return sm
 end
 
@@ -123,15 +130,25 @@ function sparse_show(sm::SparseMatrix{Int})
     # Display an integer sparse matrix
     #
 
-    for k=1:sm.nrow
-        print("[")
-        for m=1:sm.ncol
-            str2 = string(sm[k,m])
-            str1len = 4 - length(str2)
-            str1 = ^(" ",str1len)
-            print(str1,str2)
+    if sm.char > 0
+        for k=1:sm.nrow
+            print("[", sm[k,1])
+            for m=2:sm.ncol
+                print("   ", sm[k,m])
+            end
+            println("]")
         end
-        println("]")
+    else
+        for k=1:sm.nrow
+            print("[")
+            for m=1:sm.ncol
+                str2 = string(sm[k,m])
+                str1len = 4 - length(str2)
+                str1 = ^(" ",str1len)
+                print(str1,str2)
+            end
+            println("]")
+        end
     end
 end
 

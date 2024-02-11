@@ -1,20 +1,23 @@
 export connection_matrix
 
 """
-    cm = connection_matrix(lc, mvf; p=2)
-    cm, cmbasis = connection_matrix(lc, mvf; p=2, returnbasis=true)
+    cm = connection_matrix(lc, mvf; p)
+    cm, cmbasis = connection_matrix(lc, mvf; p, returnbasis=true)
 
 Compute a connection matrix for the multivector field `mvf` on the
-Lefschetz complex `lc` over a finite field with `p` elements.
+Lefschetz complex `lc` over a finite field with `p` elements, or 
+over the rationals.
 
 The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{Int}}`,
 and the return object is of type `ConleyMorseCM`. If the optional argument
 `returnbasis::Bool=true` is given, then the function returns a dictionary 
 which gives the basis for the connection matrix columns in terms of the
-original labels. If `p` is omitted, then `p=2` is used.
+original labels. If `p` is omitted, then the Lefschetz complex boundary
+has to has been specified over a field. If the boundary matrix is an
+integer matrix, `p` has to be chosen.
 """
 function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
-                           p::Int=2, returnbasis::Bool=false)
+                           p::Int=-1, returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #
@@ -30,10 +33,22 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 
     adorder, adbnd, psetvec, scc = admissible_order(bndmatrix, mvf)
 
-    # Convert the boundary matrix to finite field format
-    # For now we hardcode the characteristic of the finite field
+    # Convert the boundary matrix to finite field or rational format
 
-    bndA = convert_matrix_gfp(adbnd,p)
+    if (adbnd isa SparseMatrix{Int}) && (adbnd.char == 0)
+        if (p == -1)
+            error("Homology over Z is not supported, specify p!")
+        elseif (p >= 0)
+            bndA = convert_matrix_gfp(adbnd, p)
+        else
+            error("Wrong characteristic p!")
+        end
+    else
+        bndA = adbnd
+        if !(adbnd.char == p) && !(p == -1)
+            println("WARNING: Using inherent characteristic of the complex boundary!")
+        end
+    end
 
     # Compute the connection matrix in reordered form
 
@@ -91,7 +106,7 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 
     # Return the connection matrix information
     
-    cm = ConleyMorseCM{typeof(cmMatr)}(
+    cm = ConleyMorseCM{typeof(cmMatr.zero)}(
                 cmMatr, cmCols, cmPoset, cmLabels, cmMorseSets, cmPoincare)
 
     if returnbasis
@@ -102,20 +117,23 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 end
 
 """
-    cm = connection_matrix(lc, mvf; p=2)
-    cm, cmbasis = connection_matrix(lc, mvf; p=2, returnbasis=true)
+    cm = connection_matrix(lc, mvf; p)
+    cm, cmbasis = connection_matrix(lc, mvf; p, returnbasis=true)
 
 Compute a connection matrix for the multivector field `mvf` on the
-Lefschetz complex `lc` over a finite field with `p` elements.
+Lefschetz complex `lc` over a finite field with `p` elements, or 
+over the rationals.
 
 The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{String}}`,
 and the return object is of type `ConleyMorseCM`. If the optional argument
 `returnbasis::Bool=true` is given, then the function returns a dictionary 
 which gives the basis for the connection matrix columns in terms of the
-original labels. If `p` is omitted, then `p=2` is used.
+original labels. If `p` is omitted, then the Lefschetz complex boundary
+has to has been specified over a field. If the boundary matrix is an
+integer matrix, `p` has to be chosen.
 """
 function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{String}};
-                           p::Int=2, returnbasis::Bool=false)
+                           p::Int=-1, returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #

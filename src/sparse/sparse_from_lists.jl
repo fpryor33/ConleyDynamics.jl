@@ -1,30 +1,42 @@
 export sparse_from_lists, lists_from_sparse
 
 """
-    sm = sparse_from_lists(nr, nc, tzero, tone, r, c, vals)
+    sparse_from_lists(nr, nc, tchar, tzero, tone, r, c, v)
 
 Create sparse matrix from lists describing the entries.
 
-The vectors `r`, `c`, and `vals` have to have the same length
-and the matric has entry `vals[k]` at `(r[k],c[k])`. Zero
+The vectors `r`, `c`, and `v` have to have the same length
+and the matric has entry `v[k]` at `(r[k],c[k])`. Zero
 entries will be ignored, and multiple entries for the same
 matrix position raise an error.
 
 The input arguments have the following meaning:
 * `nr::Int`: Number of rows
 * `nc::Int`: Number of columns
+* 'tchar`: Field characteristic if `T==Int`
 * `tzero::T`: Number 0 of type `T`
 * `tone::T`:  Number 1 of type `T`
 * `r::Vector{Int}`: Vector of row indices
 * `c::Vector{Int}`: Vector of column indices
-* `vals::Vector{T}`: Vector of matrix entries
+* `v::Vector{T}`: Vector of matrix entries
 """
-function sparse_from_lists(nr::Int, nc::Int, tzero, tone,
-                           r::Vector{Int}, c::Vector{Int}, vals)
+function sparse_from_lists(nr::Int, nc::Int, tchar::Int, tzero, tone,
+                           r::Vector{Int}, c::Vector{Int}, v)
     #
     # Create a sparse matrix from a list of row indices, column indices,
     # as well as associated values. The values have to be in some field.
     #
+
+    # Make sure that we are in GF(p) if tchar > 0
+
+    if (tzero isa Int) && (tchar > 0)
+        vals = Vector{Int}()
+        for k=1:length(v)
+            push!(vals,mod(v[k], tchar))
+        end
+    else
+        vals = v
+    end
 
     # Initialize the row, column, and entry vectors
 
@@ -35,7 +47,7 @@ function sparse_from_lists(nr::Int, nc::Int, tzero, tone,
     # If the lists have length zero, return the zero matrix
 
     if length(r)==0
-        sm = SparseMatrix{typeof(tzero)}(nr, nc, tzero, tone,
+        sm = SparseMatrix{typeof(tzero)}(nr, nc, tchar, tzero, tone,
                                          entries, columns, rows)
         return sm
     end
@@ -72,13 +84,13 @@ function sparse_from_lists(nr::Int, nc::Int, tzero, tone,
 
     # Create and return the sparse matrix object
 
-    sm = SparseMatrix{typeof(tzero)}(nr, nc, tzero, tone,
+    sm = SparseMatrix{typeof(tzero)}(nr, nc, tchar, tzero, tone,
                                      entries, columns, rows)
     return sm
 end
 
 """
-    nr, nc, tzero, tone, r, c, vals = lists_from_sparse(sm::SparseMatrix)
+    nr, nc, tchar, tzero, tone, r, c, v = lists_from_sparse(sm::SparseMatrix)
 
 Create list representation from sparse matrix.
 
@@ -94,6 +106,7 @@ function lists_from_sparse(sm::SparseMatrix)
 
     nr = sm.nrow
     nc = sm.ncol
+    tchar = sm.char
     tzero = sm.zero
     tone  = sm.one
 
@@ -101,18 +114,18 @@ function lists_from_sparse(sm::SparseMatrix)
 
     r = Vector{Int}([])
     c = Vector{Int}([])
-    vals = Vector{typeof(tzero)}([])
+    v = Vector{typeof(tzero)}([])
 
     for k=1:nc
         for m=1:length(sm.columns[k])
             push!(r,sm.columns[k][m])
             push!(c,k)
-            push!(vals,sm.entries[k][m])
+            push!(v,sm.entries[k][m])
         end
     end
 
     # Return the results
 
-    return nr, nc, tzero, tone, r, c, vals
+    return nr, nc, tchar, tzero, tone, r, c, v
 end
 

@@ -105,7 +105,7 @@ function create_simplicial_complex(labels::Vector{String},
         end
     end
 
-    B = sparse_from_lists(nsimp,nsimp,Int(0),Int(1),Br,Bc,Bv)
+    B = sparse_from_lists(nsimp,nsimp,0,Int(0),Int(1),Br,Bc,Bv)
     
     # Create the Lefschetz complex
 

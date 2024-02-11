@@ -11,7 +11,7 @@ paper by *Mrozek & Wanner*.
 ```jldoctest
 julia> lc, mvf = example_MW_fig01();
 
-julia> cm = connection_matrix(lc, mvf);
+julia> cm = connection_matrix(lc, mvf, p=2);
 
 julia> sparse_show(cm.cm)
 [0   0   0]

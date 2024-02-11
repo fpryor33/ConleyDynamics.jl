@@ -11,7 +11,7 @@ by *Batko, Kaczynski, Mrozek, and Wanner*.
 ```jldoctest
 julia> lc, mvf = example_BKMW20_fig3();
 
-julia> cm = connection_matrix(lc, mvf);
+julia> cm = connection_matrix(lc, mvf, p=2);
 
 julia> sparse_show(cm.cm)
 [0   0   0   0   1   0   1   0   0]

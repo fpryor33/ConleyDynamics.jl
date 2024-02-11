@@ -5,7 +5,6 @@ Collection of tools for computational Conley theory.
 """
 module ConleyDynamics
 
-using Nemo
 using Graphs
 using Combinatorics
 using Random

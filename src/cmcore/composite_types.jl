@@ -8,7 +8,7 @@ Collect the Lefschetz complex information in a struct.
 The struct has the following fields:
 * `ncells::Int`: number of cells
 * `dim::Int`: dimension of the complex
-* `boundary::Matrix{Int}`: boundary matrix, columns give the cell boundaries
+* `boundary::SparseMatrix{Int}`: boundary matrix, columns give the cell boundaries
 * `labels::Vector{String}`: vector of labels associated with cell indices
 * `indices::Dict{String,Int}`: dictionary for finding cell index from label
 * `dimensions::Vector{Int}`: vector cell dimensions
@@ -23,12 +23,12 @@ struct LefschetzComplex
 end
 
 """
-    ConleyMorseCM{Tmatrix}
+    ConleyMorseCM{T}
 
 Collect the connection matrix information in a struct.
 
 The struct has the following fields:
-* `cm::Tmatrix`: connection matrix
+* `cm::SparseMatrix{T}`: connection matrix
 * `columns::Vector{Int}`: corresponding columns in the boundary matrix
 * `poset::Vector{Int}`: poset indices for the connection matrix columns
 * `labels::Vector{String}`: labels for the connection matrix columns
@@ -36,8 +36,8 @@ The struct has the following fields:
 * `poincare::Vector{Vector{Int}}`: vector of Poincare polynomial coefficients
   for the Morse sets. The k-th entry is the coefficient of t^(k-1).
 """
-struct ConleyMorseCM{Tmatrix}
-    cm::Tmatrix
+struct ConleyMorseCM{T}
+    cm::SparseMatrix{T}
     columns::Vector{Int}
     poset::Vector{Int}
     labels::Vector{String}

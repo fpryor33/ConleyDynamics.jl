@@ -13,9 +13,9 @@ complex, but differ in the ordering of the labels.
 ```jldoctest
 julia> lc1, lc2, mvf = example_nonunique();
 
-julia> cm1 = connection_matrix(lc1, mvf);
+julia> cm1 = connection_matrix(lc1, mvf, p=2);
 
-julia> cm2 = connection_matrix(lc2, mvf);
+julia> cm2 = connection_matrix(lc2, mvf, p=2);
 
 julia> sparse_show(cm1.cm)
 [0   0   0   1   0   1   0   0   0]
