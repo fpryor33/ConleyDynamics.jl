@@ -1,8 +1,8 @@
 export permute_lefschetz_complex
 
 """
-    lc2 = permute_lefschetz_complex(lc::LefschetzComplex,
-                                    permutation::Vector{Int})
+    permute_lefschetz_complex(lc::LefschetzComplex,
+                              permutation::Vector{Int})
 
 Permute the indices of a Lefschetz complex.
 
@@ -37,12 +37,7 @@ function permute_lefschetz_complex(lc::LefschetzComplex,
     lcdim2      = lcdim1
     labels2     = labels1[perm]
     dimensions2 = dimensions1[perm]
-
-    if typeof(boundary1) == Matrix{Int}
-        boundary2 = boundary1[perm,perm]
-    else
-        boundary2 = sparse_permute(boundary1, perm, perm)
-    end
+    boundary2   = sparse_permute(boundary1, perm, perm)
 
     # Create the permuted dictionary
     

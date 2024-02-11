@@ -24,14 +24,9 @@ function lefschetz_subcomplex(lc::LefschetzComplex, subcomp::Vector{Int})
     sub_indices = Dict{String,Int}(sub_labels[j] => j
                                    for j=1:length(sub_labels))
 
-    # Construct the boundary matrix as a sparse matrix
+    # Construct the new boundary matrix
 
-    if typeof(lc.boundary)==Matrix
-        bnd = sparse_from_full(lc.boundary)
-    else
-        bnd = lc.boundary
-    end
-
+    bnd = lc.boundary
     sub_boundary = sparse_minor(bnd, clsubcomp, clsubcomp)
 
     # Create the new Lefschetz complex and return it

@@ -1,7 +1,7 @@
 export convert_mvf
 
 """
-    newmvf = convert_mvf(mvf::Vector{Vector{Int}}, lc::LefschetzComplex)
+    convert_mvf(mvf::Vector{Vector{Int}}, lc::LefschetzComplex)
 
 Convert multivector field `mvf` on the Lefschetz complex `lc` from 
 index form to label form.
@@ -24,7 +24,7 @@ function convert_mvf(mvf::Vector{Vector{Int}}, lc::LefschetzComplex)
 end
 
 """
-    newmvf = convert_mvf(mvf::Vector{Vector{String}}, lc::LefschetzComplex)
+    convert_mvf(mvf::Vector{Vector{String}}, lc::LefschetzComplex)
 
 Convert multivector field `mvf` on the Lefschetz complex `lc` from 
 label form to index form.

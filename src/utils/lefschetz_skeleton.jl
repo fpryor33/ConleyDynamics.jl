@@ -14,11 +14,7 @@ function lefschetz_skeleton(lc::LefschetzComplex, subcomp::Vector{Int}, skdim::I
 
     # Extract the boundary matrix as a sparse matrix
 
-    if typeof(lc.boundary)==Matrix
-        bnd = sparse_from_full(lc.boundary)
-    else
-        bnd = lc.boundary
-    end
+    bnd = lc.boundary
 
     # Compute the closure of the subcomplex
     

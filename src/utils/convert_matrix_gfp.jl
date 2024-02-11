@@ -1,29 +1,7 @@
 export convert_matrix_gfp
 
 """
-    gfpmatrix = convert_matrix_gfp(matrix::Matrix{Int}, p::Int)
-
-Convert an integer matrix to a finite field matrix over `GF(p)`.
-For the choice `p=0` the rationals are used.
-"""
-function convert_matrix_gfp(matrix::Matrix{Int}, p::Int)
-    #
-    # Convert an integer matrix to a finite field matrix over GF(p).
-    #
-    m,n = size(matrix)
-    if (p > 0)
-        FF = GF(p)
-        gfpmatrix = [FF(matrix[i,j]) for i=1:m, j=1:n]
-    elseif (p == 0)
-        gfpmatrix = [Rational{Int}(matrix[i,j]) for i=1:m, j=1:n]
-    else
-        error("Wrong characteristic p!")
-    end
-    return gfpmatrix
-end
-
-"""
-    gfpmatrix = convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
+    convert_matrix_gfp(matrix::SparseMatrix{Int}, p::Int)
 
 Convert a sparse integer matrix to a finite field sparse matrix
 over `GF(p)`. For the choice `p=0` the rationals are used.

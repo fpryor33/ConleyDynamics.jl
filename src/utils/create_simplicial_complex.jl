@@ -1,8 +1,8 @@
 export create_simplicial_complex
 
 """
-    lc = create_simplicial_complex(labels::Vector{String},
-                                   simplices::Vector{Vector{Int}})
+    create_simplicial_complex(labels::Vector{String},
+                              simplices::Vector{Vector{Int}})
 
 Initialize a Lefschetz complex from a simplicial complex.
 
@@ -117,8 +117,8 @@ function create_simplicial_complex(labels::Vector{String},
 end
 
 """
-    lc = create_simplicial_complex(labels::Vector{String},
-                                   simplices::Vector{Vector{String}})
+    create_simplicial_complex(labels::Vector{String},
+                              simplices::Vector{Vector{String}})
 
 Initialize a Lefschetz complex from a simplicial complex.
 

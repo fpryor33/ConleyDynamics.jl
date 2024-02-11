@@ -16,7 +16,7 @@ The struct has the following fields:
 struct LefschetzComplex
     ncells::Int
     dim::Int
-    boundary::Union{Matrix{Int},SparseMatrix{Int}}
+    boundary::SparseMatrix{Int}
     labels::Vector{String}
     indices::Dict{String,Int}
     dimensions::Vector{Int}

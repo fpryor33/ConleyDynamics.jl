@@ -1,7 +1,7 @@
 export renumber_poset!
 
 """
-    renumber_poset!(poset)
+    renumber_poset!(poset::Vector{Int})
 
 Renumber the poset given by the increasing integer vector `poset`.
 """

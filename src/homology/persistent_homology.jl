@@ -32,13 +32,7 @@ function persistent_homology(lc::LefschetzComplex, filtration::Vector{Int};
     # Create the permuted boundary matrix and make sure it
     # is strictly upper triangular
 
-    if typeof(lc.boundary)==Matrix
-        bnd = sparse_from_full(lc.boundary)
-    else
-        bnd = lc.boundary
-    end
-
-    bndperm = sparse_permute(bnd, adperm, adperm)
+    bndperm = sparse_permute(lc.boundary, adperm, adperm)
 
     if !sparse_is_sut(bndperm)
         error("Filtration error!")

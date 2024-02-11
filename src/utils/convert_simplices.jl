@@ -1,8 +1,8 @@
 export convert_simplices
 
 """
-    newsimplicies = convert_simplices(simplices::Vector{Vector{Int}},
-                                      labels::Vector{String})
+    convert_simplices(simplices::Vector{Vector{Int}},
+                      labels::Vector{String})
 
 Convert list of simplices from index form to label form.
 """
@@ -25,8 +25,8 @@ function convert_simplices(simplices::Vector{Vector{Int}},
 end
 
 """
-    newsimplicies = convert_simplices(simplices::Vector{Vector{String}},
-                                      labels::Vector{String})
+    convert_simplices(simplices::Vector{Vector{String}},
+                      labels::Vector{String})
 
 Convert list of simplices from label form to index form.
 """

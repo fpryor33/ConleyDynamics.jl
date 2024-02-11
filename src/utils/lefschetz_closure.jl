@@ -1,7 +1,7 @@
 export lefschetz_closure
 
 """
-    c = lefschetz_closure(lc::LefschetzComplex, subcomp::Vector{Int})
+    lefschetz_closure(lc::LefschetzComplex, subcomp::Vector{Int})
 
 Compute the closure of a Lefschetz complex subset.
 """
@@ -10,13 +10,9 @@ function lefschetz_closure(lc::LefschetzComplex, subcomp::Vector{Int})
     # Compute the closure of a Lefschetz complex subset
     #
 
-    # Extract the boundary matrix as a sparse matrix
-
-    if typeof(lc.boundary)==Matrix
-        bnd = sparse_from_full(lc.boundary)
-    else
-        bnd = lc.boundary
-    end
+    # Extract the boundary matrix
+        
+    bnd = lc.boundary
 
     # Create list of cells to consider
 
@@ -37,7 +33,7 @@ function lefschetz_closure(lc::LefschetzComplex, subcomp::Vector{Int})
 end
 
 """
-    c = lefschetz_closure(lc::LefschetzComplex, subcomp::Vector{String})
+    lefschetz_closure(lc::LefschetzComplex, subcomp::Vector{String})
 
 Compute the closure of a Lefschetz complex subset.
 """

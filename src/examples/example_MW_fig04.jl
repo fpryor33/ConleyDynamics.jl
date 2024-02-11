@@ -72,9 +72,9 @@ function example_MW_fig04()
 
     # Construct the Lefschetz complex struct
     
-    lcf = LefschetzComplex(nc, Int(2), bndmatrix,
-                           labelvec, indexdict, sdvec)
-    lc = convert_lefschetz_sparse(lcf)
+    lc = LefschetzComplex(nc, Int(2),
+                          sparse_from_full(bndmatrix),
+                          labelvec, indexdict, sdvec)
 
     # Create a second version of the Lefschetz complex via permutation
 
@@ -84,9 +84,9 @@ function example_MW_fig04()
     bndmatrix2 = bndmatrix[perm,perm]
     indexdict2 = Dict{String,Int}([(labelvec2[k],k) for k in 1:length(labelvec2)])
 
-    lcf2 = LefschetzComplex(nc, Int(2), bndmatrix2,
-                            labelvec2, indexdict2, sdvec2)
-    lc2 = convert_lefschetz_sparse(lcf2)
+    lc2 = LefschetzComplex(nc, Int(2),
+                           sparse_from_full(bndmatrix2),
+                           labelvec2, indexdict2, sdvec2)
 
     # Create the common part of the combinatorial vector fields
     

@@ -20,7 +20,6 @@ lefschetz_skeleton(::LefschetzComplex,::Vector{String},::Int)
 lefschetz_subcomplex(::LefschetzComplex,::Vector{Int})
 lefschetz_subcomplex(::LefschetzComplex,::Vector{String})
 permute_lefschetz_complex(::LefschetzComplex,::Vector{Int})
-convert_lefschetz_sparse(::LefschetzComplex)
 ```
 
 ## Multivector Fields
@@ -33,8 +32,6 @@ convert_mvf(::Vector{Vector{String}},::LefschetzComplex)
 ## Matrix Conversions
 
 ```@docs
-convert_matrix_gfp(::Matrix{Int},::Int)
 convert_matrix_gfp(::SparseMatrix{Int},::Int)
-convert_matrix_int(::Matrix)
 ```
 
