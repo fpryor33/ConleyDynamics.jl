@@ -24,6 +24,14 @@ function relative_homology(lc::LefschetzComplex,
     # Compute the homology of a Lefschetz complex
     #
 
+    # First deal with the case of empty subcomplex
+
+    if length(subc) == 0
+        betti = homology(lc,p=p)
+        betti[1] += 1
+        return betti
+    end
+
     # Create the filtration: 0 for the closed subcomplex,
     # and 1 for the rest
 

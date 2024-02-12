@@ -154,7 +154,15 @@ As the above two examples demonstrate, the subcomplex can be specified
 either as a list of simplex indices, or through the simplex labels.
 Moreover, the specfied subspace simplex list is automatically extended
 by `relative_homology` to include all simplex faces, i.e., it computes
-the simplicial closure to arrive at a closed subcomplex.
+the simplicial closure to arrive at a closed subcomplex. Finally,
+note that the subcomplex can be empty:
+
+```@example T1
+relative_homology(sc, Vector{Int}([]), p=0)
+```
+
+As expected, in this case one basically obtains the standard homology
+of `sc`, but with zero-dimensional Betti number increased by one.
 
 In addition to regular and relative homology, ConleyDynamics can also
 compute *persistent homology*. In this case, one has to specify a 
