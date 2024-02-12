@@ -158,7 +158,7 @@ the simplicial closure to arrive at a closed subcomplex. Finally,
 note that the subcomplex can be empty:
 
 ```@example T1
-relative_homology(sc, Vector{Int}([]), p=0)
+relative_homology(sc, [], p=0)
 ```
 
 As expected, in this case one basically obtains the standard homology

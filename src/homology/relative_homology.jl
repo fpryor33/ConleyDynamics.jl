@@ -72,3 +72,11 @@ function relative_homology(lc::LefschetzComplex,
     return betti
 end
 
+function relative_homology(lc::LefschetzComplex, subc::Vector{Any}; p::Int=-1)
+    if length(subc) == 0
+        return relative_homology(lc, Vector{Int}([]), p=p)   
+    else
+        error("Unknow subspace type!")
+    end
+end
+
