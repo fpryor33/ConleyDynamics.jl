@@ -3,9 +3,8 @@
 ## Connection Matrix Computation
 
 ```@docs
-connection_matrix(::LefschetzComplex,::Vector{Vector{Int}};::Int,::Bool)
-connection_matrix(::LefschetzComplex,::Vector{Vector{String}};::Int,::Bool)
-cm_create!(::SparseMatrix,::Vector{Int};::Bool)
+connection_matrix(::LefschetzComplex,::MultiVectorField;::Int,::Bool)
+cm_reduce!(::SparseMatrix,::Vector{Int};::Bool)
 ```
 
 ## Poset Order Functions

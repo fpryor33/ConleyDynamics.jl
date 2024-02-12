@@ -21,7 +21,7 @@ include("./cmcore/composite_types.jl")
 
 include("./cmcore/admissible_order.jl")
 include("./cmcore/cm_columns.jl")
-include("./cmcore/cm_create.jl")
+include("./cmcore/cm_reduce.jl")
 include("./cmcore/connection_matrix.jl")
 include("./cmcore/homogeneous_columns.jl")
 include("./cmcore/renumber_poset.jl")

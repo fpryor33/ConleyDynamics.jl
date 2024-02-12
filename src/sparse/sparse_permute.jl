@@ -1,7 +1,7 @@
 export sparse_permute
 
 """
-    smp = sparse_permute(sm::SparseMatrix, pr::Vector{Int}, pc::Vector{Int})
+    sparse_permute(sm::SparseMatrix, pr::Vector{Int}, pc::Vector{Int})
 
 Create sparse matrix by permuting the row and column indices.
 

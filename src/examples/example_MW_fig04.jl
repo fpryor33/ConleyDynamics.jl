@@ -15,19 +15,19 @@ matrices.
 ```jldoctest
 julia> lc1, lc2, mvf = example_MW_fig04();
 
-julia> cm1 = connection_matrix(lc1, mvf; p=0);
+julia> cm1 = connection_matrix(lc1, mvf);
 
-julia> cm2 = connection_matrix(lc2, mvf; p=0);
+julia> cm2 = connection_matrix(lc2, mvf);
 
 julia> full_from_sparse(cm1.cm)
-4×4 Matrix{Rational{Int64}}:
+4×4 Matrix{Int64}:
  0  0  0  0
  0  0  0  1
  0  0  0  1
  0  0  0  0
 
 julia> full_from_sparse(cm2.cm)
-4×4 Matrix{Rational{Int64}}:
+4×4 Matrix{Int64}:
  0  0  0  0
  0  0  0  0
  0  0  0  1
@@ -73,7 +73,7 @@ function example_MW_fig04()
     # Construct the Lefschetz complex struct
     
     lc = LefschetzComplex(nc, Int(2),
-                          sparse_from_full(bndmatrix),
+                          sparse_from_full(bndmatrix, p=2),
                           labelvec, indexdict, sdvec)
 
     # Create a second version of the Lefschetz complex via permutation
@@ -85,7 +85,7 @@ function example_MW_fig04()
     indexdict2 = Dict{String,Int}([(labelvec2[k],k) for k in 1:length(labelvec2)])
 
     lc2 = LefschetzComplex(nc, Int(2),
-                           sparse_from_full(bndmatrix2),
+                           sparse_from_full(bndmatrix2, p=2),
                            labelvec2, indexdict2, sdvec2)
 
     # Create the common part of the combinatorial vector fields

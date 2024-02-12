@@ -1,7 +1,7 @@
 export sparse_from_full, full_from_sparse
 
 """
-    sparse_from_full(matrix::Matrix{Int}; p::Int=0)
+    sparse_from_full(matrix::Matrix{Int}; [p::Int=0])
 
 Create integer sparse matrix from full matrix. If the
 optional argument `p` is specified and positive, then

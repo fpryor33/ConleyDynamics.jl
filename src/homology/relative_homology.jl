@@ -1,9 +1,9 @@
 export relative_homology
 
 """
-    betti = relative_homology(lc::LefschetzComplex,
-                              subc::Union{Vector{Int},Vector{String}};
-                              p::Int)
+    relative_homology(lc::LefschetzComplex,
+                      subc::Union{Vector{Int},Vector{String}};
+                      [p::Int])
 
 Compute the relative homology of a Lefschetz complex with
 respect to a subcomplex.

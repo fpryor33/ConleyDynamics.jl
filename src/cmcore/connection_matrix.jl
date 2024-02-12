@@ -1,26 +1,33 @@
 export connection_matrix
 
 """
-    cm = connection_matrix(lc, mvf; p)
-    cm, cmbasis = connection_matrix(lc, mvf; p, returnbasis=true)
+    connection_matrix(lc::LefschetzComplex, mvf::MultiVectorField;
+                      [p::Int,] [returnbasis::Bool])
 
 Compute a connection matrix for the multivector field `mvf` on the
 Lefschetz complex `lc` over a finite field with `p` elements, or 
 over the rationals.
 
-The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{Int}}`,
-and the return object is of type `ConleyMorseCM`. If the optional argument
-`returnbasis::Bool=true` is given, then the function returns a dictionary 
-which gives the basis for the connection matrix columns in terms of the
-original labels. If `p` is omitted, then the Lefschetz complex boundary
-has to has been specified over a field. If the boundary matrix is an
-integer matrix, `p` has to be chosen.
+The function returns an object of type `ConleyMorseCM`. If the optional
+argument `returnbasis::Bool=true` is given, then the function also returns
+a dictionary which gives the basis for the connection matrix columns in
+terms of the original labels. If `p` is omitted, then the Lefschetz
+complex boundary has to has been specified over a field. If the boundary
+matrix is an integer matrix, `p` has to be chosen.
 """
-function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
+function connection_matrix(lc::LefschetzComplex, mvfarg::MultiVectorField;
                            p::Int=-1, returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #
+
+    # Convert the multivector field to Int if necessary
+
+    if mvfarg isa Vector{Vector{String}}
+        mvf = convert_mvf(mvfarg, lc)
+    else
+        mvf = mvfarg
+    end
 
     # Copy boundary and label data
     
@@ -46,7 +53,7 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
     else
         bndA = adbnd
         if !(adbnd.char == p) && !(p == -1)
-            println("WARNING: Using inherent characteristic of the complex boundary!")
+            println("WARNING: Using inherent characteristic of the boundary matrix!")
         end
     end
 
@@ -54,9 +61,9 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
 
     cmRedP = deepcopy(bndA)
     if returnbasis
-        cmMatrP, cmColsP, cmBasisP = cm_create!(cmRedP, psetvec; returnbasis=true)
+        cmMatrP, cmColsP, cmBasisP = cm_reduce!(cmRedP, psetvec; returnbasis=true)
     else
-        cmMatrP, cmColsP = cm_create!(cmRedP, psetvec)
+        cmMatrP, cmColsP = cm_reduce!(cmRedP, psetvec)
     end
 
     # Compute first few return variables
@@ -112,40 +119,6 @@ function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{Int}};
     if returnbasis
         return cm, basisdict
     else
-        return cm
-    end
-end
-
-"""
-    cm = connection_matrix(lc, mvf; p)
-    cm, cmbasis = connection_matrix(lc, mvf; p, returnbasis=true)
-
-Compute a connection matrix for the multivector field `mvf` on the
-Lefschetz complex `lc` over a finite field with `p` elements, or 
-over the rationals.
-
-The arguments are typed as `lc::LefschetzComplex` and `mvf::Vector{Vector{String}}`,
-and the return object is of type `ConleyMorseCM`. If the optional argument
-`returnbasis::Bool=true` is given, then the function returns a dictionary 
-which gives the basis for the connection matrix columns in terms of the
-original labels. If `p` is omitted, then the Lefschetz complex boundary
-has to has been specified over a field. If the boundary matrix is an
-integer matrix, `p` has to be chosen.
-"""
-function connection_matrix(lc::LefschetzComplex, mvf::Vector{Vector{String}};
-                           p::Int=-1, returnbasis::Bool=false)
-    #
-    # Compute the connection matrix
-    #
-    # This is an alternative method for multivector fields with
-    # a String representation.
-    #
-    newmvf = convert_mvf(mvf, lc)
-    if returnbasis
-        cm, cmbasis = connection_matrix(lc, newmvf; p=p, returnbasis=true)
-        return cm, cmbasis
-    else
-        cm = connection_matrix(lc, newmvf; p=p)
         return cm
     end
 end

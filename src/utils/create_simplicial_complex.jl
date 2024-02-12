@@ -11,7 +11,8 @@ The vector `labels` contains a label for every vertex, while
 to define the simplicial complex. Every simplex is represented as
 a vector of `Int`, with entries corresponding to the vertex indices.
 
-Note that the labels all have to have the same character length!
+!!! warning
+    Note that the labels all have to have the same character length!
 """
 function create_simplicial_complex(labels::Vector{String},
                                    simplices::Vector{Vector{Int}})

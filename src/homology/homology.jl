@@ -1,7 +1,7 @@
 export homology
 
 """
-    homology(lc::LefschetzComplex; p::Int)
+    homology(lc::LefschetzComplex; [p::Int])
 
 Compute the homology of a Lefschetz complex.
 

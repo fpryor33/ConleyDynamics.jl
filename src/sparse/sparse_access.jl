@@ -3,7 +3,7 @@ export sparse_get_column, sparse_get_nz_column
 export getindex, setindex!
        
 """
-    value = sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
+    sparse_get_entry(matrix::SparseMatrix, ri::Int, ci::Int)
 
 Get the sparse matrix entry at location `(ri,ci)`.
 """
@@ -91,7 +91,7 @@ function Base.setindex!(matrix::SparseMatrix, val, ri::Int, ci::Int)
 end
 
 """
-    value = sparse_get_column(matrix::SparseMatrix, ci::Int)
+    sparse_get_column(matrix::SparseMatrix, ci::Int)
 
 Get the ci-th column of the sparse matrix.
 """
@@ -116,9 +116,9 @@ function sparse_get_column(matrix::SparseMatrix, ci::Int)
 end
 
 """
-    value = sparse_get_nz_column(matrix::SparseMatrix, ci::Int)
+    sparse_get_nz_column(matrix::SparseMatrix, ci::Int)
 
-Get the row indizes for the nonzero entries in the ci-th column
+Get the row indices for the nonzero entries in the ci-th column
 of the sparse matrix.
 """
 function sparse_get_nz_column(matrix::SparseMatrix, ci::Int)

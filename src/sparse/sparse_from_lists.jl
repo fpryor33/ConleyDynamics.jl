@@ -13,12 +13,14 @@ matrix position raise an error.
 The input arguments have the following meaning:
 * `nr::Int`: Number of rows
 * `nc::Int`: Number of columns
-* 'tchar`: Field characteristic if `T==Int`
+* `tchar`: Field characteristic if `T==Int`
 * `tzero::T`: Number 0 of type `T`
 * `tone::T`:  Number 1 of type `T`
 * `r::Vector{Int}`: Vector of row indices
 * `c::Vector{Int}`: Vector of column indices
 * `v::Vector{T}`: Vector of matrix entries
+If `tchar>0`, then the entries in `v` are all
+replaced by their values mod `tchar`.
 """
 function sparse_from_lists(nr::Int, nc::Int, tchar::Int, tzero, tone,
                            r::Vector{Int}, c::Vector{Int}, v)

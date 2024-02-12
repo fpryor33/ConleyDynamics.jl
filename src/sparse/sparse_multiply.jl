@@ -1,7 +1,7 @@
 export sparse_multiply
 
 """
-    sm = sparse_multiply(A::SparseMatrix, B::SparseMatrix)
+    sparse_multiply(A::SparseMatrix, B::SparseMatrix)
 
 Multiply two sparse matrices.
 
@@ -58,7 +58,7 @@ function sparse_multiply(A::SparseMatrix, B::SparseMatrix)
 end
 
 """
-    sm = Base.:*(A::SparseMatrix, B::SparseMatrix)
+    Base.:*(A::SparseMatrix, B::SparseMatrix)
 
 Multiply two sparse matrices.
 

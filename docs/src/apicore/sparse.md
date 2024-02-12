@@ -1,5 +1,11 @@
 # Sparse Matrix Functions
 
+## Internal Sparse Matrix Representation
+
+```@docs
+SparseMatrix
+```
+
 ## Access Functions
 
 ```@docs
@@ -35,9 +41,7 @@ sparse_add_row!(::SparseMatrix{Int}, ::Int, ::Int, ::Int, ::Int)
 sparse_permute(sm::SparseMatrix, pr::Vector{Int}, pc::Vector{Int})
 sparse_remove!(matrix::SparseMatrix, ri::Int, ci::Int)
 sparse_multiply(A::SparseMatrix,B::SparseMatrix)
-sparse_multiply(A::SparseMatrix{Int},B::SparseMatrix{Int})
 Base.:*(::SparseMatrix,::SparseMatrix)
-Base.:*(::SparseMatrix{Int},::SparseMatrix{Int})
 ```
 
 ## Conversion Functions

@@ -1,20 +1,23 @@
-export cm_create! 
+export cm_reduce! 
 
 """
-    cmatrix, cmatrix_cols = cm_create!(matrix, psetvec)
-    cmatrix, cmatrix_cols, basisvecs = cm_create!(matrix, psetvec;
-                                                  returnbasis=true)
+    cm_reduce!(matrix::SparseMatrix, psetvec::Vector{Int};
+               [returnbasis::Bool])
 
 Compute the connection matrix.
 
 Assumes that `matrix` is upper triangular and filtered according
-to `psetvec`. Modifies the argument `matrix`. If the optional
-argument `returnbasis=true` is given, then the function also
-returns information about the computed basis. The k-th entry of
-`basisvecs` is a vector containing the columns making up the
-k-th basis vector, which corresponds to column `cmatrix_cols[k]`.
+to `psetvec`. Modifies the argument `matrix`.
+
+# Return values:
+* `cmatrix`: Connection matrix
+* `cmatrix_cols`: Columns of the connection matrix in the boundary
+* `basisvecs` (optional): If the argument `returnbasis=true` is given,
+  this returns information about the computed basis. The k-th entry
+  of `basisvecs` is a vector containing the columns making up the
+  k-th basis vector, which corresponds to column `cmatrix_cols[k]`.
 """
-function cm_create!(matrix::SparseMatrix, psetvec::Vector{Int};
+function cm_reduce!(matrix::SparseMatrix, psetvec::Vector{Int};
                     returnbasis::Bool=false)
     #
     # Compute the connection matrix

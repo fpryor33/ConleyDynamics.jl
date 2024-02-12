@@ -1,7 +1,9 @@
 # Composite Data Structures
 
 The package relies on three basic composite data structures that
-encompass more complicated objects.
+encompass more complicated objects. For the internal representation
+of sparse matrices we refer to
+[Internal Sparse Matrix Representation](@ref).
 
 ```@docs
 ConleyDynamics
@@ -23,11 +25,5 @@ MultiVectorField
 
 ```@docs
 ConleyMorseCM
-```
-
-## Internal Sparse Matrix Representation
-
-```@docs
-SparseMatrix
 ```
 
