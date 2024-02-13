@@ -1,5 +1,12 @@
 # Connection Matrix Functions
 
+## Conley Index Computations
+
+```@docs
+conley_index(::LefschetzComplex,::Vector{Int};::Int)
+conley_index(::LefschetzComplex,::Vector{String};::Int)
+```
+
 ## Connection Matrix Computation
 
 ```@docs

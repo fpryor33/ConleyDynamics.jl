@@ -161,8 +161,7 @@ note that the subcomplex can be empty:
 relative_homology(sc, [], p=0)
 ```
 
-As expected, in this case one basically obtains the standard homology
-of `sc`, but with zero-dimensional Betti number increased by one.
+As expected, in this case one obtains the standard homology of `sc`.
 
 In addition to regular and relative homology, ConleyDynamics can also
 compute *persistent homology*. In this case, one has to specify a 
