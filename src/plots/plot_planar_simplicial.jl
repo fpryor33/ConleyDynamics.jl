@@ -4,33 +4,37 @@ export plot_planar_simplicial
     plot_planar_simplicial(sc::LefschetzComplex,
                            coords::Vector{<:Vector{<:Real}},
                            fname::String;
-                           mvf::MultiVectorField,
-                           labeldir::Vector{<:Real},
-                           hfac::Real,
-                           vfac::Real)
+                           [mvf::MultiVectorField,]
+                           [labeldir::Vector{<:Real},]
+                           [labeldis::Real,]
+                           [hfac::Real],
+                           [vfac::Real])
 
-Create an svg image of a planar simplicial complex, and if
+Create a pdf image of a planar simplicial complex, and if
 specified, a Forman vector field on it.
 
 The vector `coords` contains coordinates for every one of the
 vertices of the simplicial complex `sc`. The image will be saved
-in the file with name `fname`. The optional vector `labeldir`
-contains directions for the vertex labels. These have to be
-reals between 0 and 4, with 0,1,2,3 corresponding to E,N,W,S.
-If `mvf` is specified and is a Forman vector field, then this
-Forman vector field is drawn as well. The optional constants
-`hfac` and `vfac` contain the horizontal and vertical scale
-vectors.
+in the file with name `fname`. 
+
+If the optional `mvf` is specified and is a Forman vector field,
+then this Forman vector field is drawn as well. The optional
+vector `labeldir` contains directions for the vertex labels,
+and `labeldis` the distance from the vertex. The directions
+have to be reals between 0 and 4, with 0,1,2,3 corresponding
+to E,N,W,S. The optional constants `hfac` and `vfac` contain
+the horizontal and vertical scale vectors.
 """
 function plot_planar_simplicial(sc::LefschetzComplex,
                                 coords::Vector{<:Vector{<:Real}},
                                 fname::String;
                                 mvf::MultiVectorField=Vector{Vector{Int}}([]),
                                 labeldir::Vector{<:Real}=Vector{Int}([]),
+                                labeldis::Real=8,
                                 hfac::Real=1.5,
                                 vfac::Real=1.5)
     #
-    # Create an svg image of a planar simplicial complex
+    # Create a pdf image of a planar simplicial complex
     #
 
     # Create proper coordinates
@@ -115,7 +119,7 @@ function plot_planar_simplicial(sc::LefschetzComplex,
     
     # Create the image
     
-    @svg begin
+    @pdf begin
     
         # Plot the simplicial complex
 
@@ -174,7 +178,7 @@ function plot_planar_simplicial(sc::LefschetzComplex,
             setcolor("black")
             for k = 1:length(coords)
                 label(sc.labels[k], pi*(4.0-labeldir[k])/2.0, points[k],
-                      offset=8)
+                      offset=labeldis)
             end
         end
 

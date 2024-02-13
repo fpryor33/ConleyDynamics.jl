@@ -1,13 +1,16 @@
 export example_MW_fig11
 
 """
-    lc, mvf = example_MW_fig11(mvftype)
+    example_MW_fig11(mvftype)
 
 Create the Lefschetz complex and multivector field for the example
 from Figure 11 in the connection matrix paper by *Mrozek & Wanner*.
 
 Depending on the value of `mvftype`, return the multivector (0=default)
 or one of the two combinatorial vector field (1,2) examples.
+
+The function returns the Lefschetz complex `lc` and the
+multivector field `mvf`.
 
 # Examples
 ```jldoctest

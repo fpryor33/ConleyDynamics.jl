@@ -1,11 +1,16 @@
 export example_BKMW20_fig3
 
 """
-    lc, mvf = example_BKMW20_fig3()
+    example_BKMW20_fig3()
 
 Create the simplicial complex and multivector field
 for the example from Figure 3 in the FoCM 2020 paper
 by *Batko, Kaczynski, Mrozek, and Wanner*.
+
+The function returns the Lefschetz complex `lc` and the
+multivector field `mvf`. If desired for plotting, the third
+return value `coords` gives a vector of coordinates for the
+vertices.
 
 # Examples
 ```jldoctest
@@ -41,6 +46,12 @@ function example_BKMW20_fig3()
     strsimplices = convert_simplices(intsimplices, labels)
     lc = create_simplicial_complex(labels, strsimplices)
 
+    # Create the coordinates vector
+
+    coords = [[50,200],[150,200],[250,200],
+              [0,100],[100,100],[200,100],[300,100],
+              [50,0],[150,0],[250,0]]
+
     # Create the multivector field
 
     mvf = [["A","AD"], ["B","AB"], ["C","BC"], ["F","FG"], ["G","GJ"],
@@ -50,6 +61,6 @@ function example_BKMW20_fig3()
 
     # Return the example data
 
-    return lc, mvf
+    return lc, mvf, coords
 end
 

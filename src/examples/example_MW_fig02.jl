@@ -1,13 +1,18 @@
 export example_MW_fig02
 
 """
-    lc, mvf = example_MW_fig02(mvftype)
+    example_MW_fig02(mvftype)
 
 Create the simplicial complex and multivector field for the example
 from Figure 2 in the connection matrix paper by *Mrozek & Wanner*.
 
 Depending on the value of `mvftype`, return the periodic orbit (0=default)
 or one of the three gradient (1,2,3) examples.
+
+The function returns the Lefschetz complex `lc` and the
+multivector field `mvf`. If desired for plotting, the third
+return value `coords` gives a vector of coordinates for the
+vertices.
 
 # Examples
 ```jldoctest
@@ -50,6 +55,10 @@ function example_MW_fig02(mvftype=0)
     push!(labelvec,"A","B","C","D","E","F","G")
     push!(labelvec,"AB","AC","BC","BD","CD","CE","DE","DF","EF","EG","FG")
     push!(labelvec,"ABC","BCD","DEF","EFG")
+
+    # Create the coordinates for plotting
+
+    coords = [[0,0],[50,100],[100,0],[150,100],[200,0],[250,100],[300,0]]
 
     # Create the label to index dictionary
 
@@ -120,6 +129,6 @@ function example_MW_fig02(mvftype=0)
 
     # Return the example data
 
-    return lc, strmvf
+    return lc, strmvf, coords
 end
 

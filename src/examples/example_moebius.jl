@@ -7,6 +7,9 @@ Create two simplicial complexes for a cylinder and Moebius
 strip, respectively, together with associated multivector
 fields on them.
 
+The function returns the Lefschetz complexes `lc1` and `lc2`,
+as well as the multivector fields `mvf1` and `mvf2`.
+
 The multivector field is the same, and it has one critical 
 cell each in dimension 1 and 2 in the interior of the strip.
 The boundary consists of two periodic orbits for `lc1` and

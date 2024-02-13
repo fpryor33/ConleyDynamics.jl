@@ -1,11 +1,14 @@
 export example_MW_fig01
 
 """
-    lcomplex, mvf = example_MW_fig01()
+    example_MW_fig01()
 
 Create the simplicial complex and multivector field
 for the example from Figure 1 in the connection matrix
 paper by *Mrozek & Wanner*.
+
+The function returns the Lefschetz complex `lc` and the
+multivector field `mvf`.
 
 # Examples
 ```jldoctest
