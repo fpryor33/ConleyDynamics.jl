@@ -5,3 +5,11 @@ In particular, this should discuss the various field types that
 can be used, as well as all the entries in the [`LefschetzComplex`](@ref)
 data structure.
 
+[dlotko:etal:11a](@cite)
+[lipinski:etal:23a](@cite)
+
+```@bibliography
+Pages = ["lefschetz.md"]
+Canonical = false
+```
+

@@ -31,10 +31,7 @@ example_nonunique()
 
 ## Examples from MW-2023
 
-The following examples are taken from the paper
-*Connection matrices in combinatorial topological dynamics*
-by Marian Mrozek & Thomas Wanner (*Preprint*, submitted for
-publication, 115 pp, 2023).
+The following examples are taken from [mrozek:wanner:p21a](@cite).
 
 ![Four sample combinatorial vector fields](img/connectionex.png)
 
@@ -51,13 +48,21 @@ example_MW_fig11()
 
 ## Examples from BKMW-2020
 
-The following examples are taken from the paper *Linking combinatorial
-and classical dynamics: Conley index and Morse decompositions* by
-Bogdan Batko, Tomasz Kaczynski, Marian Mrozek, and Thomas Wanner
-(*Foundations of Computational Mathematics* 20(5), pp. 967-1012, 2020).
+The following examples are taken from [batko:etal:20a](@cite).
 
 ```@docs
 example_BKMW20_fig1()
 example_BKMW20_fig3()
+```
+
+## Examples References
+
+See the [full bibliography](@ref References) for a complete list
+of references cited throughout this documentation. This page cites
+the following references:
+
+```@bibliography
+Pages = ["examples.md"]
+Canonical = false
 ```
 

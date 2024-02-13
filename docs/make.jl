@@ -13,6 +13,11 @@ push!(LOAD_PATH,"../src/")
 
 using Documenter
 using ConleyDynamics
+using DocumenterCitations
+
+bib = CitationBibliography(
+    joinpath(@__DIR__, "src", "refs.bib");
+    style=:numeric)
 
 pageslist = ["Overview" => "index.md",
              "Manual" => Any[
@@ -21,7 +26,8 @@ pageslist = ["Overview" => "index.md",
                  "man/connections.md",
                  "man/homology.md",
                  "man/sparse.md",
-                 "man/examples.md"
+                 "man/examples.md",
+                 "man/references.md"
                   ],
              "Core API" => Any[
                  "apicore/datastruct.md",
@@ -41,21 +47,24 @@ if "--local-html" in ARGS
         modules=[ConleyDynamics],
         format = Documenter.HTML(prettyurls = false),
         pages = pageslist,
-        authors = "Thomas Wanner"
+        authors = "Thomas Wanner",
+        plugins=[bib]
         )
 elseif "--latex-pdf" in ARGS
     makedocs(sitename="ConleyDynamics.jl",
         modules=[ConleyDynamics],
         format = Documenter.LaTeX(platform = "docker"),
         pages = pageslist,
-        authors = "Thomas Wanner"
+        authors = "Thomas Wanner",
+        plugins=[bib]
         )
 else
     makedocs(sitename="ConleyDynamics.jl",
         modules=[ConleyDynamics],
         format = Documenter.HTML(),
         pages = pageslist,
-        authors = "Thomas Wanner"
+        authors = "Thomas Wanner",
+        plugins=[bib]
         )
     deploydocs(
         repo = "github.com/almost6heads/ConleyDynamics.jl.git",

@@ -5,3 +5,12 @@ In particular, this should discuss the various field types that
 can be used, as well as all the entries in the [`ConleyMorseCM`](@ref)
 data structure.
 
+[kaczynski:etal:16a](@cite)
+[mrozek:wanner:21a](@cite)
+[mrozek:etal:22a](@cite)
+
+```@bibliography
+Pages = ["connections.md"]
+Canonical = false
+```
+

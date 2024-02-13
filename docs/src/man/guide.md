@@ -213,7 +213,12 @@ in ``K_4``. Note that the interval death times respect the
 merging, the younger interval gets killed, and the older one
 continues to live. Similarly in higher dimensions.
 
-## Forman Vector Fields and Connecting Orbits
+## Forman Vector Fields and Isolated Invariant Sets
+
+
+
+
+
 
 
 ![A first Forman vector field](img/tutorialforman.png)
@@ -221,17 +226,26 @@ continues to live. Similarly in higher dimensions.
 
 ## Finding Connection Matrices
 
+We now turn our attention to an example from
+[mrozek:wanner:p21a; Figure 1](@citet*), which happens to 
+be also the logo for `ConleyDynamics.jl`.
+
 
 ![The logo multivector field](img/multivectorex.png)
 
-We begin by discussion an elementary example from Mrozek & Wanner[^1].
-
-[^1]:
-    Marian Mrozek, Thomas Wanner: [Connection matrices in combinatorial
-    topological dynamics](https://arxiv.org/abs/2103.04269),
-    *Preprint*, submitted for publication, 115 pp, 2023.
 
 ## Working with Sparse Matrices
 
 
+
+## Tutorial References
+
+See the [full bibliography](@ref References) for a complete list
+of references cited throughout this documentation. This page cites
+the following references:
+
+```@bibliography
+Pages = ["guide.md"]
+Canonical = false
+```
 
