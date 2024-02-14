@@ -3,14 +3,16 @@
 This tutorial explains the basic usage of the main components
 of ConleyDynamics. It is not meant to be exhaustive, since more 
 details will be provided in the more indiviualized sections. Also,
-precise mathematical definitions will be delayed until then.
+precise mathematical definitions will be delayed until then. The
+presented examples are taken from the papers [batko:etal:20a](@cite)
+and [mrozek:wanner:p21a](@cite), with minor modifications.
 
 ## Creating Lefschetz Complexes
 
 The fundamental mathematical object for ConleyDynamics is a Lefschetz
-complex. For now we note that both simplicial complexes and cubical
-complexes are special cases, and ConleyDynamics provides convenient
-interfaces for generating them.
+complex [lefschetz:42a](@cite). For now we note that both simplicial
+complexes and cubical complexes are special cases, and ConleyDynamics
+provides convenient interfaces for generating them.
 
 We begin by considering the case of a simplicial complex. Recall that
 an *abstract simplicial complex* ``K`` is just a collection of finite
@@ -213,15 +215,107 @@ in ``K_4``. Note that the interval death times respect the
 merging, the younger interval gets killed, and the older one
 continues to live. Similarly in higher dimensions.
 
-## Forman Vector Fields and Isolated Invariant Sets
+## Forman Vector Fields
 
+The main focus of ConleyDynamics is on the study of *combinatorial
+topological dynamics* on Lefschetz complexes. While the phase
+space as Lefschetz complex has been discussed above, the dynamics
+part can be given in the simplest form by a *combinatorial vector
+field*, also called a *Forman vector field* [forman:98a, forman:98b](@cite).
+We will soon see that such vector fields are a more restrictive version
+of *multivector fields*, but they are easier to start with. The following
+command defines a simple Forman vector field on our sample simplicial
+complex ``K`` from above:
 
+```@example T1
+formanvf = [["A","AC"],["B","AB"],["C","BC"],["D","BD"],["E","DE"]]
+```
 
-
-
-
+The Forman vector field `formanvf` is viualized in the
+accompanying figure.
 
 ![A first Forman vector field](img/tutorialforman.png)
+
+According to the figure, a Forman vector field is comprised of
+*arrows*, as well as *critical cells* which are indicated by red
+dots. In fact, every simplex of the underlying simplicial complex
+is either critical, or it is contained in a unique arrow. In other
+words, the collection of critical cells and arrows forms a partition
+of the underlying simplicial complex ``K``. Arrows always have to
+consist of precisely two simplices: The source of the arrow is 
+a simplex ``\sigma^-``, while its target is a second simplex
+``\sigma^+``. These two simplices have to be related in the sense
+that ``\sigma^-`` is a *facet* of ``\sigma^+``. Recall that a facet
+of a simplex ``\tau`` is any subsimplex obtained from ``\tau`` by
+removing precisely one vertex, i.e., its dimension is exactly one
+less that ``\dim\tau``, and it is contained in the boundary
+of ``\tau``.
+
+As the above Julia code shows, a forman vector field is described
+by a vector of string vectors, where each of the latter contains 
+the labels of the two simplices making up an arrow. Note that the
+critical cells are not explicitly listed, as any simplex of ``K``
+that is not part of a vector is automatically critical.
+
+Intuitively, the above visualization of the Forman vector field
+`formanvf` clearly induces *dynamical behavior* on the simplicial 
+complex `sc`:
+
+- __Critical cells__ can be though of as *equilibrium states* for the
+  dynamics, i.e., they contain a stationary solution. Depending
+  on their dimension, they can also exhibit nonconstant dynamics --
+  which in backward time converges to the equilibrium, and in forward
+  time flows towards the boundary of the simplex.
+- __Arrow sources__ always lead to flow into the interior of their
+  target simplex ``\sigma^+``.
+- __Arrow targets__ create flow towards the boundary of ``\sigma^+``,
+  except the source facet ``\sigma^-``.
+
+In the above figure, for example, the simplex `EF` is a critical cell,
+so it contains an equilibrium. At the same time, it also allows for 
+flow towards the boundary, which consists of the vertices `E` and `F`.
+A solution flowing to the former then has to enter `DE`, flow through
+`D` to `BD`, before entering the periodic orbit given by
+
+```math
+   B \to AB \to A \to AC \to C \to BC \to B \to AB \to \ldots
+```
+
+This heuristic description can be made precise. It was shown in
+[mrozek:wanner:21a](@cite) that for every Forman vector field on
+a simplicial complex there exists a classical dynamical system 
+which exhibits dynamics consistent with the above interpretation.
+
+## Isolated Invariant Sets
+
+
+[conley:78a](@cite)
+
+
+```@example T1
+conley_index(sc, ["F"], p=0)
+```
+
+
+```@example T1
+conley_index(sc, ["DF"], p=0)
+```
+
+
+
+```@example T1
+conley_index(sc, ["DEF"], p=0)
+```
+
+
+```@example T1
+conley_index(sc, ["AB", "AC", "BC", "A", "B", "C"], p=0)
+```
+
+
+
+
+
 
 
 ## Finding Connection Matrices
@@ -234,7 +328,7 @@ be also the logo for `ConleyDynamics.jl`.
 ![The logo multivector field](img/multivectorex.png)
 
 
-## Working with Sparse Matrices
+
 
 
 
