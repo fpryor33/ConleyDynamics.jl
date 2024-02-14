@@ -4,7 +4,8 @@ Conley's theory for the qualitative study of dynamical systems is based
 on fundamental concepts from algebraic topology. One of these is homology,
 which studies the topological properties of spaces. As part of ConleyDynamics
 a number of homology methods are included. These are described in detail 
-below.
+below. More detailed information on the discussed topics can be found
+in [munkres:84a](@citet*).
 
 ## Homology of Lefschetz Complexes
 
@@ -51,4 +52,15 @@ complex ``L``.
 
 ## Persistent Homology of Filtrations
 
+
+## Tutorial References
+
+See the [full bibliography](@ref References) for a complete list
+of references cited throughout this documentation. This section cites
+the following references:
+
+```@bibliography
+Pages = ["homology.md"]
+Canonical = false
+```
 

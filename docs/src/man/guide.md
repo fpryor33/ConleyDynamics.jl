@@ -241,7 +241,7 @@ be also the logo for `ConleyDynamics.jl`.
 ## Tutorial References
 
 See the [full bibliography](@ref References) for a complete list
-of references cited throughout this documentation. This page cites
+of references cited throughout this documentation. This section cites
 the following references:
 
 ```@bibliography

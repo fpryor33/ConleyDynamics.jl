@@ -14,10 +14,14 @@ push!(LOAD_PATH,"../src/")
 using Documenter
 using ConleyDynamics
 using DocumenterCitations
+using Bibliography
 
 bib = CitationBibliography(
     joinpath(@__DIR__, "src", "refs.bib");
-    style=:numeric)
+    style=:alpha) # The default is     style=:numeric
+                  # One can also use   style=:authoryear
+
+# sort_bibliography!(bib.entries, :nyt)  # name-year-title
 
 pageslist = ["Overview" => "index.md",
              "Manual" => Any[
@@ -45,7 +49,8 @@ DocMeta.setdocmeta!(ConleyDynamics, :DocTestSetup,
 if "--local-html" in ARGS
      makedocs(sitename="ConleyDynamics.jl",
         modules=[ConleyDynamics],
-        format = Documenter.HTML(prettyurls = false),
+        format = Documenter.HTML(prettyurls = false,
+                                 assets=String["assets/citations.css"]),
         pages = pageslist,
         authors = "Thomas Wanner",
         plugins=[bib]
@@ -61,7 +66,7 @@ elseif "--latex-pdf" in ARGS
 else
     makedocs(sitename="ConleyDynamics.jl",
         modules=[ConleyDynamics],
-        format = Documenter.HTML(),
+        format = Documenter.HTML(assets=String["assets/citations.css"]),
         pages = pageslist,
         authors = "Thomas Wanner",
         plugins=[bib]

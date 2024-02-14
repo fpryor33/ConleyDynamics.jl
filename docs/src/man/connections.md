@@ -9,6 +9,12 @@ data structure.
 [mrozek:wanner:21a](@cite)
 [mrozek:etal:22a](@cite)
 
+## Connection Matrices References
+
+See the [full bibliography](@ref References) for a complete list
+of references cited throughout this documentation. This section cites
+the following references:
+
 ```@bibliography
 Pages = ["connections.md"]
 Canonical = false
