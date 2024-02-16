@@ -25,10 +25,10 @@ bib = CitationBibliography(
 
 pageslist = ["Overview" => "index.md",
              "Manual" => Any[
-                 "man/guide.md",
+                 "man/tutorial.md",
                  "man/lefschetz.md",
-                 "man/connections.md",
                  "man/homology.md",
+                 "man/conley.md",
                  "man/sparse.md",
                  "man/examples.md",
                  "man/references.md"

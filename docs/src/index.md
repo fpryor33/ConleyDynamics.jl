@@ -21,11 +21,11 @@ Morse theory in a discrete combinatorial setting.
   cubical complexes.
 - Classical Forman combinatorial vector fields and multivector fields are
   supported.
-- Computation of connection matrices and Conley-Morse graphs.
-- Basic homology algorithms over finite fields, including persistent homology
-  and relative homology.
-- Algorithms rely on a built-in sparse matrix implementation geared towards
-  computations over finite fields.
+- Computation of Conley indices, connection matrices, and Conley-Morse graphs.
+- Basic homology algorithms over finite fields and the rationals, including
+  persistent homology and relative homology.
+- Algorithms rely on a built-in sparse matrix implementation which is geared
+  towards computations over finite fields and the rationals.
 
 ## Installation
 
@@ -43,10 +43,10 @@ julia> using Pkg; Pkg.add("ConleyDynamics")
 
 ```@contents
 Pages = [
-    "man/guide.md",
+    "man/tutorial.md",
     "man/lefschetz.md",
-    "man/connections.md",
     "man/homology.md",
+    "man/conley.md",
     "man/sparse.md",
     "man/examples.md",
 ]
@@ -55,7 +55,8 @@ Depth = 1
 
 The [Tutorial](@ref) briefly explains how to get started with ConleyDynamics.
 More details, including on the underlying mathematics, are provided in the
-following four sections, which cover Lefschetz complexes, connection matrices,
-homology, and sparse matrices, respectively.  Finally, a discussion of all
-included examples can be found in the [Examples](@ref) section.
+following four sections, which cover Lefschetz complexes, homology, Conley
+theory including connection matrices, and sparse matrices, respectively.
+Finally, a discussion of all included examples can be found in the
+[Examples](@ref) section.
 

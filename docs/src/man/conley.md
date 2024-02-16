@@ -1,9 +1,9 @@
-# Connection Matrices
+# Conley Theory
 
-Here we need a more detailed description of connection matrices.
-In particular, this should discuss the various field types that
-can be used, as well as all the entries in the [`ConleyMorseCM`](@ref)
-data structure.
+Here we need a more detailed description of Conley theory, and in particular
+connection matrices.  In particular, this should discuss the various field types
+that can be used, as well as all the entries in the [`ConleyMorseCM`](@ref) data
+structure.
 
 [kaczynski:etal:16a](@cite)
 [mrozek:wanner:21a](@cite)
@@ -16,7 +16,7 @@ of references cited throughout this documentation. This section cites
 the following references:
 
 ```@bibliography
-Pages = ["connections.md"]
+Pages = ["conley.md"]
 Canonical = false
 ```
 
