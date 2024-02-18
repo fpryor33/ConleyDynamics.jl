@@ -504,7 +504,29 @@ are distinguished as follows:
 One can show that in the case of a Forman vector field, critical cells
 are always critical in the above sense, while arrows are always regular.
 In our above example `mvflogo`, all three multivectors which are not
-singletons are regular.
+singletons are regular. For example, the following computation shows
+that the cell `ABC` is a critical cell:
+
+```@example T2
+cl1, mo1 = lefschetz_clomo_pair(sclogo, ["ABC"])
+relative_homology(sclogo, cl1, mo1, p=2)
+```
+
+The first command creates the closure-mouth pair associated with
+the cell `ABC`, i.e., the variable `cl1` is the closed triangle,
+while `mo1` is the closed boundary of the triangle. The next 
+command determines the relative homology. Notice that this employs
+another method under the name `relative_homology`, in contrast to
+the one used earlier in this tutorial. For more details, see
+[Homology Functions](@ref).
+
+Similarly, the next sequence of commands verifies that the third
+nontrivial multivector `mvflogo[3]` is indeed a regular multivector:
+
+```@example T2
+cl2, mo2 = lefschetz_clomo_pair(sclogo, mvflogo[3])
+relative_homology(sclogo, cl2, mo2, p=2)
+```
 
 The global dynamics can again be determined using the function
 [`connection_matrix`](@ref):

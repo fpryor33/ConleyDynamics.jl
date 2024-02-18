@@ -5,6 +5,7 @@
 ```@docs
 homology(::LefschetzComplex;::Int)
 relative_homology(::LefschetzComplex,::Union{Vector{Int},Vector{String}};::Int)
+relative_homology(::LefschetzComplex,::Union{Vector{Int},Vector{String}},::Union{Vector{Int},Vector{String}};::Int)
 ```
 
 ## Persistent Homology
