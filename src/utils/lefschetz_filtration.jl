@@ -37,7 +37,7 @@ julia> phint
  []
  [(1, 5), (2, 7), (4, 6)]
  []
-
+```
 """
 function lefschetz_filtration(lc::LefschetzComplex, fvalues::Vector{Int})
     #
