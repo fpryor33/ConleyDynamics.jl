@@ -1,5 +1,12 @@
 # Utility Functions
 
+```@meta
+DocTestSetup = quote
+    push!(LOAD_PATH,"../../../src/")
+    using ConleyDynamics
+end
+```
+
 ## Simplicial Complexes
 
 ```@docs
@@ -23,6 +30,7 @@ lefschetz_skeleton(::LefschetzComplex,::Vector{Int},::Int)
 lefschetz_skeleton(::LefschetzComplex,::Vector{String},::Int)
 lefschetz_subcomplex(::LefschetzComplex,::Vector{Int})
 lefschetz_subcomplex(::LefschetzComplex,::Vector{String})
+lefschetz_filtration(::LefschetzComplex,::Vector{Int})
 permute_lefschetz_complex(::LefschetzComplex,::Vector{Int})
 ```
 
