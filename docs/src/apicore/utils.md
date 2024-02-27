@@ -13,6 +13,7 @@ end
 create_simplicial_complex(::Vector{String},::Vector{Vector{Int}})
 create_simplicial_complex(::Vector{String},::Vector{Vector{String}})
 create_simplicial_rectangle(::Int,::Int)
+create_cubical_complex(::Vector{String})
 convert_simplices(::Vector{Vector{Int}},::Vector{String})
 convert_simplices(::Vector{Vector{String}},::Vector{String})
 ```
@@ -31,6 +32,7 @@ lefschetz_skeleton(::LefschetzComplex,::Vector{String},::Int)
 lefschetz_subcomplex(::LefschetzComplex,::Vector{Int})
 lefschetz_subcomplex(::LefschetzComplex,::Vector{String})
 lefschetz_filtration(::LefschetzComplex,::Vector{Int})
+lefschetz_filtration(::LefschetzComplex,::Vector{Vector{String}})
 permute_lefschetz_complex(::LefschetzComplex,::Vector{Int})
 ```
 
