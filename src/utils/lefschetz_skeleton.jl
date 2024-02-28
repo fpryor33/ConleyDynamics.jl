@@ -9,12 +9,8 @@ The computed skeleton is for the closure of the subcomplex given by `subcomp`.
 """
 function lefschetz_skeleton(lc::LefschetzComplex, subcomp::Vector{Int}, skdim::Int)
     #
-    # Compute the skdim-dimensional skeleton  of a Lefschetz complex subset
+    # Compute the skdim-dimensional skeleton of a Lefschetz complex subset
     #
-
-    # Extract the boundary matrix as a sparse matrix
-
-    bnd = lc.boundary
 
     # Compute the closure of the subcomplex
     
@@ -53,6 +49,33 @@ function lefschetz_skeleton(lc::LefschetzComplex, subcomp::Vector{String}, skdim
     end
 
     lcskeleton = lefschetz_skeleton(lc, subcompI, skdim)
+    return lcskeleton
+end
+
+"""
+    lefschetz_skeleton(lc::LefschetzComplex, skdim::Int)
+
+Compute the `skdim`-dimensional skeleton of a Lefschetz complex.
+
+The computed skeleton is for the full Lefschetz complex.
+"""
+function lefschetz_skeleton(lc::LefschetzComplex, skdim::Int)
+    #
+    # Compute the skdim-dimensional skeleton of a Lefschetz complex
+    #
+
+    # Extract the cells of dimension skdim
+
+    lcskeleton = Vector{Int}()
+
+    for k in 1:lc.ncells
+        if lc.dimensions[k] == skdim
+            push!(lcskeleton,k)
+        end
+    end
+
+    # Return the skeleton indices
+
     return lcskeleton
 end
 
