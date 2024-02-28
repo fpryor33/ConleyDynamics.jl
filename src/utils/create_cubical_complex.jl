@@ -1,4 +1,4 @@
-export create_cubical_complex, create_cube_label
+export create_cubical_complex, cube_field_size, cube_information, cube_label
 
 """
     create_cubical_complex(cubes::Vector{String})
@@ -26,6 +26,22 @@ been represented by `360.101` or by `003006000.101`.
 
 !!! warning
     Note that the labels all have to have the same format!
+
+# Example
+```jldoctest
+julia> cubes = ["00.11", "01.01", "02.10", "11.10", "11.01", "22.00"];
+
+julia> lc = create_cubical_complex(cubes);
+
+julia> lc.ncells
+17
+
+julia> homology(lc, p=0)
+3-element Vector{Int64}:
+ 2
+ 1
+ 0
+```
 """
 function create_cubical_complex(cubes::Vector{String})
     #
@@ -34,8 +50,7 @@ function create_cubical_complex(cubes::Vector{String})
 
     # Determine the point dimension and the coordinate field width
 
-    pointdim = length(cubes[1]) - first(findfirst(".",cubes[1]))
-    pointlen = Int((length(cubes[1]) - 1) / pointdim - 1)
+    pointdim, pointlen = cube_field_size(cubes[1])
 
     # Create a dictionary with all label to integer data information
     # 
@@ -47,29 +62,8 @@ function create_cubical_complex(cubes::Vector{String})
     # 1+2*pointdim:            dimension of the cube
 
     labelintinfodict = Dict{String,Vector{Int}}()
-    for k = 1:length(cubes)
-        curlabel = cubes[k]
-        curintinfo = Vector{Int}()
-        for m = 1:pointdim
-            i1 = 1 + (m-1) * pointlen
-            i2 = m * pointlen
-            push!(curintinfo,parse(Int,curlabel[i1:i2]))
-        end
-        for m = 1:pointdim
-            i1 = pointdim * pointlen + 1 + m
-            push!(curintinfo,parse(Int,curlabel[i1]))
-        end
-        curdim = sum(curintinfo[pointdim+1:2*pointdim])
-        push!(curintinfo,curdim)
-
-        if minimum(curintinfo[1:pointdim]) < 0
-            error("Point coordinates have to be at least 0!")
-        end
-        if maximum(curintinfo[1:pointdim]) > 10^pointlen - 2
-            error("Point coordinates overflow! (Cannot be 10^w-1)")
-        end
-
-        labelintinfodict[curlabel] = curintinfo
+    for curlabel in cubes
+        labelintinfodict[curlabel] = cube_information(curlabel)
     end
 
     # Find the dimension of the cubical complex
@@ -82,8 +76,7 @@ function create_cubical_complex(cubes::Vector{String})
     labelsets = [Set{String}() for _ in 0:CCdim]
     labelvect = [Vector{String}() for _ in 0:CCdim]
     
-    for k = 1:length(cubes)      # Initialize with the given cubes
-        curcube = cubes[k]
+    for curcube in cubes   # Initialize with the given cubes
         curcdim = labelintinfodict[curcube][1+2*pointdim]
         push!(labelsets[curcdim+1], curcube)
     end
@@ -112,8 +105,8 @@ function create_cubical_complex(cubes::Vector{String})
                 newintinfoN[ione+pointdim] = 0
                 newintinfoP[1+2*pointdim] -= 1
                 newintinfoN[1+2*pointdim] -= 1
-                newlabelP = create_cube_label(pointdim, pointlen, newintinfoP)
-                newlabelN = create_cube_label(pointdim, pointlen, newintinfoN)
+                newlabelP = cube_label(pointdim, pointlen, newintinfoP)
+                newlabelN = cube_label(pointdim, pointlen, newintinfoN)
                 push!(labelsets[k], newlabelP)
                 push!(labelsets[k], newlabelN)
                 labelintinfodict[newlabelP] = newintinfoP
@@ -164,8 +157,8 @@ function create_cubical_complex(cubes::Vector{String})
                 newintinfoN[ione+pointdim] = 0
                 newintinfoP[1+2*pointdim] -= 1
                 newintinfoN[1+2*pointdim] -= 1
-                newlabelP = create_cube_label(pointdim, pointlen, newintinfoP)
-                newlabelN = create_cube_label(pointdim, pointlen, newintinfoN)
+                newlabelP = cube_label(pointdim, pointlen, newintinfoP)
+                newlabelN = cube_label(pointdim, pointlen, newintinfoN)
                 bcellP = CClabelindexdict[newlabelP]
                 bcellN = CClabelindexdict[newlabelN]
 
@@ -193,7 +186,128 @@ function create_cubical_complex(cubes::Vector{String})
     return lc
 end
 
-function create_cube_label(pointdim::Int, pointlen::Int, newintinfo::Vector{Int})
+"""
+    cube_field_size(cube::String)
+
+Determine the field sizes of a given cube label.
+
+The function returns the dimension of the ambient space in the first output
+parameter `pointdim`, and the length of the individual coordinate fields
+in the second return variable `pointlen`.
+
+# Example
+```jldoctest
+julia> cube_field_size("011654003020.0110")
+(4, 3)
+```
+"""
+function cube_field_size(cube::String)
+    #
+    # Determine the field sizes of a given cube label
+    #
+
+    pointdim = length(cube) - first(findfirst(".",cube))
+    pointlen = Int((length(cube) - 1) / pointdim - 1)
+
+    return pointdim, pointlen
+end
+
+"""
+    cube_information(cube::String)
+
+Compute a cube's coordinate information.
+
+The function returns an integer vector with the cubes coordinate information.
+The return vector `intinfo` contains in its components the following data:
+
+* `1:pointdim`: Coordinates of the anchor point
+* `1+pointdim:2*pointdim`: Interval length in each dimension
+* `1+2*pointdim`: Dimension of the cube
+
+Note that `pointdim` equals the dimension of the points specifying the cube.
+
+# Example
+```jldoctest
+julia> cube_information("011654003.011")
+7-element Vector{Int64}:
+  11
+ 654
+   3
+   0
+   1
+   1
+   2
+```
+"""
+function cube_information(cube::String)
+    #
+    # Create a vector of a cube's integer data information. The
+    # vector entries contain the following information:
+    #
+    # 1:pointdim:              coordinates of the anchor point
+    # 1+pointdim:2*pointdim:   interval length in each dimension
+    # 1+2*pointdim:            dimension of the cube
+    #
+
+    # Get the cube's size information
+
+    pointdim, pointlen = cube_field_size(cube)
+
+    # Extract the anchor point coordinates
+
+    intinfo = Vector{Int}()
+    for m = 1:pointdim
+        i1 = 1 + (m-1) * pointlen
+        i2 = m * pointlen
+        push!(intinfo,parse(Int,cube[i1:i2]))
+    end
+
+    # Extract the cube's interval length information
+
+    for m = 1:pointdim
+        i1 = pointdim * pointlen + 1 + m
+        push!(intinfo,parse(Int,cube[i1]))
+    end
+
+    # Add the dimension information for convenience
+
+    cdim = sum(intinfo[pointdim+1:2*pointdim])
+    push!(intinfo,cdim)
+
+    # Check for admissibility
+
+    if minimum(intinfo[1:pointdim]) < 0
+        error("Point coordinates have to be at least 0!")
+    end
+    if maximum(intinfo[1:pointdim]) > 10^pointlen - 2
+        error("Point coordinates overflow! (Cannot be 10^w-1)")
+    end
+
+    # Return the integer information
+
+    return intinfo
+end
+
+"""
+    cube_label(pointdim::Int, pointlen::Int, pointinfo::Vector{Int})
+
+Create a label from a cube's coordinate information.
+
+The dimension of the ambient Eucliden space is `pointdim`, while the field
+length for each coordinate is `pointlen`. The vector `pointinfo` has to be of
+length at least two times `pointdim`. The first `pointdim` entries contain the
+coordinates of the anchor point, while the next `pointdim` entries are either 0
+or 1 depending on the size of the interval. For example, if `poindim = 3`
+and `pointinfo = [1,2,3,1,0,1]`, then we represent the cube in three-dimensional
+space given by `[1,2] x [2] x [3 4]`.
+
+# Example
+```jldoctest
+julia> cube_label(3,2,[10,23,5,1,1,0])
+"102305.110"
+```
+"""
+function cube_label(pointdim::Int, pointlen::Int, pointinfo::Vector{Int})
     #
     # Create the label for a cube
     #
@@ -202,13 +316,13 @@ function create_cube_label(pointdim::Int, pointlen::Int, newintinfo::Vector{Int}
     labelvec = Vector{String}()
 
     for k = 1:pointdim
-        push!(labelvec, Printf.format(Printf.Format(labformat), newintinfo[k]))
+        push!(labelvec, Printf.format(Printf.Format(labformat), pointinfo[k]))
     end
 
     push!(labelvec, ".")
 
     for k = 1:pointdim
-        push!(labelvec, string(newintinfo[k+pointdim]))
+        push!(labelvec, string(pointinfo[k+pointdim]))
     end
 
     return join(labelvec)
