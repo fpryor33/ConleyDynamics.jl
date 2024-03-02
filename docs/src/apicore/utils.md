@@ -13,18 +13,27 @@ end
 create_simplicial_complex(::Vector{String},::Vector{Vector{Int}})
 create_simplicial_complex(::Vector{String},::Vector{Vector{String}})
 create_simplicial_rectangle(::Int,::Int)
+convert_simplices(::Vector{Vector{Int}},::Vector{String})
+convert_simplices(::Vector{Vector{String}},::Vector{String})
+```
+
+## Cubical Complexes
+
+```@docs
 create_cubical_complex(::Vector{String})
 create_cubical_rectangle(::Int,::Int)
 cube_field_size(::String)
 cube_information(::String)
 cube_label(::Int,::Int,::Vector{Int})
-convert_simplices(::Vector{Vector{Int}},::Vector{String})
-convert_simplices(::Vector{Vector{String}},::Vector{String})
 ```
 
-## Lefschetz complexes
+## General Lefschetz complexes
 
 ```@docs
+lefschetz_boundary(::LefschetzComplex,::Int)
+lefschetz_boundary(::LefschetzComplex,::String)
+lefschetz_coboundary(::LefschetzComplex,::Int)
+lefschetz_coboundary(::LefschetzComplex,::String)
 lefschetz_closure(::LefschetzComplex,::Vector{Int})
 lefschetz_closure(::LefschetzComplex,::Vector{String})
 lefschetz_is_closed(::LefschetzComplex,::Vector{Int})
