@@ -48,7 +48,8 @@ function lefschetz_skeleton(lc::LefschetzComplex, subcomp::Vector{String}, skdim
         push!(subcompI,lc.indices[ks])
     end
 
-    lcskeleton = lefschetz_skeleton(lc, subcompI, skdim)
+    lcskeletonI = lefschetz_skeleton(lc, subcompI, skdim)
+    lcskeleton  = lc.labels[lcskeletonI]
     return lcskeleton
 end
 

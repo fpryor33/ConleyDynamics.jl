@@ -47,7 +47,8 @@ function lefschetz_closure(lc::LefschetzComplex, subcomp::Vector{String})
         push!(subcompI,lc.indices[ks])
     end
 
-    lcclosure = lefschetz_closure(lc, subcompI)
+    lcclosureI = lefschetz_closure(lc, subcompI)
+    lcclosure  = lc.labels[lcclosureI]
     return lcclosure
 end
 

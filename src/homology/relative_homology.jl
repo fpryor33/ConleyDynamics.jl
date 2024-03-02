@@ -30,11 +30,19 @@ function relative_homology(lc::LefschetzComplex,
         return homology(lc,p=p)
     end
 
+    # Convert subcomplex list to integers if necessary
+
+    if subc isa Vector{String}
+        isubc = [lc.indices[k] for k in subc]
+    else
+        isubc = subc
+    end
+
     # Create the filtration: 0 for the closed subcomplex,
     # and 1 for the rest
 
     filtration = fill(Int(1),lc.ncells)
-    closure = lefschetz_closure(lc, subc)
+    closure = lefschetz_closure(lc, isubc)
 
     for k in closure
         filtration[k] = 0
