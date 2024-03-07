@@ -1,4 +1,4 @@
-# Connection Matrix Functions
+# Conley Theory Functions
 
 ## Conley Index Computations
 

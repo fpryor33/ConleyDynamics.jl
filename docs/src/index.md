@@ -41,6 +41,13 @@ julia> using Pkg; Pkg.add("ConleyDynamics")
 
 ## Manual Outline
 
+The [Tutorial](@ref) briefly explains how to get started with ConleyDynamics.
+More details, including on the underlying mathematics, are provided in the
+following four sections, which cover Lefschetz complexes, homology, Conley
+theory including connection matrices, and sparse matrices, respectively.
+Finally, a discussion of all included examples can be found in the
+[Examples](@ref) section.
+
 ```@contents
 Pages = [
     "man/tutorial.md",
@@ -50,13 +57,6 @@ Pages = [
     "man/sparse.md",
     "man/examples.md",
 ]
-Depth = 1
+Depth = 2
 ```
-
-The [Tutorial](@ref) briefly explains how to get started with ConleyDynamics.
-More details, including on the underlying mathematics, are provided in the
-following four sections, which cover Lefschetz complexes, homology, Conley
-theory including connection matrices, and sparse matrices, respectively.
-Finally, a discussion of all included examples can be found in the
-[Examples](@ref) section.
 

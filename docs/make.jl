@@ -39,7 +39,8 @@ pageslist = ["Overview" => "index.md",
                  "apicore/plots.md",
                  "apicore/cmcore.md",
                  "apicore/homology.md",
-                 "apicore/sparse.md"
+                 "apicore/sparse.md",
+                 "apicore/apiindex.md"
                   ],
             ]
 
