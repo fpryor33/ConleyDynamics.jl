@@ -13,8 +13,8 @@ end
 create_simplicial_complex(::Vector{String},::Vector{Vector{Int}})
 create_simplicial_complex(::Vector{String},::Vector{Vector{String}})
 create_simplicial_rectangle(::Int,::Int)
-create_simplicial_delauney(::Real,::Real,::Real,::Int)
-create_simplicial_delauney(::Real,::Real,::Int)
+create_simplicial_delaunay(::Real,::Real,::Real,::Int)
+create_simplicial_delaunay(::Real,::Real,::Int)
 convert_simplices(::Vector{Vector{Int}},::Vector{String})
 convert_simplices(::Vector{Vector{String}},::Vector{String})
 ```

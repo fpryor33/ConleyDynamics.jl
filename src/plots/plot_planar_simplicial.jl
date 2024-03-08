@@ -7,8 +7,8 @@ export plot_planar_simplicial
                            [mvf::MultiVectorField,]
                            [labeldir::Vector{<:Real},]
                            [labeldis::Real,]
-                           [hfac::Real],
-                           [vfac::Real],
+                           [hfac::Real,]
+                           [vfac::Real,]
                            [pv::Bool])
 
 Create an image of a planar simplicial complex, and if
@@ -28,6 +28,31 @@ to E,N,W,S. The optional constants `hfac` and `vfac` contain
 the horizontal and vertical scale vectors. Finally if one passes
 the argument `pv=true`, then in addition to saving the file
 a preview is displayed.
+
+# Examples
+
+Suppose we have created a simplicial complex using the commands
+
+```julia
+sc, coords = create_simplicial_delaunay(300, 300, 30, 20)
+fname = "sc_plot_test.pdf"
+```
+
+Then the following code creates an image of the simplicial complex
+without labels, but with a preview:
+
+```julia
+plot_planar_simplicial(sc, coords, fname, pv=true)
+```
+
+If we want to see the labels, we can use
+
+```julia
+ldir = fill(0.5, sc.ncells);
+plot_planar_simplicial(sc, coords, fname, labeldir=ldir, labeldis=10, pv=true)
+```
+
+This command puts all labels in the North-East direction at a distance of 10.
 """
 function plot_planar_simplicial(sc::LefschetzComplex,
                                 coords::Vector{<:Vector{<:Real}},
