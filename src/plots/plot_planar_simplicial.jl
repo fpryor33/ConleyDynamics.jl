@@ -9,7 +9,7 @@ export plot_planar_simplicial
                            [labeldis::Real,]
                            [hfac::Real],
                            [vfac::Real],
-                           [preview::Bool])
+                           [pv::Bool])
 
 Create an image of a planar simplicial complex, and if
 specified, a Forman vector field on it.
