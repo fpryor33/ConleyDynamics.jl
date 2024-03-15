@@ -61,6 +61,8 @@ permute_lefschetz_complex(::LefschetzComplex,::Vector{Int})
 ```@docs
 convert_mvf(::Vector{Vector{Int}},::LefschetzComplex)
 convert_mvf(::Vector{Vector{String}},::LefschetzComplex)
+create_mvf_hull(::Vector{Vector{Int}},::LefschetzComplex)
+create_mvf_hull(::Vector{Vector{String}},::LefschetzComplex)
 ```
 
 ## Matrix Conversions
