@@ -13,8 +13,11 @@ the center point of the square. Labels have the following meaning:
 - The label `XXXYYYc` corresponds to `(XXX + 1/2, YYY + 1/2)`.
 
 The number of characters in `XXX` and `YYY` matches the number 
-of digits of the larger number of `nx` and `ny`.
+of digits of the larger number of `nx` and `ny`. The function
+returns the following objects:
 
+* A simplicial complex `sc::LefschetzComplex`.
+* A vector `coords::Vector{Vector{Float64}}` of vertex coordinates.
 """
 function create_simplicial_rectangle(nx::Int, ny::Int)
     #
@@ -35,16 +38,19 @@ function create_simplicial_rectangle(nx::Int, ny::Int)
     # Create the vector of labels
 
     labels = Vector{String}()
+    coords = Vector{Vector{Float64}}()
     for ky = 0:ny
         for kx = 0:nx
             vlabel = Printf.format(Printf.Format(labformat), kx, ky, "b")
             push!(labels, vlabel)
+            push!(coords, [Float64(kx), Float64(ky)])
         end
     end
     for ky = 0:ny-1
         for kx = 0:nx-1
             vlabel = Printf.format(Printf.Format(labformat), kx, ky, "c")
             push!(labels, vlabel)
+            push!(coords, [Float64(kx)+0.5, Float64(ky)+0.5])
         end
     end
 
@@ -69,6 +75,6 @@ function create_simplicial_rectangle(nx::Int, ny::Int)
     # Create the simplicial complex and return it
 
     sc = create_simplicial_complex(labels,triangles)
-    return sc
+    return sc, coords
 end
 
