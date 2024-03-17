@@ -63,11 +63,13 @@ convert_mvf(::Vector{Vector{Int}},::LefschetzComplex)
 convert_mvf(::Vector{Vector{String}},::LefschetzComplex)
 create_mvf_hull(::Vector{Vector{Int}},::LefschetzComplex)
 create_mvf_hull(::Vector{Vector{String}},::LefschetzComplex)
+create_planar_mvf(::LefschetzComplex,::Vector{Vector{Float64}},vf)
 ```
 
-## Matrix Conversions
+## General Helper Functions
 
 ```@docs
+convert_planar_coordinates(::Vector{Vector{Float64}},::Vector{Float64},::Vector{Float64})
 convert_matrix_gfp(::SparseMatrix{Int},::Int)
 ```
 
