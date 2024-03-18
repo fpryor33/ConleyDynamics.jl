@@ -4,12 +4,14 @@ export plot_planar_simplicial
     plot_planar_simplicial(sc::LefschetzComplex,
                            coords::Vector{<:Vector{<:Real}},
                            fname::String;
-                           [mvf::MultiVectorField,]
-                           [labeldir::Vector{<:Real},]
-                           [labeldis::Real,]
-                           [hfac::Real,]
-                           [vfac::Real,]
-                           [pv::Bool])
+                           [mvf::MultiVectorField=Vector{Vector{Int}}([]),]
+                           [labeldir::Vector{<:Real}=Vector{Int}([]),]
+                           [labeldis::Real=8,]
+                           [hfac::Real=1.2,]
+                           [vfac::Real=1.2,]
+                           [sfac::Real=0,]
+                           [pdim::Vector{Bool}=[true,true,true],]
+                           [pv::Bool=false])
 
 Create an image of a planar simplicial complex, and if
 specified, a Forman vector field on it.
@@ -25,7 +27,10 @@ vector `labeldir` contains directions for the vertex labels,
 and `labeldis` the distance from the vertex. The directions
 have to be reals between 0 and 4, with 0,1,2,3 corresponding
 to E,N,W,S. The optional constants `hfac` and `vfac` contain
-the horizontal and vertical scale vectors. Finally if one passes
+the horizontal and vertical scale vectors, while `sfac` describes
+a uniform scale. If `sfac=0` the latter is automatically determined.
+The vector `pdim` specifies in which dimensions cells are drawn; the
+default shows vertices, edges, and triangles. Finally if one passes
 the argument `pv=true`, then in addition to saving the file
 a preview is displayed.
 
@@ -60,8 +65,10 @@ function plot_planar_simplicial(sc::LefschetzComplex,
                                 mvf::MultiVectorField=Vector{Vector{Int}}([]),
                                 labeldir::Vector{<:Real}=Vector{Int}([]),
                                 labeldis::Real=8,
-                                hfac::Real=1.5,
-                                vfac::Real=1.5,
+                                hfac::Real=1.2,
+                                vfac::Real=1.2,
+                                sfac::Real=0,
+                                pdim::Vector{Bool}=[true,true,true],
                                 pv::Bool=false)
     #
     # Create an image of a planar simplicial complex
@@ -69,17 +76,23 @@ function plot_planar_simplicial(sc::LefschetzComplex,
 
     # Create proper coordinates
    
-    cxmin = minimum([coords[k][1] for k in 1:length(coords)])
-    cxmax = maximum([coords[k][1] for k in 1:length(coords)])
-    cymin = minimum([-coords[k][2] for k in 1:length(coords)])
-    cymax = maximum([-coords[k][2] for k in 1:length(coords)])
-    figw = Int(round((cxmax - cxmin) * hfac))
-    figh = Int(round((cymax - cymin) * vfac))
-    figwoff = Int(round((cxmax - cxmin) * (hfac-1.0) * 0.5))
-    fighoff = Int(round((cymax - cymin) * (vfac-1.0) * 0.5))
+    cx0 = minimum([c[1] for c in coords])
+    cx1 = maximum([c[1] for c in coords])
+    cy0 = minimum([c[2] for c in coords])
+    cy1 = maximum([c[2] for c in coords])
 
-    pcoords = [[figwoff + coords[k][1], figh - fighoff - coords[k][2]]
-               for k in 1:length(coords)]
+    if iszero(sfac)
+        sfac = 800.0 / maximum([1, cx1-cx0, cy1-cy0])
+    end
+
+    figw  = Int(round((cx1 - cx0) * hfac * sfac))
+    figh  = Int(round((cy1 - cy0) * vfac * sfac))
+    figdx = (cx1 - cx0) * (hfac-1.0) * 0.5 * sfac
+    figdy = (cy1 - cy0) * (vfac-1.0) * 0.5 * sfac
+
+    pcoords = [[figdx + (c[1] - cx0) * (figw-2.0*figdx) / (cx1-cx0),
+                figdy + (cy1 - c[2]) * (figh-2.0*figdy) / (cy1-cy0)]
+               for c in coords]
 
     # Create a list of vertex points
 

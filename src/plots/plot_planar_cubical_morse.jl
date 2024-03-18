@@ -1,58 +1,40 @@
-export plot_planar_cubical
+export plot_planar_cubical_morse
 
 """
-    plot_planar_cubical(cc::LefschetzComplex,
-                        fname::String;
-                        [hfac::Real=1.2,]
-                        [vfac::Real=1.2,]
-                        [cubefac::Real=0,]
-                        [pdim::Vector{Bool}=[true,true,true],]
-                        [pv::Bool=false])
+    plot_planar_cubical_morse(cc::LefschetzComplex,
+                              fname::String,
+                              morsesets::MultiVectorField;
+                              [hfac::Real=1.2,]
+                              [vfac::Real=1.2,]
+                              [cubefac::Real=0,]
+                              [pdim::Vector{Bool}=[false,true,true],]
+                              [pv::Bool=false])
 
-Create an image of a planar cubical complex.
+Create an image of a planar cubical complex, together with
+Morse sets, or also selected multivectors.
 
-The image will be saved in the file with name `fname`, and the
-ending determines the image type. Accepted are `.pdf`, `.svg`,
-`.png`, and `.eps`. The optional constants `hfac` and `vfac` contain
-the horizontal and vertical scale vectors. The optional argument
-`cubefac` specifies the side length of an elementary cube for
-plotting, and it will be automatically determined otherwise. The
-vector `pdim` specifies which cell dimensions should be plotted,
-with `pdim[k]` representing dimension `k-1`. Finally if one passes
-the argument `pv=true`, then in addition to saving the file
-a preview is displayed.
+The image will be saved in the file with name `fname`, and the ending
+determines the image type. Accepted are `.pdf`, `.svg`, `.png`, and `.eps`.
 
-# Examples
+The vector `morsesets` contains a list of Morse sets, or more general,
+subsets of the cubical complex. For every `k`, the set described
+by `morsesets[k]` will be shown in a distinct color.
 
-Suppose we have created a cubical complex using the commands
-
-```julia
-cubes = ["00.11", "01.01", "02.10", "11.10", "11.01", "22.00"]
-cc = create_cubical_complex(cubes)
-fname = "cc_plot_test.pdf"
-```
-
-Then the following code creates an image of the simplicial complex
-without labels, but with a preview:
-
-```julia
-plot_planar_cubical(cc, fname, pv=true)
-```
-
-If one only wants to plot the edges in the complex, but not the
-vertices or rectangles, then one can use:
-
-```julia
-plot_planar_cubical(cc, fname, pv=true, pdim=[false,true,false])
-```
+The optional constants `hfac` and `vfac` contain the horizontal and
+vertical scale vectors for the margins, while `cubefac` describes a uniform
+scale. If `cubefac=0` the latter is automatically determined. The vector `pdim`
+specifies in which dimensions cells are drawn; the default only shows edges
+and squares. Finally if one passes the argument `pv=true`, then in addition
+to saving the file a preview is displayed.
 """
-function plot_planar_cubical(cc::LefschetzComplex,
-                             fname::String;
-                             hfac::Real=1.2,
-                             vfac::Real=1.2,
-                             cubefac::Real=0,
-                             pdim::Vector{Bool}=[true,true,true],
-                             pv::Bool=false)
+function plot_planar_cubical_morse(cc::LefschetzComplex,
+                                   fname::String,
+                                   morsesets::MultiVectorField;
+                                   hfac::Real=1.2,
+                                   vfac::Real=1.2,
+                                   cubefac::Real=0,
+                                   pdim::Vector{Bool}=[false,true,true],
+                                   pv::Bool=false)
     #
     # Create an image of a planar cubical complex
     #
@@ -147,6 +129,41 @@ function plot_planar_cubical(cc::LefschetzComplex,
             setcolor("steelblue1")
             poly([points[k1],points[k2],points[k3],points[k4]],
                        action = :fill; close=true)
+        end
+    end
+
+    # Plot the Morse sets
+
+    if morsesets isa Vector{Vector{Int}}
+        msI = morsesets
+    else
+        msI = convert_mvf(morsesets, cc)
+    end
+
+    col1 = colorant"royalblue4"
+    col2 = colorant"royalblue3"
+    col3 = colorant"steelblue1"
+    cols = distinguishable_colors(length(msI), [col1,col2,col3], dropseed=true)
+
+    for m in eachindex(msI)
+        setcolor(cols[m])
+        for k in msI[m]
+            cdim = cc.dimensions[k]
+            if (cdim == 0) & pdim[1]
+                circle(points[k], 5, action = :fill)
+            elseif (cdim == 1) & pdim[2]
+                k1 = cellvertices[k][1]
+                k2 = cellvertices[k][2]
+                line(points[k1],points[k2])
+                strokepath()
+            elseif (cdim == 2) & pdim[3]
+                k1 = cellvertices[k][1]
+                k2 = cellvertices[k][3]
+                k3 = cellvertices[k][4]
+                k4 = cellvertices[k][2]
+                poly([points[k1],points[k2],points[k3],points[k4]],
+                           action = :fill; close=true)
+            end
         end
     end
 

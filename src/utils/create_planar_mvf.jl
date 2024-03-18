@@ -63,7 +63,14 @@ full_from_sparse(cm.cm)
 ```
 
 finally show that this vector field gives rise to a Morse decomposition
-with nine Morse sets, and twelve connecting orbits.
+with nine Morse sets, and twelve connecting orbits. Using the commands
+
+```julia
+fname = "morse_test.pdf"
+plot_planar_simplicial_morse(lc, coordsN, fname, cm.morsesets)
+```
+
+these Morse sets can be visualized. The image will be saved in `fname`.
 
 # Example 2
 
@@ -95,6 +102,9 @@ cm2 = connection_matrix(lc2, mvf2, p=2);
 cm2.poincare
 cm2.poset
 full_from_sparse(cm2.cm)
+
+fname2 = "morse_test2.pdf"
+plot_planar_cubical_morse(lc2, fname2, cm2.morsesets)
 ```
 
 In this case, one obtains three Morse sets: One is a stable equilibrium,
