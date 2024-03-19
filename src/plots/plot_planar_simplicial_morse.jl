@@ -122,6 +122,7 @@ function plot_planar_simplicial_morse(sc::LefschetzComplex,
 
     for m in eachindex(msI)
         setcolor(cols[m])
+        setopacity(0.6)
         for k in msI[m]
             cdim = sc.dimensions[k]
             if (cdim == 0) && pdim[1]

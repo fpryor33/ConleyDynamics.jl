@@ -2,6 +2,7 @@ export plot_planar_cubical_morse
 
 """
     plot_planar_cubical_morse(cc::LefschetzComplex,
+                              coords::Vector{<:Vector{<:Real}},
                               fname::String,
                               morsesets::MultiVectorField;
                               [hfac::Real=1.2,]
@@ -10,11 +11,13 @@ export plot_planar_cubical_morse
                               [pdim::Vector{Bool}=[false,true,true],]
                               [pv::Bool=false])
 
-Create an image of a planar cubical complex, together with
-Morse sets, or also selected multivectors.
+Create an image of a planar cubical complex, together with Morse sets,
+or also selected multivectors.
 
-The image will be saved in the file with name `fname`, and the ending
-determines the image type. Accepted are `.pdf`, `.svg`, `.png`, and `.eps`.
+The vector `coords` contains coordinates for every one of the vertices
+of the cubical complex `cc`. The image will be saved in the file with
+name `fname`, and the ending determines the image type. Accepted are
+`.pdf`, `.svg`, `.png`, and `.eps`.
 
 The vector `morsesets` contains a list of Morse sets, or more general,
 subsets of the cubical complex. For every `k`, the set described
@@ -28,6 +31,7 @@ and squares. Finally if one passes the argument `pv=true`, then in addition
 to saving the file a preview is displayed.
 """
 function plot_planar_cubical_morse(cc::LefschetzComplex,
+                                   coords::Vector{<:Vector{<:Real}},
                                    fname::String,
                                    morsesets::MultiVectorField;
                                    hfac::Real=1.2,
@@ -47,29 +51,8 @@ function plot_planar_cubical_morse(cc::LefschetzComplex,
         error("The vertices are not at the beginning of the cell list!")
     end
 
-    # If desired, determine cubefac automatically
-
-    if iszero(cubefac)
-        oxmin = 10^10
-        oxmax = 0
-        oymin = 10^10
-        oymax = 0
-        for k = 1:length(vertices)
-            intinfo = cube_information(cc.labels[k])
-            oxmin = minimum([oxmin, intinfo[1]])
-            oxmax = maximum([oxmax, intinfo[1]])
-            oymin = minimum([oymin, intinfo[2]])
-            oymax = maximum([oymax, intinfo[2]])
-        end
-        cubefac = 800.0 / maximum([1, oxmax-oxmin, oymax-oymin])
-    end
-
-    # Compute the coordinates
-
-    coords = Vector{Vector{Float64}}()
-    for k = 1:length(vertices)
-        intinfo = cube_information(cc.labels[k])
-        push!(coords, [cubefac*intinfo[1], cubefac*intinfo[2]])
+    if !(length(vertices) == length(coords))
+        error("Coordinates need to be provided for all vertices!")
     end
 
     # Create proper coordinates
@@ -78,10 +61,15 @@ function plot_planar_cubical_morse(cc::LefschetzComplex,
     cx1 = maximum([c[1] for c in coords])
     cy0 = minimum([c[2] for c in coords])
     cy1 = maximum([c[2] for c in coords])
-    figw = Int(round((cx1 - cx0) * hfac))
-    figh = Int(round((cy1 - cy0) * vfac))
-    figdx = (cx1 - cx0) * (hfac-1.0) * 0.5
-    figdy = (cy1 - cy0) * (vfac-1.0) * 0.5
+
+    if iszero(cubefac)
+        cubefac = 800.0 / maximum([1, cx1-cx0, cy1-cy0])
+    end
+
+    figw  = Int(round((cx1 - cx0) * hfac * cubefac))
+    figh  = Int(round((cy1 - cy0) * vfac * cubefac))
+    figdx = (cx1 - cx0) * (hfac-1.0) * 0.5 * cubefac
+    figdy = (cy1 - cy0) * (vfac-1.0) * 0.5 * cubefac
 
     pcoords = [[figdx + (c[1] - cx0) * (figw-2.0*figdx) / (cx1-cx0),
                 figdy + (cy1 - c[2]) * (figh-2.0*figdy) / (cy1-cy0)]
@@ -147,6 +135,7 @@ function plot_planar_cubical_morse(cc::LefschetzComplex,
 
     for m in eachindex(msI)
         setcolor(cols[m])
+        setopacity(0.6)
         for k in msI[m]
             cdim = cc.dimensions[k]
             if (cdim == 0) & pdim[1]
@@ -173,5 +162,55 @@ function plot_planar_cubical_morse(cc::LefschetzComplex,
     if pv
         preview()
     end
+end
+
+"""
+    plot_planar_cubical_morse(cc::LefschetzComplex,
+                              fname::String,
+                              morsesets::MultiVectorField;
+                              [hfac::Real=1.2,]
+                              [vfac::Real=1.2,]
+                              [cubefac::Real=0,]
+                              [pdim::Vector{Bool}=[false,true,true],]
+                              [pv::Bool=false])
+
+Create an image of a planar cubical complex, together with
+Morse sets, or also selected multivectors.
+
+This is an alternative method which does not require the specification
+of the vertex coordinates. They will be taken from the cube vertex labels.
+"""
+function plot_planar_cubical_morse(cc::LefschetzComplex,
+                                   fname::String,
+                                   morsesets::MultiVectorField;
+                                   hfac::Real=1.2,
+                                   vfac::Real=1.2,
+                                   cubefac::Real=0,
+                                   pdim::Vector{Bool}=[false,true,true],
+                                   pv::Bool=false)
+    #
+    # Create an image of a planar cubical complex
+    #
+
+    # Extract the vertex information
+
+    vertices = lefschetz_skeleton(cc, 0)
+
+    if !(length(vertices) == maximum(vertices))
+        error("The vertices are not at the beginning of the cell list!")
+    end
+
+    # Compute the coordinates
+
+    coords = Vector{Vector{Float64}}()
+    for k = 1:length(vertices)
+        intinfo = cube_information(cc.labels[k])
+        push!(coords, [1.0*intinfo[1], 1.0*intinfo[2]])
+    end
+
+    # Call the method with coordinates
+    
+    plot_planar_cubical_morse(cc,coords,fname,morsesets,
+        hfac=hfac,vfac=vfac,cubefac=cubefac,pdim=pdim,pv=pv)
 end
 

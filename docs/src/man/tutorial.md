@@ -7,7 +7,7 @@ delayed until then. The presented examples are taken from the papers
 [batko:etal:20a](@cite) and [mrozek:wanner:p21a](@cite), with minor
 modifications.
 
-## Creating Lefschetz Complexes
+## Creating Simplicial Complexes
 
 The fundamental mathematical object for ConleyDynamics is a Lefschetz complex
 [lefschetz:42a](@cite). For now we note that both simplicial complexes and
@@ -453,7 +453,7 @@ error.
 
 ## Multivector Fields
 
-As second and last example of this first tutorial we turn our attention to the
+As second example of this first tutorial we turn our attention to the
 logo of `ConleyDynamics.jl`. It shows a simple multivector field on a simplicial
 complex, and both the simplicial complex `sclogo` and the multivector field
 `mvflogo` can be defined using the commands
@@ -554,6 +554,102 @@ set `ABC` and the large index 1 Morse set comprising almost all
 of the simplicial complex can be detected algebraically. In fact,
 there are two connections between the large Morse set and the
 stable equilibrium `D`, but they cancel algebraically.
+
+## Analyzing Planar Vector Fields
+
+Our third and last example of the tutorial briefly indicates how
+`ConleyDynamics.jl` can be used to analyze the global dynamics of
+certain planar ordinary differential equations. For this, consider
+the planar system given by
+
+```math
+   \begin{array}{rcl}
+     \dot{x}_1 & = & x_1 \left( 1 - x_1^2 - 3 x_2^2 \right) \\[1ex]
+     \dot{x}_2 & = & x_2 \left( 1 - 3 x_1^2 - x_2^2 \right)
+   \end{array}
+```
+
+The right-hand side of this vector field can be implemented using
+the Julia function
+
+```@example T3
+using ..ConleyDynamics # hide
+function planarvf(x::Vector{Float64})
+    #
+    # Sample planar vector field with nontrivial Morse decomposition
+    #
+    x1, x2 = x
+    y1 = x1 * (1.0 - x1*x1 - 3.0*x2*x2)
+    y2 = x2 * (1.0 - 3.0*x1*x1 - x2*x2)
+    return [y1, y2]
+end
+```
+
+To analyze the global dynamics of this vector field, we first create
+a Delaunay triangulation of the square ``[-3/2, 3/2]^2`` using the
+commands
+
+```@example T3
+lc, coords = create_simplicial_delaunay(300, 300, 10, 30);
+coordsN = convert_planar_coordinates(coords,[-1.5,-1.5], [1.5,1.5]);
+cx = [c[1] for c in coordsN];
+(minimum(cx), maximum(cx))
+```
+
+The first command generates the triangulation in a square box with 
+sidelength 300, while trying to keep a minimum distance of about 10
+between vertices. Once this has been accomplished, the second 
+command transforms the coordinates to the desired square domain.
+As the last two commands show, the resulting x-coordinates do indeed
+lie between -3/2 and 3/2.
+
+Next we can create a multivector field which describes the flow behavior
+through the edges of the triangulation. Basically, for each edge which
+is traversed in only one direction, the corresponding multivector
+respects this unidirectionality, while non-transverse edges lead
+to multivectors which allow for flow in both directions between the
+adjacent triangles. This is achieved with the commands
+
+```@example T3
+mvf = create_planar_mvf(lc, coordsN, planarvf);
+mvf[1:3]
+```
+
+The first command generates the multivector field, while the second
+one merely displays the first three resulting multivectors. Note that
+if the discretization is too coarse, this might lead to large multivectors
+that cannot resolve the underlying dynamics. In our case, we can analyze
+the global dynamics of the created multivector field using the commands
+
+```@example T3
+cm = connection_matrix(lc, mvf, p=2);
+cm.poincare
+```
+
+As the output shows, this planar system has nine isolated invariant sets:
+
+* One unstable equilibrium of index 2,
+* four unstable equilibria of index 1,
+* and four stable equilibria.
+
+More precisely, this computation does not in fact establish the existence
+of these equilibria, but of corresponding isolated invariant sets which have
+the respective Conley indices. The connection matrix is given by
+
+```@example T3
+full_from_sparse(cm.cm)
+```
+
+It shows that there are twelve connecting orbits that are forced by the
+algebraic topology. Finally, we can visualize the Morse sets using the
+command
+
+```julia
+fname = "tutorialplanar.pdf"
+plot_planar_simplicial_morse(lc, coordsN, fname, cm.morsesets, pv=true)
+```
+
+![Morse sets of a planar vector field](img/tutorialplanar.png)
 
 ## Tutorial References
 

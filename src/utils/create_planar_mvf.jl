@@ -67,7 +67,7 @@ with nine Morse sets, and twelve connecting orbits. Using the commands
 
 ```julia
 fname = "morse_test.pdf"
-plot_planar_simplicial_morse(lc, coordsN, fname, cm.morsesets)
+plot_planar_simplicial_morse(lc, coordsN, fname, cm.morsesets, pv=true)
 ```
 
 these Morse sets can be visualized. The image will be saved in `fname`.
@@ -104,7 +104,7 @@ cm2.poset
 full_from_sparse(cm2.cm)
 
 fname2 = "morse_test2.pdf"
-plot_planar_cubical_morse(lc2, fname2, cm2.morsesets)
+plot_planar_cubical_morse(lc2, fname2, cm2.morsesets, pv=true)
 ```
 
 In this case, one obtains three Morse sets: One is a stable equilibrium,
