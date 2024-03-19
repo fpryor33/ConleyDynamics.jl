@@ -439,17 +439,17 @@ between the equilibrium and the complete periodic solution. Similarly, there are
 connections between `DF` and both `F` and the periodic orbit, in view of the
 fourth column of the connection matrix.
 
-A description of the remaining fields of the struct `cm` can be found in the API
-entry for the function [`connection_matrix`](@ref). Internally, all computations
-necessary for determining the connection matrix are performed automatically over
-the rationals or over ``GF(p)``, dependending on the value of the arguent `p`.
+A description of the remaining fields of `cm` can be found in the API entry
+for [`connection_matrix`](@ref). Internally, all computations necessary for
+determining the connection matrix are performed automatically over the
+rationals or over ``GF(p)``, dependending on the value of the arguent `p`.
 If this argument is omitted, then the function either uses the value of
 `lc.boundary.char`, provided it is a nonzero integer, or raises an error. This
 is due to the fact that the boundary of a Lefschetz complex can be specified
 either as a matrix over the integers or over ``GF(p)``, but the connection
 matrix computations have to be performed over a field. Thus, the case of an
 integer boundary matrix (which corresponds to `lc.boundary.char=0`) raises an
-error. For more details, see the discussion of [`connection_matrix`](@ref).
+error.
 
 ## Multivector Fields
 

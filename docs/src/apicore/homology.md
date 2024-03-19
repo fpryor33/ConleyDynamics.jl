@@ -3,20 +3,19 @@
 ## Regular Homology
 
 ```@docs
-homology(::LefschetzComplex;::Int)
-relative_homology(::LefschetzComplex,::Union{Vector{Int},Vector{String}};::Int)
-relative_homology(::LefschetzComplex,::Union{Vector{Int},Vector{String}},::Union{Vector{Int},Vector{String}};::Int)
+homology
+relative_homology
 ```
 
 ## Persistent Homology
 
 ```@docs
-persistent_homology(::LefschetzComplex,::Vector{Int};::Int)
+persistent_homology
 ```
 
 ## Reduction Algorithm
 
 ```@docs
-ph_reduce!(::SparseMatrix;::Bool)
+ph_reduce!
 ```
 

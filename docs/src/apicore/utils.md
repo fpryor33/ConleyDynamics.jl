@@ -10,66 +10,50 @@ end
 ## Simplicial Complexes
 
 ```@docs
-create_simplicial_complex(::Vector{String},::Vector{Vector{Int}})
-create_simplicial_complex(::Vector{String},::Vector{Vector{String}})
-create_simplicial_rectangle(::Int,::Int)
-create_simplicial_delaunay(::Real,::Real,::Real,::Int)
-create_simplicial_delaunay(::Real,::Real,::Int)
-convert_simplices(::Vector{Vector{Int}},::Vector{String})
-convert_simplices(::Vector{Vector{String}},::Vector{String})
+create_simplicial_complex
+create_simplicial_rectangle
+create_simplicial_delaunay
+convert_simplices
 ```
 
 ## Cubical Complexes
 
 ```@docs
-create_cubical_complex(::Vector{String})
-create_cubical_rectangle(::Int,::Int)
-cube_field_size(::String)
-cube_information(::String)
-cube_label(::Int,::Int,::Vector{Int})
+create_cubical_complex
+create_cubical_rectangle
+cube_field_size
+cube_information
+cube_label
 ```
 
 ## General Lefschetz complexes
 
 ```@docs
-lefschetz_boundary(::LefschetzComplex,::Int)
-lefschetz_boundary(::LefschetzComplex,::String)
-lefschetz_coboundary(::LefschetzComplex,::Int)
-lefschetz_coboundary(::LefschetzComplex,::String)
-lefschetz_openhull(::LefschetzComplex,::Vector{Int})
-lefschetz_openhull(::LefschetzComplex,::Vector{String})
-lefschetz_closure(::LefschetzComplex,::Vector{Int})
-lefschetz_closure(::LefschetzComplex,::Vector{String})
-lefschetz_lchull(::LefschetzComplex,::Vector{Int})
-lefschetz_lchull(::LefschetzComplex,::Vector{String})
-lefschetz_is_closed(::LefschetzComplex,::Vector{Int})
-lefschetz_is_closed(::LefschetzComplex,::Vector{String})
-lefschetz_clomo_pair(::LefschetzComplex,::Vector{Int})
-lefschetz_clomo_pair(::LefschetzComplex,::Vector{String})
-lefschetz_skeleton(::LefschetzComplex,::Vector{Int},::Int)
-lefschetz_skeleton(::LefschetzComplex,::Vector{String},::Int)
-lefschetz_skeleton(::LefschetzComplex,::Int)
-lefschetz_subcomplex(::LefschetzComplex,::Vector{Int})
-lefschetz_subcomplex(::LefschetzComplex,::Vector{String})
-lefschetz_filtration(::LefschetzComplex,::Vector{Int})
-lefschetz_filtration(::LefschetzComplex,::Vector{Vector{String}})
-permute_lefschetz_complex(::LefschetzComplex,::Vector{Int})
+lefschetz_boundary
+lefschetz_coboundary
+lefschetz_openhull
+lefschetz_closure
+lefschetz_lchull
+lefschetz_is_closed
+lefschetz_clomo_pair
+lefschetz_skeleton
+lefschetz_subcomplex
+lefschetz_filtration
+permute_lefschetz_complex
 ```
 
 ## Multivector Fields
 
 ```@docs
-convert_mvf(::Vector{Vector{Int}},::LefschetzComplex)
-convert_mvf(::Vector{Vector{String}},::LefschetzComplex)
-create_mvf_hull(::Vector{Vector{Int}},::LefschetzComplex)
-create_mvf_hull(::Vector{Vector{String}},::LefschetzComplex)
-create_planar_mvf(::LefschetzComplex,::Vector{Vector{Float64}},vf)
+convert_mvf
+create_mvf_hull
+create_planar_mvf
 ```
 
 ## General Helper Functions
 
 ```@docs
-convert_planar_coordinates(::Vector{Vector{Float64}},::Vector{Float64},::Vector{Float64})
-convert_matrix_gfp(::SparseMatrix{Int},::Int)
+convert_planar_coordinates
+convert_matrix_gfp
 ```
 
