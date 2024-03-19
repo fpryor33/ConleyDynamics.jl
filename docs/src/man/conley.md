@@ -95,6 +95,39 @@ plot_planar_cubical_morse(lc, fname, cm.morsesets, pv=true)
 
 ![Morse sets of the planar circles vector field](img/cubicalcircles.png)
 
+To constrast the above example with the use of a Delaunay triangulation,
+we reanalyze the vector field in the following way:
+
+```julia
+lc2, coords2 = create_simplicial_delaunay(400, 400, 10, 30)
+coords2N = convert_planar_coordinates(coords2,[-3.0,-3.0], [3.0,3.0])
+mvf2 = create_planar_mvf(lc2, coords2N, circlevf)
+cm2 = connection_matrix(lc2, mvf2, p=2)
+
+fname2 = "cubicalcircles2.pdf"
+plot_planar_simplicial_morse(lc2, coords2N, fname2, cm2.morsesets, pv=true)
+```
+
+In this case, the Morse sets can be visualized as in the figure.
+
+![Morse sets of the planar circles vector field via Delaunay](img/cubicalcircles2.png)
+
+Notice that we can also show the individual multivectors in more detail.
+For the above example, we can plot all multivectors of the multivector
+field `mvf2` which consist of at least 10 cells using the commands
+
+```julia
+mv_indices = findall(x -> (length(x)>9), mvf2)
+large_mv = mvf2[mv_indices]
+
+fname3 = "cubicalcircles3.pdf"
+plot_planar_simplicial_morse(lc2, coords2N, fname3, large_mv, pv=true)
+```
+
+![Large multivectors in the Delaunay multivector field](img/cubicalcircles3.png)
+
+Note that in this example, there are only 20 large multivectors.
+
 ## Conley Theory References
 
 See the [full bibliography](@ref References) for a complete list
