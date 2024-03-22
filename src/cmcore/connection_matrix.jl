@@ -24,7 +24,7 @@ function connection_matrix(lc::LefschetzComplex, mvfarg::MultiVectorField;
     # Convert the multivector field to Int if necessary
 
     if mvfarg isa Vector{Vector{String}}
-        mvf = convert_mvf(mvfarg, lc)
+        mvf = convert_mvf(lc, mvfarg)
     else
         mvf = mvfarg
     end

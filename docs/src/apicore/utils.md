@@ -48,6 +48,7 @@ permute_lefschetz_complex
 convert_mvf
 create_mvf_hull
 create_planar_mvf
+extract_multivectors
 ```
 
 ## General Helper Functions

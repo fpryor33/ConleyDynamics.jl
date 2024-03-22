@@ -154,7 +154,7 @@ function create_planar_mvf(lc::LefschetzComplex, coords::Vector{Vector{Float64}}
 
     # Create the multivector field
 
-    mvf = create_mvf_hull(mvfbase, lc)
+    mvf = create_mvf_hull(lc, mvfbase)
     return mvf
 end
 

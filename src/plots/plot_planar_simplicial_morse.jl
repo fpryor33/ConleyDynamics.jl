@@ -112,7 +112,7 @@ function plot_planar_simplicial_morse(sc::LefschetzComplex,
     if morsesets isa Vector{Vector{Int}}
         msI = morsesets
     else
-        msI = convert_mvf(morsesets, sc)
+        msI = convert_mvf(sc, morsesets)
     end
 
     col1 = colorant"royalblue4"

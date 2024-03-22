@@ -116,7 +116,7 @@ function plot_planar_simplicial(sc::LefschetzComplex,
         # First make sure that the multivector field has type Int
 
         if typeof(mvf[1][1]) == String
-            mvfI = convert_mvf(mvf, sc)
+            mvfI = convert_mvf(sc, mvf)
         else
             mvfI = mvf
         end

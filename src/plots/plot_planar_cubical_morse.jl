@@ -125,7 +125,7 @@ function plot_planar_cubical_morse(cc::LefschetzComplex,
     if morsesets isa Vector{Vector{Int}}
         msI = morsesets
     else
-        msI = convert_mvf(morsesets, cc)
+        msI = convert_mvf(cc, morsesets)
     end
 
     col1 = colorant"royalblue4"
