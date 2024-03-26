@@ -55,6 +55,7 @@ include("./utils/lefschetz_filtration.jl")
 include("./utils/create_mvf_hull.jl")
 include("./utils/create_planar_mvf.jl")
 include("./utils/extract_multivectors.jl")
+include("./utils/planar_nontransverse_edges.jl")
 
 include("./sparse/sparse_basic_functions.jl")
 include("./sparse/sparse_from_lists.jl")
