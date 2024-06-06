@@ -2,7 +2,7 @@ export cm_reduce!
 
 """
     cm_reduce!(matrix::SparseMatrix, psetvec::Vector{Int};
-               [returnbasis::Bool])
+               [returnbasis::Bool],[returntm::Bool])
 
 Compute the connection matrix.
 
@@ -16,9 +16,13 @@ to `psetvec`. Modifies the argument `matrix`.
   this returns information about the computed basis. The k-th entry
   of `basisvecs` is a vector containing the columns making up the
   k-th basis vector, which corresponds to column `cmatrix_cols[k]`.
+* `tmatrix` (optional): If the argument `returntm=true` is given
+  in addition to `returnbasis=true`, then instead of `basisvecs`
+  the function returns the complete transformation matrix. In this
+  case, `basicvecs` is not returned.
 """
 function cm_reduce!(matrix::SparseMatrix, psetvec::Vector{Int};
-                    returnbasis::Bool=false)
+                    returnbasis::Bool=false, returntm::Bool=false)
     #
     # Compute the connection matrix
     #
@@ -71,19 +75,17 @@ function cm_reduce!(matrix::SparseMatrix, psetvec::Vector{Int};
     cmatrix      = sparse_minor(matrix, cmatrix_cols, cmatrix_cols)
     
     if returnbasis
-
-        # Create a vector of basis vectors
-
-        basisvecs = Vector{Vector{Int}}()
-
-        for k=1:length(cmatrix_cols)
-            bvec = sort(sparse_get_nz_column(basis,cmatrix_cols[k]),rev=true)
-            push!(basisvecs,bvec)
+        if returntm
+            return cmatrix, cmatrix_cols, basis
+        else
+            # Create and return a vector of basis vectors
+            basisvecs = Vector{Vector{Int}}()
+            for k=1:length(cmatrix_cols)
+                bvec = sort(sparse_get_nz_column(basis,cmatrix_cols[k]),rev=true)
+                push!(basisvecs,bvec)
+            end
+            return cmatrix, cmatrix_cols, basisvecs
         end
-
-        # Return the results
-
-        return cmatrix, cmatrix_cols, basisvecs
     else
         return cmatrix, cmatrix_cols
     end
