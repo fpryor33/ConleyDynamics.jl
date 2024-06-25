@@ -153,7 +153,7 @@ function relative_homology(lc::LefschetzComplex,
 
     # Compute the relative homology
 
-    lcclsubc = lefschetz_subcomplex(lc, clsubc)
+    lcclsubc = lefschetz_closed_subcomplex(lc, clsubc)
     clsubc0_string = lc.labels[clsubc0]
     bettisub = relative_homology(lcclsubc, clsubc0_string, p=p)
     betti = fill(Int(0),lc.dim+1)

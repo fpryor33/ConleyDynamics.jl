@@ -1,12 +1,12 @@
-export lefschetz_subcomplex
+export lefschetz_closed_subcomplex
 
 """
-    lefschetz_subcomplex(lc::LefschetzComplex, subcomp::Vector{Int})
+    lefschetz_closed_subcomplex(lc::LefschetzComplex, subcomp::Vector{Int})
 
 Extract a closed subcomplex from a Lefschetz complex. The subcomplex is
 the closure of the collection of cells given in `subcomp`.
 """
-function lefschetz_subcomplex(lc::LefschetzComplex, subcomp::Vector{Int})
+function lefschetz_closed_subcomplex(lc::LefschetzComplex, subcomp::Vector{Int})
     #
     # Extract a subcomplex of a Lefschetz complex
     #
@@ -37,12 +37,12 @@ function lefschetz_subcomplex(lc::LefschetzComplex, subcomp::Vector{Int})
 end
 
 """
-    lefschetz_subcomplex(lc::LefschetzComplex, subcomp::Vector{String})
+    lefschetz_closed_subcomplex(lc::LefschetzComplex, subcomp::Vector{String})
 
 Extract a closed subcomplex from a Lefschetz complex. The subcomplex is
 the closure of the collection of cells given in `subcomp`.
 """
-function lefschetz_subcomplex(lc::LefschetzComplex, subcomp::Vector{String})
+function lefschetz_closed_subcomplex(lc::LefschetzComplex, subcomp::Vector{String})
     #
     # Extract a subcomplex of a Lefschetz complex
     #
@@ -52,7 +52,7 @@ function lefschetz_subcomplex(lc::LefschetzComplex, subcomp::Vector{String})
         push!(subcompI,lc.indices[ks])
     end
 
-    lcsub = lefschetz_subcomplex(lc, subcompI)
+    lcsub = lefschetz_closed_subcomplex(lc, subcompI)
     return lcsub
 end
 

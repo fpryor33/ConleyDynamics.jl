@@ -75,7 +75,7 @@ function lefschetz_filtration(lc::LefschetzComplex, fvalues::Vector{Int})
     else
         # Not all cells are used, extract a subcomplex
         indexpos = findall(x -> x>0, newfvalues)
-        lcsub = lefschetz_subcomplex(lc, indexpos)
+        lcsub = lefschetz_closed_subcomplex(lc, indexpos)
         fvalsub = filter(x -> x>0, newfvalues)
     end
         

@@ -28,7 +28,7 @@ function conley_index(lc::LefschetzComplex, subcomp::Vector{String};
 
     # Compute the subcomplex for the closure
 
-    lcclo = lefschetz_subcomplex(lc, clo)
+    lcclo = lefschetz_closed_subcomplex(lc, clo)
 
     # Compute and return the Conley index
 
