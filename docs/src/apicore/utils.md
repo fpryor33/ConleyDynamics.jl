@@ -35,8 +35,10 @@ lefschetz_openhull
 lefschetz_closure
 lefschetz_lchull
 lefschetz_is_closed
+lefschetz_is_locally_closed
 lefschetz_clomo_pair
 lefschetz_skeleton
+lefschetz_subcomplex
 lefschetz_closed_subcomplex
 lefschetz_filtration
 permute_lefschetz_complex
