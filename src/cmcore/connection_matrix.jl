@@ -111,10 +111,26 @@ function connection_matrix(lc::LefschetzComplex, mvfarg::MultiVectorField;
 
     renumber_poset!(cmPoset)
 
+    # Construct the Conley complex as a Lefschetz complex
+
+    cc_ncells  = length(cmLabels)
+    cc_bnd     = cmMatr
+    cc_labels  = cmLabels
+    cc_dims    = Vector{Int}([lc.dimensions[lc.indices[cmLabels[k]]]
+                              for k in 1:cc_ncells])
+    cc_dim     = maximum(cc_dims)
+    cc_indices = Dict{String,Int}(cc_labels[j] => j
+                                   for j=1:length(cc_labels))
+
+    # Create the new Lefschetz complex and return it
+
+    cmCC = LefschetzComplex(cc_ncells, cc_dim, cc_bnd,
+                            cc_labels, cc_indices, cc_dims)
+ 
     # Return the connection matrix information
     
     cm = ConleyMorseCM{typeof(cmMatr.zero)}(
-                cmMatr, cmCols, cmPoset, cmLabels, cmMorseSets, cmPoincare)
+                cmMatr, cmCols, cmPoset, cmLabels, cmMorseSets, cmPoincare, cmCC)
 
     if returnbasis
         return cm, basisdict

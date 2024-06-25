@@ -22,7 +22,7 @@ matrix over `GF(p)` and all future computations are restricted to that field.
 struct LefschetzComplex
     ncells::Int
     dim::Int
-    boundary::SparseMatrix{Int}
+    boundary::SparseMatrix
     labels::Vector{String}
     indices::Dict{String,Int}
     dimensions::Vector{Int}
@@ -49,6 +49,7 @@ struct ConleyMorseCM{T}
     labels::Vector{String}
     morsesets::Vector{Vector{String}}
     poincare::Vector{Vector{Int}}
+    complex::LefschetzComplex
 end
 
 """
