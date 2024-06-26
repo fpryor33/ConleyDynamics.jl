@@ -1,7 +1,7 @@
 export example_BKMW20_fig1
 
 """
-    example_BKMW20_fig1()
+    lc, mvf, coords = example_BKMW20_fig1()
 
 Create the simplicial complex and multivector field
 for the example from Figure 1 in the FoCM 2020 paper
@@ -10,13 +10,14 @@ by *Batko, Kaczynski, Mrozek, and Wanner*.
 The function returns the Lefschetz complex `lc` and the 
 multivector field `mvf`. If desired for plotting, the third
 return value `coords` gives a vector of coordinates for the
-vertices.
+vertices. The Lefschetz complex is defined over the finite
+field GF(2).
 
 # Examples
 ```jldoctest
 julia> lc, mvf = example_BKMW20_fig1();
 
-julia> cm = connection_matrix(lc, mvf, p=2);
+julia> cm = connection_matrix(lc, mvf);
 
 julia> sparse_show(cm.cm)
 [0   0   0   0   1]
@@ -38,7 +39,7 @@ function example_BKMW20_fig1()
 
     labels = ["A", "B", "C", "D", "E", "F"]
     intsimplices = [[1,3],[1,4],[3,4],[2,5],[2,6],[5,6],[4,5]]
-    lc = create_simplicial_complex(labels, intsimplices)
+    lc = create_simplicial_complex(labels, intsimplices, p=2)
 
     # Create coordinates for plotting
 

@@ -2,21 +2,19 @@ export connection_matrix
 
 """
     connection_matrix(lc::LefschetzComplex, mvf::MultiVectorField;
-                      [p::Int,] [returnbasis::Bool])
+                      [returnbasis::Bool])
 
 Compute a connection matrix for the multivector field `mvf` on the
-Lefschetz complex `lc` over a finite field with `p` elements, or 
-over the rationals.
+Lefschetz complex `lc` over the field associated with the Lefschetz
+complex boundary matrix.
 
 The function returns an object of type `ConleyMorseCM`. If the optional
 argument `returnbasis::Bool=true` is given, then the function also returns
 a dictionary which gives the basis for the connection matrix columns in
-terms of the original labels. If `p` is omitted, then the Lefschetz
-complex boundary has to has been specified over a field. If the boundary
-matrix is an integer matrix, `p` has to be chosen.
+terms of the original labels.
 """
 function connection_matrix(lc::LefschetzComplex, mvfarg::MultiVectorField;
-                           p::Int=-1, returnbasis::Bool=false)
+                           returnbasis::Bool=false)
     #
     # Compute the connection matrix
     #
@@ -40,26 +38,9 @@ function connection_matrix(lc::LefschetzComplex, mvfarg::MultiVectorField;
 
     adorder, adbnd, psetvec, scc = admissible_order(bndmatrix, mvf)
 
-    # Convert the boundary matrix to finite field or rational format
-
-    if (adbnd isa SparseMatrix{Int}) && (adbnd.char == 0)
-        if (p == -1)
-            error("Homology over Z is not supported, specify p!")
-        elseif (p >= 0)
-            bndA = convert_matrix_gfp(adbnd, p)
-        else
-            error("Wrong characteristic p!")
-        end
-    else
-        bndA = adbnd
-        if !(adbnd.char == p) && !(p == -1)
-            println("WARNING: Using inherent characteristic of the boundary matrix!")
-        end
-    end
-
     # Compute the connection matrix in reordered form
 
-    cmRedP = deepcopy(bndA)
+    cmRedP = deepcopy(adbnd)
     if returnbasis
         cmMatrP, cmColsP, cmBasisP = cm_reduce!(cmRedP, psetvec; returnbasis=true)
     else

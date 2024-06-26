@@ -1,9 +1,10 @@
 export create_cubical_rectangle
 
 """
-    create_cubical_rectangle(nx::Int, ny::Int)
+    create_cubical_rectangle(nx::Int, ny::Int; p::Int=2)
 
-Create a cubical complex covering a rectangle in the plane.
+Create a cubical complex covering a rectangle in the plane. The
+complex is over the rationals if `p=0`, and over `GF(p)` if `p>0`.
 
 The rectangle is given by the subset `[0,nx] x [0,ny]` of the plane,
 and each unit square gives a two-dimensional cube in the resulting
@@ -12,7 +13,7 @@ cubical complex. The function returns the following objects:
 * A cubical complex `cc::LefschetzComplex`.
 * A vector `coords::Vector{Vector{Float64}}` of vertex coordinates.
 """
-function create_cubical_rectangle(nx::Int, ny::Int)
+function create_cubical_rectangle(nx::Int, ny::Int; p::Int=2)
     #
     # Create a Lefschetz complex struct for a cubical rectangle.
     #
@@ -39,7 +40,7 @@ function create_cubical_rectangle(nx::Int, ny::Int)
 
     # Create the Lefschetz complex
 
-    lc = create_cubical_complex(cubes)
+    lc = create_cubical_complex(cubes, p=p)
 
     # Create the coordinate vector
 

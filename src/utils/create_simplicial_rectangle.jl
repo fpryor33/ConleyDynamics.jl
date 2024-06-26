@@ -1,9 +1,10 @@
 export create_simplicial_rectangle
 
 """
-    create_simplicial_rectangle(nx::Int, ny::Int)
+    create_simplicial_rectangle(nx::Int, ny::Int; p::Int=2)
 
-Create a simplicial complex covering a rectangle in the plane.
+Create a simplicial complex covering a rectangle in the plane. The
+complex is over the rationals if `p=0`, and over `GF(p)` if `p>0`.
 
 The rectangle is given by the subset `[0,nx] x [0,ny]` of the plane.
 Each unit square is represented by four triangles, which meet in
@@ -19,7 +20,7 @@ returns the following objects:
 * A simplicial complex `sc::LefschetzComplex`.
 * A vector `coords::Vector{Vector{Float64}}` of vertex coordinates.
 """
-function create_simplicial_rectangle(nx::Int, ny::Int)
+function create_simplicial_rectangle(nx::Int, ny::Int; p::Int=2)
     #
     # Create a Lefschetz complex struct for a simplicial rectangle.
     #
@@ -74,7 +75,7 @@ function create_simplicial_rectangle(nx::Int, ny::Int)
 
     # Create the simplicial complex and return it
 
-    sc = create_simplicial_complex(labels,triangles)
+    sc = create_simplicial_complex(labels,triangles,p=p)
     return sc, coords
 end
 

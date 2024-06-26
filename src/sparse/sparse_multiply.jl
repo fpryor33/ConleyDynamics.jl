@@ -23,7 +23,7 @@ function sparse_multiply(A::SparseMatrix, B::SparseMatrix)
         error("The sparse matrices need to have the same type!")
     end
 
-    if !(typeof(A.char) == typeof(B.char))
+    if !(A.char == B.char)
         error("The sparse matrices have to be over the same field!")
     end
 

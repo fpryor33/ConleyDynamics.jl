@@ -1,19 +1,19 @@
 export example_MW_fig03
 
 """
-    example_MW_fig03()
+    lc, mvf = example_MW_fig03()
 
 Create the Lefschetz complex and multivector field for the example
 from Figure 3 in the connection matrix paper by *Mrozek & Wanner*.
 
-The function returns the Lefschetz complex `lc` and the
-multivector field `mvf`.
+The function returns the Lefschetz complex `lc` over GF(2) and
+the multivector field `mvf`.
 
 # Examples
 ```jldoctest
 julia> lc, mvf = example_MW_fig03();
 
-julia> cm = connection_matrix(lc, mvf, p=2);
+julia> cm = connection_matrix(lc, mvf);
 
 julia> sparse_show(cm.cm)
 [0   0   0   0]
@@ -69,7 +69,7 @@ function example_MW_fig03()
     # Construct the Lefschetz complex struct
     
     lc = LefschetzComplex(nc, Int(2),
-                          sparse_from_full(bndmatrix),
+                          sparse_from_full(bndmatrix, p=2),
                           labelvec, indexdict, sdvec)
 
     # Create the common part of the combinatorial vector fields

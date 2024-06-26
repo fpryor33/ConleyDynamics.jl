@@ -1,7 +1,7 @@
 export example_MW_fig11
 
 """
-    example_MW_fig11(mvftype)
+    lc, mvf = example_MW_fig11(mvftype)
 
 Create the Lefschetz complex and multivector field for the example
 from Figure 11 in the connection matrix paper by *Mrozek & Wanner*.
@@ -9,14 +9,14 @@ from Figure 11 in the connection matrix paper by *Mrozek & Wanner*.
 Depending on the value of `mvftype`, return the multivector (0=default)
 or one of the two combinatorial vector field (1,2) examples.
 
-The function returns the Lefschetz complex `lc` and the
-multivector field `mvf`.
+The function returns the Lefschetz complex `lc` over the rationals
+and the multivector field `mvf`.
 
 # Examples
 ```jldoctest
 julia> lc, mvf = example_MW_fig11(1);
 
-julia> cm = connection_matrix(lc, mvf; p=0);
+julia> cm = connection_matrix(lc, mvf);
 
 julia> full_from_sparse(cm.cm)
 5×5 Matrix{Rational{Int64}}:
@@ -72,7 +72,7 @@ function example_MW_fig11(mvftype=0)
     # Construct the Lefschetz complex struct
     
     lc = LefschetzComplex(nc, Int(2),
-                          sparse_from_full(bndmatrix),
+                          sparse_from_full(bndmatrix, p=0),
                           labelvec, indexdict, sdvec)
 
     # Create the common part of the combinatorial vector fields

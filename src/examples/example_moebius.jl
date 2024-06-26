@@ -1,29 +1,34 @@
 export example_moebius
 
 """
-    lc1, mvf1, lc2, mvf2 = example_moebius()
+    lc1, mvf1, lc2, mvf2 = example_moebius(p)
 
 Create two simplicial complexes for a cylinder and Moebius
 strip, respectively, together with associated multivector
 fields on them.
 
 The function returns the Lefschetz complexes `lc1` and `lc2`,
-as well as the multivector fields `mvf1` and `mvf2`.
+as well as the multivector fields `mvf1` and `mvf2`. Both
+complexes are over a field with characteristic `p`. Positive 
+prime characteristic uses the finite field GF(p), while zero
+characteristic gives the rationals.
 
 The multivector field is the same, and it has one critical 
 cell each in dimension 1 and 2 in the interior of the strip.
 The boundary consists of two periodic orbits for `lc1` and
 `mvf1`, and of one periodic orbit in the Moebius case `lc2`
 and `mvf2`. The latter case leads to different connection
-matrices for the fields GFP(2) and GFP(7), for example.
+matrices for the fields GF(2) and GF(7), for example.
 
 # Examples
 ```jldoctest
-julia> lc1, mvf1, lc2, mvf2 = example_moebius();
+julia> lc1p2, mvf1p2, lc2p2, mvf2p2 = example_moebius(2);
 
-julia> cmp2 = connection_matrix(lc2, mvf2; p=2);
+julia> lc1p7, mvf1p7, lc2p7, mvf2p7 = example_moebius(7);
 
-julia> cmp7 = connection_matrix(lc2, mvf2; p=7);
+julia> cmp2 = connection_matrix(lc2p2, mvf2p2);
+
+julia> cmp7 = connection_matrix(lc2p7, mvf2p7);
 
 julia> sparse_show(cmp2.cm)
 [0   0   0   0]
@@ -38,7 +43,7 @@ julia> sparse_show(cmp7.cm)
 [0   0   0   0]
 ```
 """
-function example_moebius()
+function example_moebius(p::Int)
     #
     # Example which returns different connection matrices for
     # different finite fields. The two examples are a cylinder
@@ -68,8 +73,8 @@ function example_moebius()
 
     # Create the simplicial complexes
 
-    lc1 = create_simplicial_complex(labels, simplices1)
-    lc2 = create_simplicial_complex(labels, simplices2)
+    lc1 = create_simplicial_complex(labels, simplices1, p=p)
+    lc2 = create_simplicial_complex(labels, simplices2, p=p)
 
     # Return the complexes and multivector fields
 

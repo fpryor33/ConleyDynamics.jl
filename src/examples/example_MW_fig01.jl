@@ -1,20 +1,20 @@
 export example_MW_fig01
 
 """
-    example_MW_fig01()
+    lc, mvf = example_MW_fig01()
 
 Create the simplicial complex and multivector field
 for the example from Figure 1 in the connection matrix
 paper by *Mrozek & Wanner*.
 
-The function returns the Lefschetz complex `lc` and the
-multivector field `mvf`.
+The function returns the Lefschetz complex `lc` over GF(2)
+and the multivector field `mvf`.
 
 # Examples
 ```jldoctest
 julia> lc, mvf = example_MW_fig01();
 
-julia> cm = connection_matrix(lc, mvf, p=2);
+julia> cm = connection_matrix(lc, mvf);
 
 julia> sparse_show(cm.cm)
 [0   0   0]
@@ -33,7 +33,7 @@ function example_MW_fig01()
 
     labels = ["A", "B", "C", "D"]
     intsimplices = [[1,2,3],[2,3,4]]
-    lc = create_simplicial_complex(labels, intsimplices)
+    lc = create_simplicial_complex(labels, intsimplices, p=2)
 
     # Create the multivector field
 

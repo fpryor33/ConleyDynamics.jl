@@ -1,17 +1,15 @@
 export conley_index
 
 """
-    conley_index(lc::LefschetzComplex, subcomp::Vector{String};
-                 p::Int)
+    conley_index(lc::LefschetzComplex, subcomp::Vector{String})
 
 Determine the Conley index of a Lefschetz complex subset.
 
 The function raises an error if the subset `subcomp` is not
-locally closed. The optional parameter `p` specifies the
-field characteristic for the homology computation.
+locally closed. The computations are performed over the field
+associated with the Lefschetz complex boundary matrix.
 """
-function conley_index(lc::LefschetzComplex, subcomp::Vector{String};
-                      p::Int=-1)
+function conley_index(lc::LefschetzComplex, subcomp::Vector{String})
     #
     # Determine the Conley index of a Lefschetz complex subset
     #
@@ -32,7 +30,7 @@ function conley_index(lc::LefschetzComplex, subcomp::Vector{String};
 
     # Compute and return the Conley index
 
-    bettisub = relative_homology(lcclo, mo, p=p)
+    bettisub = relative_homology(lcclo, mo)
     betti = fill(Int(0),lc.dim+1)
     for k=1:length(bettisub)
         betti[k] = bettisub[k]
@@ -44,22 +42,20 @@ function conley_index(lc::LefschetzComplex, subcomp::Vector{String};
 end
 
 """
-    conley_index(lc::LefschetzComplex, subcomp::Vector{Int};
-                 p::Int)
+    conley_index(lc::LefschetzComplex, subcomp::Vector{Int})
 
 Determine the Conley index of a Lefschetz complex subset.
 
 The function raises an error if the subset `subcomp` is not
-locally closed. The optional parameter `p` specifies the
-field characteristic for the homology computation.
+locally closed. The computations are performed over the field
+associated with the Lefschetz complex boundary matrix.
 """
-function conley_index(lc::LefschetzComplex, subcomp::Vector{Int};
-                      p::Int=-1)
+function conley_index(lc::LefschetzComplex, subcomp::Vector{Int})
     #
     # Determine the Conley index of a Lefschetz complex subset
     #
 
     subcompS = lc.labels[subcomp]
-    return conley_index(lc, subcompS, p=p)
+    return conley_index(lc, subcompS)
 end
 

@@ -2,24 +2,19 @@ export relative_homology
 
 """
     relative_homology(lc::LefschetzComplex,
-                      subc::Union{Vector{Int},Vector{String}};
-                      [p::Int])
+                      subc::Union{Vector{Int},Vector{String}})
 
 Compute the relative homology of a Lefschetz complex with
-respect to a subcomplex.
+respect to a subcomplex. The computation is performed over
+the field associated with the Lefschetz boundary matrix.
 
 The subcomplex is the closure of the cells in `subc`, which
 can be given either as indices or labels. The homology is
-computed over the rationals (for `p=0`) or the finite field
-`GF(p)` (for prime `p`) and is returned as a vector `betti`
-of Betti numbers, where `betti[k]` is the Betti number in
-dimension `k-1`. If the Lefschetz complex boundary matrix
-already has been specialized to a field, the optional
-argument `p` can be omitted.
+returned as a vector `betti` of Betti numbers, where `betti[k]`
+is the Betti number in dimension `k-1`.
 """
 function relative_homology(lc::LefschetzComplex,
-                           subc::Union{Vector{Int},Vector{String}};
-                           p::Int=-1)
+                           subc::Union{Vector{Int},Vector{String}})
     #
     # Compute the homology of a Lefschetz complex
     #
@@ -27,7 +22,7 @@ function relative_homology(lc::LefschetzComplex,
     # First deal with the case of empty subcomplex
 
     if length(subc) == 0
-        return homology(lc,p=p)
+        return homology(lc)
     end
 
     # Convert subcomplex list to integers if necessary
@@ -50,7 +45,7 @@ function relative_homology(lc::LefschetzComplex,
 
     # Compute the persistent homology
 
-    phs, php = persistent_homology(lc,filtration,p=p)
+    phs, php = persistent_homology(lc,filtration)
 
     # Assemble the Betti numbers:
     # Intervals (1,Inf) in dim p give contribute to dim p
@@ -78,9 +73,9 @@ function relative_homology(lc::LefschetzComplex,
     return betti
 end
 
-function relative_homology(lc::LefschetzComplex, subc::Vector{Any}; p::Int=-1)
+function relative_homology(lc::LefschetzComplex, subc::Vector{Any})
     if length(subc) == 0
-        return relative_homology(lc, Vector{Int}([]), p=p)   
+        return relative_homology(lc, Vector{Int}([]))
     else
         error("Unknow subspace type!")
     end
@@ -89,26 +84,21 @@ end
 """
     relative_homology(lc::LefschetzComplex,
                       subc::Union{Vector{Int},Vector{String}},
-                      subc0::Union{Vector{Int},Vector{String}};
-                      [p::Int])
+                      subc0::Union{Vector{Int},Vector{String}})
 
 Compute the relative homology of a Lefschetz complex with
-respect to a subcomplex.
+respect to a subcomplex. The computation is performed over
+the field associated with the Lefschetz boundary matrix.
 
 In this implementation, relative homology of the pair
 `cl(subc), cl(subc0))` is computed. An error is raised if
 `cl(subc0)` is not a subset of `cl(subc)`. The homology is
-computed over the rationals (for `p=0`) or the finite field
-`GF(p)` (for prime `p`) and is returned as a vector `betti`
-of Betti numbers, where `betti[k]` is the Betti number in
-dimension `k-1`. If the Lefschetz complex boundary matrix
-already has been specialized to a field, the optional
-argument `p` can be omitted.
+returned as a vector `betti` of Betti numbers, where `betti[k]`
+is the Betti number in dimension `k-1`.
 """
 function relative_homology(lc::LefschetzComplex,
                            subc::Union{Vector{Int},Vector{String}},
-                           subc0::Union{Vector{Int},Vector{String}};
-                           p::Int=-1)
+                           subc0::Union{Vector{Int},Vector{String}})
     #
     # Compute the homology of a Lefschetz complex
     #
@@ -155,7 +145,7 @@ function relative_homology(lc::LefschetzComplex,
 
     lcclsubc = lefschetz_closed_subcomplex(lc, clsubc)
     clsubc0_string = lc.labels[clsubc0]
-    bettisub = relative_homology(lcclsubc, clsubc0_string, p=p)
+    bettisub = relative_homology(lcclsubc, clsubc0_string)
     betti = fill(Int(0),lc.dim+1)
     for k=1:length(bettisub)
         betti[k] = bettisub[k]
@@ -168,15 +158,11 @@ end
 
 function relative_homology(lc::LefschetzComplex,
                            subc::Union{Vector{Int},Vector{String}},
-                           subc0::Vector{Any}; p::Int=-1)
+                           subc0::Vector{Any})
     if length(subc0) == 0
-        return relative_homology(lc, subc, Vector{Int}([]), p=p)   
+        return relative_homology(lc, subc, Vector{Int}([]))
     else
         error("Unknow subspace type!")
     end
 end
-
-
-
-
 

@@ -24,7 +24,7 @@ julia> filtration = [0,0,0,0,0,0,0,1,1,0,1,2,0,4,2,4,0,5,3,7,6];
 
 julia> lcsub, fvalsub = lefschetz_filtration(sc,filtration);
 
-julia> phinf, phint = persistent_homology(lcsub, fvalsub, p=2);
+julia> phinf, phint = persistent_homology(lcsub,fvalsub);
 
 julia> phinf
 3-element Vector{Vector{Int64}}:
@@ -108,7 +108,7 @@ julia> strfiltration = [["AB","AD","BD"],["BE","DE"],["BCE"],["CF","EF"],["ABD"]
 
 julia> lcsub, fvalsub = lefschetz_filtration(sc, strfiltration);
 
-julia> phinf, phint = persistent_homology(lcsub, fvalsub, p=2);
+julia> phinf, phint = persistent_homology(lcsub,fvalsub);
 
 julia> phinf
 3-element Vector{Vector{Int64}}:

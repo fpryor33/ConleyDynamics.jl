@@ -47,7 +47,7 @@ a cubical complex covering the square ``[-3, 3]^2`` using the commands
 
 ```@example Ccircle
 n = 51
-lc, coords = create_cubical_rectangle(n,n);
+lc, coords = create_cubical_rectangle(n,n,p=2);
 coordsN = convert_planar_coordinates(coords,[-3.0,-3.0],[3.0,3.0]);
 lc.ncells
 ```
@@ -64,7 +64,7 @@ This multivector field consists of 2437 multivectors. Finally, the
 connection matrix can be determined using the command
 
 ```@example Ccircle
-cm = connection_matrix(lc, mvf, p=2);
+cm = connection_matrix(lc, mvf);
 cm.poincare
 ```
 
@@ -99,10 +99,10 @@ To constrast the above example with the use of a Delaunay triangulation,
 we reanalyze the vector field in the following way:
 
 ```julia
-lc2, coords2 = create_simplicial_delaunay(400, 400, 10, 30)
+lc2, coords2 = create_simplicial_delaunay(400, 400, 10, 30, p=2)
 coords2N = convert_planar_coordinates(coords2,[-3.0,-3.0], [3.0,3.0])
 mvf2 = create_planar_mvf(lc2, coords2N, circlevf)
-cm2 = connection_matrix(lc2, mvf2, p=2)
+cm2 = connection_matrix(lc2, mvf2)
 
 fname2 = "cubicalcircles2.pdf"
 plot_planar_simplicial_morse(lc2, coords2N, fname2, cm2.morsesets, pv=true)

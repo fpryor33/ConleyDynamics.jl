@@ -1,9 +1,10 @@
 export create_cubical_complex, cube_field_size, cube_information, cube_label
 
 """
-    create_cubical_complex(cubes::Vector{String})
+    create_cubical_complex(cubes::Vector{String}; p::Int=2)
 
-Initialize a Lefschetz complex from a cubical complex.
+Initialize a Lefschetz complex from a cubical complex. The complex is
+over the rationals if `p=0`, and over `GF(p)` if `p>0`.
 
 The vector `cubes` contains a list of all the highest-dimensional cubes
 necessary to define the cubical complex. Every cube is represented as a
@@ -36,14 +37,14 @@ julia> lc = create_cubical_complex(cubes);
 julia> lc.ncells
 17
 
-julia> homology(lc, p=0)
+julia> homology(lc)
 3-element Vector{Int64}:
  2
  1
  0
 ```
 """
-function create_cubical_complex(cubes::Vector{String})
+function create_cubical_complex(cubes::Vector{String}; p::Int=2)
     #
     # Create a Lefschetz complex struct for a cubical complex.
     #
@@ -175,7 +176,14 @@ function create_cubical_complex(cubes::Vector{String})
         end
     end
 
-    B = sparse_from_lists(CCn,CCn,0,Int(0),Int(1),Br,Bc,Bv)
+    if p > 0
+        B = sparse_from_lists(CCn,CCn,p,Int(0),Int(1),Br,Bc,Bv)
+    else
+        tzero = Rational{Int}(0)
+        tone  = Rational{Int}(1)
+        Bvrational = convert(Vector{Rational{Int}},Bv)
+        B = sparse_from_lists(CCn,CCn,0,tzero,tone,Br,Bc,Bvrational)
+    end
 
     # Create the Lefschetz complex
 

@@ -1,7 +1,7 @@
 export example_MW_fig04
 
 """
-    example_MW_fig04()
+    lc1, lc2, mvf = example_MW_fig04()
 
 Create two representations of the Lefschetz complex and
 the multivector field for the example from Figure 4 in
@@ -9,7 +9,8 @@ the connection matrix paper by *Mrozek & Wanner*.
 
 The complexes `lc1` and `lc2` are just two representations
 of the same complex, but they lead to different connection
-matrices.
+matrices. Both Lefschetz complexes are defined over the
+finite field GF(2).
 
 The function returns the Lefschetz complexes `lc1` and `lc2`,
 as well as the multivector field `mvf`.

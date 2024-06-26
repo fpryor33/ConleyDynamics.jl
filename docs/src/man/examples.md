@@ -18,7 +18,7 @@ example_critical_simplex(::Int)
 ## Combinatorial flows on a cylinder and a Moebius strip
 
 ```@docs
-example_moebius()
+example_moebius(::Int)
 ```
 
 ## Nonunique connection matrices

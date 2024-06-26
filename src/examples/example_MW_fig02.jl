@@ -1,7 +1,7 @@
 export example_MW_fig02
 
 """
-    example_MW_fig02(mvftype)
+    lc, mvf, coords = example_MW_fig02(mvftype)
 
 Create the simplicial complex and multivector field for the example
 from Figure 2 in the connection matrix paper by *Mrozek & Wanner*.
@@ -9,16 +9,15 @@ from Figure 2 in the connection matrix paper by *Mrozek & Wanner*.
 Depending on the value of `mvftype`, return the periodic orbit (0=default)
 or one of the three gradient (1,2,3) examples.
 
-The function returns the Lefschetz complex `lc` and the
-multivector field `mvf`. If desired for plotting, the third
-return value `coords` gives a vector of coordinates for the
-vertices.
+The function returns the Lefschetz complex `lc` over the rational field
+and the multivector field `mvf`. If desired for plotting, the third
+return value `coords` gives a vector of coordinates for the vertices.
 
 # Examples
 ```jldoctest
 julia> lc, mvf = example_MW_fig02(0);
 
-julia> cm = connection_matrix(lc, mvf; p=0);
+julia> cm = connection_matrix(lc, mvf);
 
 julia> print(cm.labels)
 ["A", "C", "CE", "AC", "BD", "DF", "ABC", "EFG"]
@@ -96,7 +95,7 @@ function example_MW_fig02(mvftype=0)
     # Construct the Lefschetz complex struct
     
     lc = LefschetzComplex(nc, maximum(sdvec),
-                          sparse_from_full(bndmatrix),
+                          sparse_from_full(bndmatrix, p=0),
                           labelvec, indexdict, sdvec)
 
     # Create the common part of the combinatorial vector fields

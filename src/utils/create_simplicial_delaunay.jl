@@ -1,9 +1,11 @@
 export create_simplicial_delaunay
 
 """
-    create_simplicial_delaunay(boxw::Real, boxh::Real, pdist::Real, attmpt::Int)
+    create_simplicial_delaunay(boxw::Real, boxh::Real, pdist::Real, attmpt::Int;
+                               p::Int=2)
 
-Create a planar Delaunay triangulation inside a box.
+Create a planar Delaunay triangulation inside a box. The complex is
+over the rationals if `p=0`, and over `GF(p)` if `p>0`.
 
 The function selects a random sample of points inside the rectangular
 box `[0,boxw] x [0,boxh]`, while trying to maintain a minimum distance 
@@ -19,7 +21,8 @@ returns the following objects:
 Note that the function does not provide a full triangulation
 of the given rectangle. Close to the boundary there will be gaps.
 """
-function create_simplicial_delaunay(boxw::Real, boxh::Real, pdist::Real, attmpt::Int)
+function create_simplicial_delaunay(boxw::Real, boxh::Real, pdist::Real, attmpt::Int;
+                                    p::Int=2)
     #
     # Create a planar Delaunay triangulation
     #
@@ -68,14 +71,16 @@ function create_simplicial_delaunay(boxw::Real, boxh::Real, pdist::Real, attmpt:
     # Create the simplicial complex, and return it 
     # together with the coordinates
 
-    sc = create_simplicial_complex(labels, simplices)
+    sc = create_simplicial_complex(labels, simplices, p=p)
     return sc, coords
 end
 
 """
-    create_simplicial_delaunay(boxw::Real, boxh::Real, npoints::Int)
+    create_simplicial_delaunay(boxw::Real, boxh::Real, npoints::Int;
+                               p::Int=2)
 
-Create a planar Delaunay triangulation inside a box.
+Create a planar Delaunay triangulation inside a box. The complex is
+over the rationals if `p=0`, and over `GF(p)` if `p>0`.
 
 The function selects a random sample of `npoints` points inside the rectangular
 box `[0,boxw] x [0,boxh]`. From the random sample, the function then creates a
@@ -87,7 +92,8 @@ Delaunay triangulation, and returns the following objects:
 Note that the function does not provide a full triangulation
 of the given rectangle. Close to the boundary there will be gaps.
 """
-function create_simplicial_delaunay(boxw::Real, boxh::Real, npoints::Int)
+function create_simplicial_delaunay(boxw::Real, boxh::Real, npoints::Int;
+                                    p::Int=2)
     #
     # Create a planar Delaunay triangulation
     #
@@ -130,7 +136,7 @@ function create_simplicial_delaunay(boxw::Real, boxh::Real, npoints::Int)
     # Create the simplicial complex, and return it 
     # together with the coordinates
 
-    sc = create_simplicial_complex(labels, simplices)
+    sc = create_simplicial_complex(labels, simplices, p=p)
     return sc, coords
 end
 

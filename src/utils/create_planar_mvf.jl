@@ -57,7 +57,7 @@ mvf = create_planar_mvf(lc,coordsN,samplevf);
 and the commands
 
 ```julia
-cm = connection_matrix(lc, mvf, p=2);
+cm = connection_matrix(lc, mvf);
 cm.poincare
 full_from_sparse(cm.cm)
 ```
@@ -98,7 +98,7 @@ n2 = 51
 lc2, coords2 = create_cubical_rectangle(n2,n2);
 coords2N = convert_planar_coordinates(coords2,[-4.0,-4.0],[4.0,4.0]);
 mvf2 = create_planar_mvf(lc2,coords2N,samplevf2);
-cm2 = connection_matrix(lc2, mvf2, p=2);
+cm2 = connection_matrix(lc2, mvf2);
 cm2.poincare
 cm2.poset
 full_from_sparse(cm2.cm)

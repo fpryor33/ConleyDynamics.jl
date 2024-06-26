@@ -3,9 +3,11 @@ export sparse_from_full, full_from_sparse
 """
     sparse_from_full(matrix::Matrix{Int}; [p::Int=0])
 
-Create integer sparse matrix from full matrix. If the
-optional argument `p` is specified and positive, then
-the matrix is interpreted over `GF(p)`.
+Create sparse matrix from full integer matrix. If the optional
+argument `p` is specified and positive, then the returned matrix
+is an integer matrix which is interpreted over `GF(p)`. On the
+other hand, if `p` is omitted or equal to zero, then the return
+matrix has rational type.
 """
 function sparse_from_full(matrix::Matrix{Int}; p::Int=0)
     #
@@ -15,19 +17,31 @@ function sparse_from_full(matrix::Matrix{Int}; p::Int=0)
 
     nr = size(matrix,1)
     nc = size(matrix,2)
-    tzero = Int(0)
-    tone  = Int(1)
+
+    if p == 0
+        tzero = Rational{Int}(0)
+        tone  = Rational{Int}(1)
+    elseif p > 0
+        tzero = Int(0)
+        tone  = Int(1)
+    else
+        error("The characteristic p has to be 0 or positive!")
+    end
     
     # Create the lists for the nonzero entries
 
     r = Vector{Int}([])
     c = Vector{Int}([])
-    vals = Vector{Int}([])
+    vals = Vector{typeof(tone)}([])
 
     for k=1:nr
         for m=1:nc
-            mvalue = matrix[k,m]
-            if !(mvalue == 0)
+            if p == 0
+                mvalue = Rational{Int}(matrix[k,m])
+            else
+                mvalue = mod(matrix[k,m], p)
+            end
+            if !(mvalue == tzero)
                 push!(r,k)
                 push!(c,m)
                 push!(vals,mvalue)

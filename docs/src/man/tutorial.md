@@ -112,16 +112,16 @@ that can be found in ``K``. Finally, ``\beta_2(K)`` equals the number of
 cavities. In our case, we have
 
 ```@example T1
-homology(sc, p=0)
+homology(sc)
 ```
 
 This means that the simplicial complex ``K`` has one component, as well as one
 loop, and no cavities. The function `homology` returns a vector of integers,
 whose k-th entry is ``\beta_{k-1}(K)``. We would like to point out that in
 ConleyDynamics all homology computations are performed over fields, and 
-therefore homology is completely described by the Betti numbers. Two
-types of fields are supported, and they are selected by specifying the
-field characteristic `p`:
+therefore homology is completely described by the Betti numbers. Two types
+of fields are supported, and they are selected by the characteristic `p` in
+the sparse boundary matrix:
 
 - If `p=0`, then the homology computation uses the field of rational numbers.
 - For any prime number `p`, homology is determined over the finite field
@@ -135,7 +135,7 @@ identifying ``K_0`` to a single point, and then decreasing the zero-dimensional
 Betti number by 1. Consider for example the following command:
 
 ```@example T1
-relative_homology(sc, [1,6], p=0)
+relative_homology(sc, [1,6])
 ```
 
 In this case, the subcomplex ``K_0`` consists of the two vertices `A` and `F`,
@@ -146,7 +146,7 @@ since we obtain a second loop by moving from `A` to `F = A` along the edges
 `AB`, `BD`, and `DF`.  Another example is the following:
 
 ```@example T1
-relative_homology(sc, ["DE","DF","EF"], p=0)
+relative_homology(sc, ["DE","DF","EF"])
 ```
 
 Now the subcomplex ``K_0`` consists of the edges `DE`, `DF`, and `EF` --
@@ -161,7 +161,7 @@ to include all simplex faces, i.e., it computes the simplicial closure to arrive
 at a closed subcomplex. Finally, note that the subcomplex can be empty:
 
 ```@example T1
-relative_homology(sc, [], p=0)
+relative_homology(sc, [])
 ```
 
 As expected, in this case one obtains the standard homology of `sc`.
@@ -183,7 +183,7 @@ persistent homology is computed via the following command:
 
 ```@example T1
 filtration = [1,1,1,2,2,2,1,1,1,3,2,2,2,4]
-phsingles, phpairs = persistent_homology(sc, filtration, p=0)
+phsingles, phpairs = persistent_homology(sc, filtration)
 ```
 
 The function returns the *persistence intervals*, which give the birth and death
@@ -337,9 +337,9 @@ computed using the command `conley_index`. For example, for the three critical
 cells `F`, `DF`, and `DEF` one obtains the following Conley indices:
 
 ```@example T1
-println(conley_index(sc, ["F"], p=0))
-println(conley_index(sc, ["DF"], p=0))
-println(conley_index(sc, ["DEF"], p=0))
+println(conley_index(sc, ["F"]))
+println(conley_index(sc, ["DF"]))
+println(conley_index(sc, ["DEF"]))
 ```
 
 In other words, the Conley index of a critical cell of dimension ``k`` has
@@ -349,7 +349,7 @@ to a point on the sphere. On the other hand, for the Conley index of the
 periodic orbit ``S_P`` one obtains:
 
 ```@example T1
-conley_index(sc, ["AB", "AC", "BC", "A", "B", "C"], p=0)
+conley_index(sc, ["AB", "AC", "BC", "A", "B", "C"])
 ```
 
 This Conley index is nontrivial in dimensions ``0`` and ``1``. This is
@@ -367,7 +367,7 @@ Forman vector field `formanvf` the connection matrix information can be
 determined as follows:
 
 ```@example T1
-cm = connection_matrix(sc, formanvf, p=2)
+cm = connection_matrix(sc, formanvf)
 fieldnames(typeof(cm))
 ```
 
@@ -509,7 +509,7 @@ that the cell `ABC` is a critical cell:
 
 ```@example T2
 cl1, mo1 = lefschetz_clomo_pair(sclogo, ["ABC"])
-relative_homology(sclogo, cl1, mo1, p=2)
+relative_homology(sclogo, cl1, mo1)
 ```
 
 The first command creates the closure-mouth pair associated with
@@ -525,14 +525,14 @@ nontrivial multivector `mvflogo[3]` is indeed a regular multivector:
 
 ```@example T2
 cl2, mo2 = lefschetz_clomo_pair(sclogo, mvflogo[3])
-relative_homology(sclogo, cl2, mo2, p=2)
+relative_homology(sclogo, cl2, mo2)
 ```
 
 The global dynamics can again be determined using the function
 [`connection_matrix`](@ref):
 
 ```@example T2
-cmlogo = connection_matrix(sclogo, mvflogo, p=2)
+cmlogo = connection_matrix(sclogo, mvflogo)
 cmlogo.morsesets
 ```
 
@@ -622,7 +622,7 @@ that cannot resolve the underlying dynamics. In our case, we can analyze
 the global dynamics of the created multivector field using the commands
 
 ```@example T3
-cm = connection_matrix(lc, mvf, p=2);
+cm = connection_matrix(lc, mvf);
 cm.poincare
 ```
 

@@ -2,9 +2,11 @@ export create_simplicial_complex
 
 """
     create_simplicial_complex(labels::Vector{String},
-                              simplices::Vector{Vector{Int}})
+                              simplices::Vector{Vector{Int}};
+                              p::Int=2)
 
-Initialize a Lefschetz complex from a simplicial complex.
+Initialize a Lefschetz complex from a simplicial complex. The
+complex is over the rationals if `p=0`, and over `GF(p)` if `p>0`.
 
 The vector `labels` contains a label for every vertex, while
 `simplices` contains all the highest-dimensional simplices necessary
@@ -15,7 +17,8 @@ a vector of `Int`, with entries corresponding to the vertex indices.
     Note that the labels all have to have the same character length!
 """
 function create_simplicial_complex(labels::Vector{String},
-                                   simplices::Vector{Vector{Int}})
+                                   simplices::Vector{Vector{Int}};
+                                   p::Int=2)
     #
     # Create a Lefschetz complex struct for a simplicial complex.
     #
@@ -106,7 +109,14 @@ function create_simplicial_complex(labels::Vector{String},
         end
     end
 
-    B = sparse_from_lists(nsimp,nsimp,0,Int(0),Int(1),Br,Bc,Bv)
+    if p > 0
+        B = sparse_from_lists(nsimp,nsimp,p,Int(0),Int(1),Br,Bc,Bv)
+    else
+        tzero = Rational{Int}(0)
+        tone  = Rational{Int}(1)
+        Bvrational = convert(Vector{Rational{Int}},Bv)
+        B = sparse_from_lists(nsimp,nsimp,0,tzero,tone,Br,Bc,Bvrational)
+    end
     
     # Create the Lefschetz complex
 
@@ -119,16 +129,19 @@ end
 
 """
     create_simplicial_complex(labels::Vector{String},
-                              simplices::Vector{Vector{String}})
+                              simplices::Vector{Vector{String}};
+                              p::Int=2)
 
-Initialize a Lefschetz complex from a simplicial complex.
+Initialize a Lefschetz complex from a simplicial complex. The
+complex is over the rationals if `p=0`, and over `GF(p)` if `p>0`.
 
 The vector `labels` contains a label for every vertex, while
 `simplices` contains all the highest-dimensional simplices necessary
 to define the simplicial complex.
 """
 function create_simplicial_complex(labels::Vector{String},
-                                   simplices::Vector{Vector{String}})
+                                   simplices::Vector{Vector{String}};
+                                   p::Int=2)
     #
     # Create a Lefschetz complex struct for a simplicial complex.
     #
@@ -136,7 +149,7 @@ function create_simplicial_complex(labels::Vector{String},
     # in String format.
     #
     newsimplices = convert_simplices(simplices, labels)
-    lc = create_simplicial_complex(labels, newsimplices)
+    lc = create_simplicial_complex(labels, newsimplices, p=p)
     return lc
 end
 
