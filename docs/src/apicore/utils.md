@@ -59,7 +59,6 @@ extract_multivectors
 
 ```@docs
 convert_planar_coordinates
-convert_matrix_gfp
 planar_nontransverse_edges
 ```
 

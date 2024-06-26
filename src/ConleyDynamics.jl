@@ -33,7 +33,6 @@ include("./homology/persistent_homology.jl")
 include("./homology/homology.jl")
 include("./homology/relative_homology.jl")
 
-include("./utils/convert_matrix_gfp.jl")
 include("./utils/convert_mvf.jl")
 include("./utils/convert_simplices.jl")
 include("./utils/convert_coordinates.jl")
