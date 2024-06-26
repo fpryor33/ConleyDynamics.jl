@@ -40,32 +40,39 @@ function sparse_low(matrix::SparseMatrix, col::Int)
 end
 
 """
-    sparse_identity(n::Int, tone; p::Int=0)
+    sparse_identity(n::Int; p::Int=0)
 
-Create a sparse identity matrix with n rows and columns, and with
-diagonal entry `tone`. The optional argument `p` specifies the
-field characteristic if `typeof(tone)==Int`.
+Create a sparse identity matrix with n rows and columns.
+
+The optional argument `p` specifies the field characteristic.
+If `p=0` then the sparse matrix is over the rationals, while
+if `p>0` is a prime, then the matrix is an integer matrix 
+whose entries are interpreted in `GF(p)`.
 """
-function sparse_identity(n::Int, tone; p::Int=0)
+function sparse_identity(n::Int; p::Int=0)
     #
     # Create a sparse identity matrix with n rows and columns,
     # and with diagonal entry tone.
     #
 
-    # Check for p consistency
-
-    if (!(tone isa Int)) & (!(p == 0))
-        error("Characteristic p should be nonzero only for type Int!")
-    end
-
     # Initialize the variables and lists
+
+    if p == 0
+        tzero = Rational{Int}(0)
+        tone  = Rational{Int}(1)
+    elseif p > 0
+        tzero = Int(0)
+        tone  = Int(1)
+    else
+        error("The characteristic cannot be negative!")
+    end
 
     r = Vector{Int}(1:n)
     vals = fill(tone,n)
 
     # Create the sparse identity and return it
 
-    sm = sparse_from_lists(n, n, p, tone-tone, tone, r, r, vals)
+    sm = sparse_from_lists(n, n, p, tzero, tone, r, r, vals)
     return sm
 end
 

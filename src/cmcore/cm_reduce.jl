@@ -37,7 +37,7 @@ function cm_reduce!(matrix::SparseMatrix, psetvec::Vector{Int};
 
     numcolumns = sparse_size(matrix, 2)
     if returnbasis
-        basis = sparse_identity(numcolumns, tone, p=tchar)
+        basis = sparse_identity(numcolumns, p=tchar)
     end
 
     # Initialize the main computation

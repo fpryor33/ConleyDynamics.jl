@@ -36,7 +36,7 @@ function ph_reduce!(matrix::SparseMatrix; returnbasis::Bool=false)
 
     numcolumns = sparse_size(matrix, 2)
     if returnbasis
-        basis = sparse_identity(numcolumns, tone, p=matrix.char)
+        basis = sparse_identity(numcolumns, p=matrix.char)
     end
 
     # Initialize the main computation
