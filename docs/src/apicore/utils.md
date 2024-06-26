@@ -29,6 +29,7 @@ cube_label
 ## General Lefschetz complexes
 
 ```@docs
+lefschetz_field
 lefschetz_boundary
 lefschetz_coboundary
 lefschetz_openhull
@@ -41,6 +42,7 @@ lefschetz_skeleton
 lefschetz_subcomplex
 lefschetz_closed_subcomplex
 lefschetz_filtration
+lefschetz_gfp_conversion
 permute_lefschetz_complex
 ```
 

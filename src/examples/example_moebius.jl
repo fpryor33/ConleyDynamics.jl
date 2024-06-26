@@ -22,13 +22,15 @@ matrices for the fields GF(2) and GF(7), for example.
 
 # Examples
 ```jldoctest
-julia> lc1p2, mvf1p2, lc2p2, mvf2p2 = example_moebius(2);
+julia> lc1, mvf1, lc2, mvf2 = example_moebius(0);
 
-julia> lc1p7, mvf1p7, lc2p7, mvf2p7 = example_moebius(7);
+julia> lc2p2 = lefschetz_gfp_conversion(lc2,2);
 
-julia> cmp2 = connection_matrix(lc2p2, mvf2p2);
+julia> lc2p7 = lefschetz_gfp_conversion(lc2,7);
 
-julia> cmp7 = connection_matrix(lc2p7, mvf2p7);
+julia> cmp2 = connection_matrix(lc2p2, mvf2);
+
+julia> cmp7 = connection_matrix(lc2p7, mvf2);
 
 julia> sparse_show(cmp2.cm)
 [0   0   0   0]
