@@ -58,8 +58,8 @@ and the commands
 
 ```julia
 cm = connection_matrix(lc, mvf);
-cm.poincare
-full_from_sparse(cm.cm)
+cm.conley
+full_from_sparse(cm.matrix)
 ```
 
 finally show that this vector field gives rise to a Morse decomposition
@@ -67,7 +67,7 @@ with nine Morse sets, and twelve connecting orbits. Using the commands
 
 ```julia
 fname = "morse_test.pdf"
-plot_planar_simplicial_morse(lc, coordsN, fname, cm.morsesets, pv=true)
+plot_planar_simplicial_morse(lc, coordsN, fname, cm.morse, pv=true)
 ```
 
 these Morse sets can be visualized. The image will be saved in `fname`.
@@ -99,12 +99,12 @@ lc2, coords2 = create_cubical_rectangle(n2,n2);
 coords2N = convert_planar_coordinates(coords2,[-4.0,-4.0],[4.0,4.0]);
 mvf2 = create_planar_mvf(lc2,coords2N,samplevf2);
 cm2 = connection_matrix(lc2, mvf2);
-cm2.poincare
+cm2.conley
 cm2.poset
-full_from_sparse(cm2.cm)
+full_from_sparse(cm2.matrix)
 
 fname2 = "morse_test2.pdf"
-plot_planar_cubical_morse(lc2, fname2, cm2.morsesets, pv=true)
+plot_planar_cubical_morse(lc2, fname2, cm2.morse, pv=true)
 ```
 
 In this case, one obtains three Morse sets: One is a stable equilibrium,

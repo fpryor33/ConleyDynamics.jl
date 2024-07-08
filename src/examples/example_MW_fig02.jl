@@ -22,7 +22,7 @@ julia> cm = connection_matrix(lc, mvf);
 julia> print(cm.labels)
 ["A", "C", "CE", "AC", "BD", "DF", "ABC", "EFG"]
 
-julia> full_from_sparse(cm.cm)
+julia> full_from_sparse(cm.matrix)
 8×8 Matrix{Rational{Int64}}:
  0  0  0  -1  -1  0   0  0
  0  0  0   1   1  0   0  0

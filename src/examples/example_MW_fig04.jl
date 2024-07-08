@@ -23,14 +23,14 @@ julia> cm1 = connection_matrix(lc1, mvf);
 
 julia> cm2 = connection_matrix(lc2, mvf);
 
-julia> full_from_sparse(cm1.cm)
+julia> full_from_sparse(cm1.matrix)
 4×4 Matrix{Int64}:
  0  0  0  0
  0  0  0  1
  0  0  0  1
  0  0  0  0
 
-julia> full_from_sparse(cm2.cm)
+julia> full_from_sparse(cm2.matrix)
 4×4 Matrix{Int64}:
  0  0  0  0
  0  0  0  0

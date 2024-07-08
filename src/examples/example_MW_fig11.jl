@@ -18,7 +18,7 @@ julia> lc, mvf = example_MW_fig11(1);
 
 julia> cm = connection_matrix(lc, mvf);
 
-julia> full_from_sparse(cm.cm)
+julia> full_from_sparse(cm.matrix)
 5×5 Matrix{Rational{Int64}}:
  0  0  1  -1  -1
  0  0  1   0   0

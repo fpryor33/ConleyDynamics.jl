@@ -65,7 +65,7 @@ connection matrix can be determined using the command
 
 ```@example Ccircle
 cm = connection_matrix(lc, mvf);
-cm.poincare
+cm.conley
 ```
 
 Therefore, the above planar system has three isolated invariant sets.
@@ -80,7 +80,7 @@ cm.poset
 The connection matrix itself is given by
 
 ```@example Ccircle
-full_from_sparse(cm.cm)
+full_from_sparse(cm.matrix)
 ```
 
 This implies that there are connecting orbits from the unstable 
@@ -90,7 +90,7 @@ commands
 
 ```julia
 fname = "cubicalcircles.pdf"
-plot_planar_cubical_morse(lc, fname, cm.morsesets, pv=true)
+plot_planar_cubical_morse(lc, fname, cm.morse, pv=true)
 ```
 
 ![Morse sets of the planar circles vector field](img/cubicalcircles.png)
@@ -105,7 +105,7 @@ mvf2 = create_planar_mvf(lc2, coords2N, circlevf)
 cm2 = connection_matrix(lc2, mvf2)
 
 fname2 = "cubicalcircles2.pdf"
-plot_planar_simplicial_morse(lc2, coords2N, fname2, cm2.morsesets, pv=true)
+plot_planar_simplicial_morse(lc2, coords2N, fname2, cm2.morse, pv=true)
 ```
 
 In this case, the Morse sets can be visualized as in the figure.

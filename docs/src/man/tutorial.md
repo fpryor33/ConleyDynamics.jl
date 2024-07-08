@@ -1,9 +1,9 @@
 # Tutorial
 
 This tutorial explains the basic usage of the main components of ConleyDynamics.
-It is not meant to be exhaustive, since more details will be provided in the
-more indiviualized sections. Also, precise mathematical definitions will be
-delayed until then. The presented examples are taken from the papers
+It is not meant to be exhaustive, and more details will be provided in the more
+indiviualized sections. Also, precise mathematical definitions will be delayed
+until then. The presented examples are taken from the papers
 [batko:etal:20a](@cite) and [mrozek:wanner:p21a](@cite), with minor
 modifications.
 
@@ -18,10 +18,31 @@ For the sake of simplicity, this tutorial only considers the case of a
 simplicial complex. Recall that an *abstract simplicial complex* ``K`` is just a
 collection of finite sets, called *simplices*, which is closed under taking
 subsets. In other words, every subset of a simplex is again a simplex. Each
-simplex has an associated *dimension*, which is one less than the number of its
-elements. One usually calls simplices of dimension 0 *vertices*, *edges* have
-dimension 1, and simplices of dimension 2 are *triangles*. It follows easily
-from these definitions that every simplex is the union of its vertices.
+simplex ``\sigma`` has an associated *dimension* ``\dim\sigma``, which is one
+less than the number of its elements. One usually calls simplices of dimension 0
+*vertices*, *edges* have dimension 1, and simplices of dimension 2 are
+*triangles*. It follows easily from these definitions that every simplex is the
+union of its vertices.  The following notions associated with simplicial
+complexes are important for this introduction:
+
+- A *face* of a simplex is any of its subsets. Notice that every simplex is
+  a face of itself, and it is the only face that has the same dimension
+  as the simplex. Faces whose dimension is strictly smaller are referrred
+  to as *proper faces*.
+- The *boundary* of a simplex ``\sigma`` is the collection of all proper
+  faces of ``\sigma``. For a triangle, this amounts to all three edges and
+  all three vertices which are part of it.
+- A *facet* of a simplex ``\sigma`` is any face ``\tau`` with dimension
+  ``\dim\tau = \dim\sigma - 1``. Notice that the facets of a simplex are
+  the faces in its boundary of maximal dimension.
+- The *closure* of a subset ``K_0`` of a simplicial complex ``K`` consists of
+  the collection of all faces of simplices in ``K_0``, and we denote the
+  closure by ``\mathrm{cl}\, K_0``.
+- A subset ``K_0`` of a simplicial complex ``K`` is called *closed*, if
+  it equals its closure. In other words, ``K_0`` is closed if and only if
+  for every simplex ``\sigma`` in ``K_0`` all of its boundary simplices
+  are part of ``K_0`` as well. Thus, a closed subset of a simplicial
+  complex is a simplicial complex in its own right.
 
 In ConleyDynamics it is easy to generate a simplicial complex. This requires two
 objects:
@@ -85,19 +106,19 @@ simplex dimensions, and can be recalled via
 println(sc.dim)
 ```
 
-The `sc` struct also contains a vector of labels, which in this case takes the
-form
+The `sc` struct contains a vector of labels, which in this case takes the form
 
 ```@example T1
 println(sc.labels)
 ```
 
 Finally, the Lefschetz complex data structure for our simplicial complex ``K``
-also includes the dimensions for the corresponding cells in the integer vector
+includes the dimensions for the corresponding cells in the integer vector
 `sc.dimensions`, a dictionary `sc.indices` which associates each simplex label
 with its integer index, and the boundary map `sc.boundary` which will be
 described in more detail in [Lefschetz Complexes](@ref). The latter map
-is internally stored as an integer sparse matrix.
+is internally stored as a sparse matrix over either a finite field or over
+the rationals. See also the discussion of [Sparse Matrices](@ref).
 
 ## Computing Homology and Persistence
 
@@ -174,9 +195,9 @@ Lefschetz complexes
   K_1 \subset K_2 \subset \ldots \subset K_m .
 ```
 
-Then persistent homology tracks the appearance and disappearance (also often
-called the birth and death) of topological features as one moves through the
-complexes in the filtration. In ConleyDynamics, one can specify a Lefschetz
+Persistent homology tracks the appearance and disappearance (also often
+called the *birth* and *death*) of topological features as one moves through
+the complexes in the filtration. In ConleyDynamics, one can specify a Lefschetz
 complex filtration by assigning the integer ``k`` to each simplex that first
 appears in ``K_k``. Moreover, it is expected that ``K_m = K``. Then the
 persistent homology is computed via the following command:
@@ -186,9 +207,9 @@ filtration = [1,1,1,2,2,2,1,1,1,3,2,2,2,4]
 phsingles, phpairs = persistent_homology(sc, filtration)
 ```
 
-The function returns the *persistence intervals*, which give the birth and death
-indices of each topological feature in each dimension. There are two types of
-intervals:
+The function returns the *persistence intervals*, which give the birth and
+death indices of each topological feature in each dimension. There are two
+types of intervals:
 
 - Intervals of the form ``[a,\infty)`` correspond to topological
   features that first appear in ``K_a`` and are still present
@@ -197,7 +218,7 @@ intervals:
 - Intervals of the form ``[a,b)`` correspond to topological
   features that first appear in ``K_a`` and first disappear
   in ``K_b``. The corresponding pairs `(a,b)` in dimension
-  `k` are contained in the list `phsingles[k+1]`.
+  `k` are contained in the list `phpairs[k+1]`.
 
 In our above example, one observes intervals ``[1,\infty)`` in dimensions zero
 and one -- and these correspond to a connected component and the loop generated
@@ -218,8 +239,8 @@ The main focus of ConleyDynamics is on the study of *combinatorial topological
 dynamics* on Lefschetz complexes. While the phase space as Lefschetz complex has
 been discussed above, albeit only for the special case of a simplicial complex,
 the dynamics part can be given in the simplest form by a *combinatorial vector
-field*, also called a *Forman vector field* [forman:98a, forman:98b](@cite).  We
-will soon see that such vector fields are a more restrictive version of
+field*, also called a *Forman vector field* [forman:98a, forman:98b](@cite).
+We will soon see that such vector fields are a more restrictive version of
 *multivector fields*, but they are easier to start with.  The following command
 defines a simple Forman vector field on our sample simplicial complex ``K`` from
 above:
@@ -239,25 +260,22 @@ arrow. In other words, the collection of critical cells and arrows forms a
 partition of the simplicial complex ``K``. Arrows always have to consist of
 precisely two simplices: The source of the arrow is a simplex ``\sigma^-``,
 while its target is a second simplex ``\sigma^+``. These two simplices have to
-be related in the sense that ``\sigma^-`` is a *facet* of ``\sigma^+``. Recall
-that a facet of a simplex ``\tau`` is any subsimplex obtained from ``\tau`` by
-removing precisely one vertex, i.e., its dimension is exactly one less that
-``\dim\tau``, and it is therefore contained in the boundary of ``\tau``.
+be related in the sense that ``\sigma^-`` is a facet of ``\sigma^+``.
 
 As the above Julia code shows, a forman vector field is described by a vector of
 string vectors, where each of the latter contains the labels of the two
 simplices making up an arrow. Note that the critical cells are not explicitly
 listed, as any simplex of ``K`` that is not part of a vector is automatically
-critical. Alternatively, one could define the Forman vector field as a
-`Vector{Vector{Int}}`, if the labels are replaced by the corresponding
+assumed to be critical. Alternatively, one could define the Forman vector field
+as a `Vector{Vector{Int}}`, if the labels are replaced by the corresponding
 indices in `sc.indices`.
 
-Intuitively, the above visualization of the Forman vector field `formanvf`
-clearly induces *dynamical behavior* on the simplicial complex `sc`:
+Intuitively, the visualization of our sample Forman vector field `formanvf`
+induces the following *dynamical behavior* on the simplicial complex `sc`:
 
 - __Critical cells__ can be though of as *equilibrium states* for the
-  dynamics, i.e., they contain a stationary solution. Depending
-  on their dimension, they can also exhibit nonconstant dynamics --
+  dynamics, i.e., they contain a stationary solution. However, depending
+  on their dimension they can also exhibit nonconstant dynamics --
   which in backward time converges to the equilibrium, and in forward
   time flows towards the boundary of the simplex.
 - __Arrow sources__ always lead to flow into the interior of their
@@ -287,7 +305,7 @@ can be described by first decomposing it into smaller building blocks. An
 *invariant set* is a subset ``S \subset K`` of the simplicial complex such that
 for every simplex ``\sigma \in S`` there exists a solution through ``\sigma``
 which is contained in ``S`` and which exists for all forward and backward time.
-For example, in our example the following are sample invariant sets:
+In our example the following are sample invariant sets:
 
 - Every critical cell ``\sigma`` by itself is an invariant set, since we can
   choose the constant solution ``\sigma`` in the above definition. Thus, also
@@ -332,9 +350,9 @@ the relative homology of this pair is defined and we let
   CH_*(S) = H_*(\mathrm{cl}\, S, \mathrm{mo}\, S)
 ```
 
-denote the *Conley index* of the isolated invariant set. The Conley index can be
-computed using the command `conley_index`. For example, for the three critical
-cells `F`, `DF`, and `DEF` one obtains the following Conley indices:
+denote the *Conley index* of the isolated invariant set. The Conley index can
+be computed using the command `conley_index`. For the three critical cells `F`,
+`DF`, and `DEF` one obtains the following Conley indices:
 
 ```@example T1
 println(conley_index(sc, ["F"]))
@@ -344,7 +362,7 @@ println(conley_index(sc, ["DEF"]))
 
 In other words, the Conley index of a critical cell of dimension ``k`` has
 Betti number ``\beta_k = 1``, while the remaining Betti numbers vanish. This
-is precisely the relative homology of a ``k``-dimensional sphere, relative
+is precisely the relative homology of a ``k``-dimensional sphere with respect
 to a point on the sphere. On the other hand, for the Conley index of the
 periodic orbit ``S_P`` one obtains:
 
@@ -376,16 +394,16 @@ This command computes the connection matrix over the finite field ``GF(2) =
 contains the following information regarding the global dynamics of the
 combinatorial dynamical system:
 
-- The field `cm.morsesets` contains the *Morse decomposition* of
+- The field `cm.morse` contains the *Morse decomposition* of
   the Forman vector field. This is a collection of isolated invariant
   sets which capture all recurrent behavior. Outside of these sets, the
   dynamics is gradient-like, i.e., it moves from one Morse set to
   another.
 - Since each of the Morse sets is an isolated invariant set, they
   all have an associated Conley index. These are contained in the
-  field `cm.poincare`.
+  field `cm.conley`.
 - In addition, the struct `cm` contains information on the actual
-  *connection matrix* in the field `cm.cm`. While the field contains
+  *connection matrix* in the field `cm.matrix`. While the field contains
   the matrix, the rows and columns of the connection matrix correspond
   to the cells listed in `cm.labels`. These cells form the basis for
   the homology groups of all the Morse sets. Moreover, a nonzero entry
@@ -393,10 +411,13 @@ combinatorial dynamical system:
   orbit between the Morse set for the column label and the Morse set
   for the row label.
 
+The remaining field names of the struct `cm` are described in
+the section on [Conley Theory](@ref).
+
 For our example system, the Morse sets are given by
 
 ```@example T1
-cm.morsesets
+cm.morse
 ```
 
 There are five of them: The stable periodic orbit ``S_P`` mentioned earlier, the
@@ -405,7 +426,7 @@ as the two-dimensional unstable critical cell `DEF`.  The associated Conley
 indices are
 
 ```@example T1
-cm.poincare
+cm.conley
 ```
 
 Note that these are exactly as described in the homology section, despite the
@@ -413,12 +434,12 @@ fact that now we are computing over the finite field ``GF(2)``. An example where
 the index depends on the underlying field is provided by the function
 [`example_moebius`](@ref).
 
-Finally, the connection matrix itself is contained in `cm.cm`. Since internally
+Finally, the connection matrix itself is contained in `cm.matrix`. Since internally
 the connection matrix is stored in a sparse format, we display it after
 conversion to a full matrix:
 
 ```@example T1
-full_from_sparse(cm.cm)
+full_from_sparse(cm.matrix)
 ```
 
 In order to see which simplices correspond to the columns of the matrix, we use
@@ -533,20 +554,20 @@ The global dynamics can again be determined using the function
 
 ```@example T2
 cmlogo = connection_matrix(sclogo, mvflogo)
-cmlogo.morsesets
+cmlogo.morse
 ```
 
 As it turns out, our logo gives rise to three Morse sets, which in fact
 partition the simplicial complex. Their Conley indices are given by
 
 ```@example T2
-println(cmlogo.poincare)
+println(cmlogo.conley)
 ```
 
 Finally, the connection matrix has the form
 
 ```@example T2
-full_from_sparse(cmlogo.cm)
+full_from_sparse(cmlogo.matrix)
 ```
 
 Notice that in this example, only the connection between the Morse
@@ -623,7 +644,7 @@ the global dynamics of the created multivector field using the commands
 
 ```@example T3
 cm = connection_matrix(lc, mvf);
-cm.poincare
+cm.conley
 ```
 
 As the output shows, this planar system has nine isolated invariant sets:
@@ -637,7 +658,7 @@ of these equilibria, but of corresponding isolated invariant sets which have
 the respective Conley indices. The connection matrix is given by
 
 ```@example T3
-full_from_sparse(cm.cm)
+full_from_sparse(cm.matrix)
 ```
 
 It shows that there are twelve connecting orbits that are forced by the
@@ -646,7 +667,7 @@ command
 
 ```julia
 fname = "tutorialplanar.pdf"
-plot_planar_simplicial_morse(lc, coordsN, fname, cm.morsesets, pv=true)
+plot_planar_simplicial_morse(lc, coordsN, fname, cm.morse, pv=true)
 ```
 
 ![Morse sets of a planar vector field](img/tutorialplanar.png)

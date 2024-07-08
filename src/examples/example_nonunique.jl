@@ -22,7 +22,7 @@ julia> cm1 = connection_matrix(lc1, mvf);
 
 julia> cm2 = connection_matrix(lc2, mvf);
 
-julia> sparse_show(cm1.cm)
+julia> sparse_show(cm1.matrix)
 [0   0   0   1   0   1   0   0   0]
 [0   0   0   1   0   1   0   0   0]
 [0   0   0   0   0   0   0   1   1]
@@ -35,7 +35,7 @@ julia> sparse_show(cm1.cm)
 
 julia> print(cm1.labels)
 ["1", "6", "68", "18", "34", "56", "057", "238", "678"]
-julia> sparse_show(cm2.cm)
+julia> sparse_show(cm2.matrix)
 [0   0   0   1   0   1   0   0   0]
 [0   0   0   1   0   1   0   0   0]
 [0   0   0   0   0   0   1   0   1]

@@ -15,7 +15,7 @@ julia> lc, mvf = example_critical_simplex(2);
 
 julia> cm = connection_matrix(lc, mvf);
 
-julia> sparse_show(cm.cm)
+julia> sparse_show(cm.matrix)
 [0   0   0   1   1   0   0]
 [0   0   0   1   0   1   0]
 [0   0   0   0   1   1   0]

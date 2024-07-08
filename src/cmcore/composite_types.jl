@@ -29,22 +29,21 @@ end
 Collect the connection matrix information in a struct.
 
 The struct has the following fields:
-* `cm::SparseMatrix{T}`: Connection matrix
+* `matrix::SparseMatrix{T}`: Connection matrix
 * `columns::Vector{Int}`: Corresponding columns in the boundary matrix
 * `poset::Vector{Int}`: Poset indices for the connection matrix columns
 * `labels::Vector{String}`: Labels for the connection matrix columns
-* `morsesets::Vector{Vector{String}}`: Vector of Morse sets in original complex
-* `poincare::Vector{Vector{Int}}`: Vector of Poincare polynomial coefficients
-  for the Morse sets. The k-th entry is the coefficient of t^(k-1).
-* `complex::LefschetzComplex`: The Conley complex as a Lefschetz complex.
+* `morse::Vector{Vector{String}}`: Vector of Morse sets in original complex
+* `conley::Vector{Vector{Int}}`: Vector of Conley indices for the Morse sets
+* `complex::LefschetzComplex`: The Conley complex as a Lefschetz complex
 """
 struct ConleyMorseCM{T}
-    cm::SparseMatrix{T}
+    matrix::SparseMatrix{T}
     columns::Vector{Int}
     poset::Vector{Int}
     labels::Vector{String}
-    morsesets::Vector{Vector{String}}
-    poincare::Vector{Vector{Int}}
+    morse::Vector{Vector{String}}
+    conley::Vector{Vector{Int}}
     complex::LefschetzComplex
 end
 
