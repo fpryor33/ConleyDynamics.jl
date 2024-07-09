@@ -389,8 +389,15 @@ cm = connection_matrix(sc, formanvf)
 fieldnames(typeof(cm))
 ```
 
-This command computes the connection matrix over the finite field ``GF(2) =
-{\mathbb Z}_2``. The `connection_matrix` function returns a struct which
+This command calculates the connection matrix over the finite field
+``GF(2) = {\mathbb Z}_2``. The base field for this computation is
+determined by the data type of the boundary matrix in the underlying
+simplicial complex `sc`. By default, if one uses the function
+[`create_simplicial_complex`](@ref) without specifying the field
+characteristic `p`, the simplicial complex is created over the
+finite field ``\mathbb{Z}_2``, i.e., with `p=2`.
+
+The `connection_matrix` function returns a struct which
 contains the following information regarding the global dynamics of the
 combinatorial dynamical system:
 
@@ -405,11 +412,12 @@ combinatorial dynamical system:
 - In addition, the struct `cm` contains information on the actual
   *connection matrix* in the field `cm.matrix`. While the field contains
   the matrix, the rows and columns of the connection matrix correspond
-  to the cells listed in `cm.labels`. These cells form the basis for
-  the homology groups of all the Morse sets. Moreover, a nonzero entry
-  in the connection matrix indicates that there has to be a connecting
-  orbit between the Morse set for the column label and the Morse set
-  for the row label.
+  to the simplices in the underlying simplicial complex `sc` listed in
+  `cm.labels`. These simplices represent the basis for the homology
+  groups of all the Morse sets. Moreover, a nonzero entry in the
+  connection matrix indicates that there has to be a connecting
+  orbit between the Morse set containing the column label and the
+  Morse set containing the row label.
 
 The remaining field names of the struct `cm` are described in
 the section on [Conley Theory](@ref).
@@ -429,10 +437,10 @@ indices are
 cm.conley
 ```
 
-Note that these are exactly as described in the homology section, despite the
-fact that now we are computing over the finite field ``GF(2)``. An example where
-the index depends on the underlying field is provided by the function
-[`example_moebius`](@ref).
+Clearly these indices are exactly as described in the homology section, since
+the underlying field is still ``\mathbb{Z}_2``, as determined by `sc`. For an
+example which involves computations over different fields, which also lead
+to different Conley indices, we refer to the function [`example_moebius`](@ref).
 
 Finally, the connection matrix itself is contained in `cm.matrix`. Since internally
 the connection matrix is stored in a sparse format, we display it after
@@ -442,7 +450,7 @@ conversion to a full matrix:
 full_from_sparse(cm.matrix)
 ```
 
-In order to see which simplices correspond to the columns of the matrix, we use
+In order to see which simplices represent the columns of the matrix, we use
 the command
 
 ```@example T1
@@ -460,21 +468,16 @@ between the equilibrium and the complete periodic solution. Similarly, there are
 connections between `DF` and both `F` and the periodic orbit, in view of the
 fourth column of the connection matrix.
 
-A description of the remaining fields of `cm` can be found in the API entry
-for [`connection_matrix`](@ref). Internally, all computations necessary for
-determining the connection matrix are performed automatically over the
-rationals or over ``GF(p)``, dependending on the value of the arguent `p`.
-If this argument is omitted, then the function either uses the value of
-`lc.boundary.char`, provided it is a nonzero integer, or raises an error. This
-is due to the fact that the boundary of a Lefschetz complex can be specified
-either as a matrix over the integers or over ``GF(p)``, but the connection
-matrix computations have to be performed over a field. Thus, the case of an
-integer boundary matrix (which corresponds to `lc.boundary.char=0`) raises an
-error.
+A description of the remaining fields of `cm` can also be found in the API entry
+for [`connection_matrix`](@ref). We would like to emphasize again that internally,
+all computations necessary for finding the connection matrix are performed
+automatically over the rationals or over the finite field ``GF(p)``. The choice
+depends on the data type of the boundary matrix for the underlying Lefschetz
+complex, in this case the simplicial complex `sc`. 
 
 ## Multivector Fields
 
-As second example of this first tutorial we turn our attention to the
+As second example of this tutorial we turn our attention to the
 logo of `ConleyDynamics.jl`. It shows a simple multivector field on a simplicial
 complex, and both the simplicial complex `sclogo` and the multivector field
 `mvflogo` can be defined using the commands
@@ -493,14 +496,17 @@ visualized in the accompanying figure.
 ![The logo multivector field](img/multivectorex.png)
 
 The multivector field `mvflogo` clearly has a different structure from the
-earlier Forman vector field. While the latter consists exclusively of arrows and
-critical cells, the former is made up of *multivectors*.  For the case of a
-simplicial complex, a multivector is a collection of simplices which form a
-*locally closed* set, i.e., if ``\sigma_1 \subset \sigma_2`` are two simplices
-in the multivector, then so are all simplices ``\tau`` with ``\sigma_1 \subset
-\tau \subset \sigma_2``.  In other words, multivectors are convex with respect
-to simplex inclusion.  A *multivector field* is a partition of the simplicial
-complex into multivectors. See [lipinski:etal:23a](@cite) for more details.
+earlier Forman vector field. While the latter consists exclusively of arrows
+and critical cells, the former is made up of *multivectors*. In this context
+a *multivector* is a collection of simplices which form a locally closed
+set, as defined earlier in the tutorial. One can show that in the case of
+a simplicial complex, this is equivalent to requiring that if ``\sigma_1
+\subset \sigma_2`` are two simplices in the multivector, then so are all
+simplices ``\tau`` with ``\sigma_1 \subset \tau \subset \sigma_2``.  In
+other words, multivectors are convex with respect to simplex inclusion, 
+i.e., with respect to the face relation.  A *multivector field* is then
+a partition of the simplicial complex into multivectors.
+See [lipinski:etal:23a](@cite) for more details.
 
 It is not difficult to see that every Forman vector field is a multivector
 field. Every critical cell consists of just one simplex, so it trivially
@@ -512,8 +518,8 @@ multivectors containing at least two simplices. Any simplex not contained on the
 list automatically gives rise to a one-element multivector.
 
 One important difference between Forman vector fields and multivector fields
-is the definition of criticality. In the mutlivector field case, multivectors
-are distinguished as follows:
+is the definition of criticality. In the multivector field case, the types
+of multivectors are distinguished as follows:
 
 - A multivector ``V`` is called *critical*, if the relative homology
   ``H_*(\mathrm{cl}\, V, \mathrm{mo}\, V)`` is not trivial, i.e., at least
@@ -537,9 +543,16 @@ The first command creates the closure-mouth pair associated with
 the cell `ABC`, i.e., the variable `cl1` is the closed triangle,
 while `mo1` is the closed boundary of the triangle. The next 
 command determines the relative homology. Notice that this employs
-another method under the name `relative_homology`, in contrast to
-the one used earlier in this tutorial. For more details, see
-[Homology Functions](@ref).
+another method under the name [`relative_homology`](@ref), in
+contrast to the one used earlier in this tutorial. For more
+details, see [Homology Functions](@ref).
+
+Alternatively, since every multivector is locally closed, one can
+also use the function [`conley_index`](@ref) for the same computation:
+
+```@example T2
+conley_index(sclogo, ["ABC"])
+```
 
 Similarly, the next sequence of commands verifies that the third
 nontrivial multivector `mvflogo[3]` is indeed a regular multivector:
@@ -561,7 +574,7 @@ As it turns out, our logo gives rise to three Morse sets, which in fact
 partition the simplicial complex. Their Conley indices are given by
 
 ```@example T2
-println(cmlogo.conley)
+cmlogo.conley
 ```
 
 Finally, the connection matrix has the form
@@ -574,7 +587,7 @@ Notice that in this example, only the connection between the Morse
 set `ABC` and the large index 1 Morse set comprising almost all 
 of the simplicial complex can be detected algebraically. In fact,
 there are two connections between the large Morse set and the
-stable equilibrium `D`, but they cancel algebraically.
+stable equilibrium `D`, and they cancel algebraically.
 
 ## Analyzing Planar Vector Fields
 
@@ -618,7 +631,7 @@ cx = [c[1] for c in coordsN];
 ```
 
 The first command generates the triangulation in a square box with 
-sidelength 300, while trying to keep a minimum distance of about 10
+side length 300, while trying to keep a minimum distance of about 10
 between vertices. Once this has been accomplished, the second 
 command transforms the coordinates to the desired square domain.
 As the last two commands show, the resulting x-coordinates do indeed
