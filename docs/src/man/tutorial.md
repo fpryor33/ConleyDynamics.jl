@@ -58,7 +58,7 @@ objects:
   are precisely the corresponding locations of the vertices in
   `labels`.
 
-!!! tip "Simplices via labels"
+!!! note "Simplices via labels"
     It is also possible to specify the list of simplices using
     a `Vector{Vector{String}}`, i.e., as a vector of string vectors.
     In this case, the entry `simplices[k]` is a list of the labels

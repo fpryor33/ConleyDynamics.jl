@@ -95,6 +95,24 @@ plot_planar_cubical_morse(lc, fname, cm.morse, pv=true)
 
 ![Morse sets of the planar circles vector field](img/cubicalcircles.png)
 
+In the above example we used the original fixed cubical grid,
+which is just a scaled version of the grid on the integer
+lattice. It is also possible to work with a *randomized
+grid*, in which the coordinates of the vertices are randomly
+perturbed. This can be achieved with the following commands:
+
+```julia
+n = 51
+lcR, coordsR = create_cubical_rectangle(n,n,p=2,randomize=0.33);
+coordsRN = convert_planar_coordinates(coordsR,[-3.0,-3.0],[3.0,3.0]);
+mvfR = create_planar_mvf(lcR, coordsRN, circlevf);
+cmR = connection_matrix(lcR, mvfR);
+fnameR = "cubicalcirclesR.pdf"
+plot_planar_cubical_morse(lcR, coordsRN, fnameR, cmR.morse, pv=true)
+```
+
+![Morse sets of the planar circles vector field via randomized cubes](img/cubicalcirclesR.png)
+
 To constrast the above example with the use of a Delaunay triangulation,
 we reanalyze the vector field in the following way:
 

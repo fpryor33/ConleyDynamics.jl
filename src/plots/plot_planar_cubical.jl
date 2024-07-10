@@ -2,6 +2,7 @@ export plot_planar_cubical
 
 """
     plot_planar_cubical(cc::LefschetzComplex,
+                        coords::Vector{<:Vector{<:Real}},
                         fname::String;
                         [hfac::Real=1.2,]
                         [vfac::Real=1.2,]
@@ -11,13 +12,14 @@ export plot_planar_cubical
 
 Create an image of a planar cubical complex.
 
-The image will be saved in the file with name `fname`, and the
-ending determines the image type. Accepted are `.pdf`, `.svg`,
-`.png`, and `.eps`. The optional constants `hfac` and `vfac` contain
-the horizontal and vertical scale vectors. The optional argument
-`cubefac` specifies the side length of an elementary cube for
-plotting, and it will be automatically determined otherwise. The
-vector `pdim` specifies which cell dimensions should be plotted,
+The vector `coords` contains coordinates for every one of the vertices
+of the cubical complex `cc`. The image will be saved in the file with
+name `fname`, and the ending determines the image type. Accepted are
+`.pdf`, `.svg`, `.png`, and `.eps`. The optional constants `hfac`
+and `vfac` contain the horizontal and vertical scale vectors. The
+optional argument `cubefac` specifies the side length of an elementary
+cube for plotting, and it will be automatically determined otherwise.
+The vector `pdim` specifies which cell dimensions should be plotted,
 with `pdim[k]` representing dimension `k-1`. Finally if one passes
 the argument `pv=true`, then in addition to saving the file
 a preview is displayed.
@@ -28,6 +30,7 @@ Suppose we have created a cubical complex using the commands
 
 ```julia
 cubes = ["00.11", "01.01", "02.10", "11.10", "11.01", "22.00"]
+coords = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,1],[2,2]]
 cc = create_cubical_complex(cubes)
 fname = "cc_plot_test.pdf"
 ```
@@ -36,17 +39,18 @@ Then the following code creates an image of the simplicial complex
 without labels, but with a preview:
 
 ```julia
-plot_planar_cubical(cc, fname, pv=true)
+plot_planar_cubical(cc, coords, fname, pv=true)
 ```
 
 If one only wants to plot the edges in the complex, but not the
 vertices or rectangles, then one can use:
 
 ```julia
-plot_planar_cubical(cc, fname, pv=true, pdim=[false,true,false])
+plot_planar_cubical(cc, coords, fname, pv=true, pdim=[false,true,false])
 ```
 """
 function plot_planar_cubical(cc::LefschetzComplex,
+                             coords::Vector{<:Vector{<:Real}},
                              fname::String;
                              hfac::Real=1.2,
                              vfac::Real=1.2,
@@ -56,7 +60,7 @@ function plot_planar_cubical(cc::LefschetzComplex,
     #
     # Create an image of a planar cubical complex
     #
-
+    
     # Extract the vertex information
 
     vertices = lefschetz_skeleton(cc, 0)
@@ -65,29 +69,8 @@ function plot_planar_cubical(cc::LefschetzComplex,
         error("The vertices are not at the beginning of the cell list!")
     end
 
-    # If desired, determine cubefac automatically
-
-    if iszero(cubefac)
-        oxmin = 10^10
-        oxmax = 0
-        oymin = 10^10
-        oymax = 0
-        for k = 1:length(vertices)
-            intinfo = cube_information(cc.labels[k])
-            oxmin = minimum([oxmin, intinfo[1]])
-            oxmax = maximum([oxmax, intinfo[1]])
-            oymin = minimum([oymin, intinfo[2]])
-            oymax = maximum([oymax, intinfo[2]])
-        end
-        cubefac = 800.0 / maximum([1, oxmax-oxmin, oymax-oymin])
-    end
-
-    # Compute the coordinates
-
-    coords = Vector{Vector{Float64}}()
-    for k = 1:length(vertices)
-        intinfo = cube_information(cc.labels[k])
-        push!(coords, [cubefac*intinfo[1], cubefac*intinfo[2]])
+    if !(length(vertices) == length(coords))
+        error("Coordinates need to be provided for all vertices!")
     end
 
     # Create proper coordinates
@@ -96,10 +79,15 @@ function plot_planar_cubical(cc::LefschetzComplex,
     cx1 = maximum([c[1] for c in coords])
     cy0 = minimum([c[2] for c in coords])
     cy1 = maximum([c[2] for c in coords])
-    figw = Int(round((cx1 - cx0) * hfac))
-    figh = Int(round((cy1 - cy0) * vfac))
-    figdx = (cx1 - cx0) * (hfac-1.0) * 0.5
-    figdy = (cy1 - cy0) * (vfac-1.0) * 0.5
+
+    if iszero(cubefac)
+        cubefac = 800.0 / maximum([1, cx1-cx0, cy1-cy0])
+    end
+
+    figw  = Int(round((cx1 - cx0) * hfac * cubefac))
+    figh  = Int(round((cy1 - cy0) * vfac * cubefac))
+    figdx = (cx1 - cx0) * (hfac-1.0) * 0.5 * cubefac
+    figdy = (cy1 - cy0) * (vfac-1.0) * 0.5 * cubefac
 
     pcoords = [[figdx + (c[1] - cx0) * (figw-2.0*figdx) / (cx1-cx0),
                 figdy + (cy1 - c[2]) * (figh-2.0*figdy) / (cy1-cy0)]
@@ -156,5 +144,52 @@ function plot_planar_cubical(cc::LefschetzComplex,
     if pv
         preview()
     end
+end
+
+"""
+    plot_planar_cubical(cc::LefschetzComplex,
+                        fname::String;
+                        [hfac::Real=1.2,]
+                        [vfac::Real=1.2,]
+                        [cubefac::Real=0,]
+                        [pdim::Vector{Bool}=[true,true,true],]
+                        [pv::Bool=false])
+
+Create an image of a planar cubical complex.
+
+This is an alternative method which does not require the specification
+of the vertex coordinates. They will be taken from the cube vertex labels.
+"""
+function plot_planar_cubical(cc::LefschetzComplex,
+                             fname::String;
+                             hfac::Real=1.2,
+                             vfac::Real=1.2,
+                             cubefac::Real=0,
+                             pdim::Vector{Bool}=[true,true,true],
+                             pv::Bool=false)
+    #
+    # Create an image of a planar cubical complex
+    #
+
+    # Extract the vertex information
+
+    vertices = lefschetz_skeleton(cc, 0)
+
+    if !(length(vertices) == maximum(vertices))
+        error("The vertices are not at the beginning of the cell list!")
+    end
+
+    # Compute the coordinates
+
+    coords = Vector{Vector{Float64}}()
+    for k = 1:length(vertices)
+        intinfo = cube_information(cc.labels[k])
+        push!(coords, [1.0*intinfo[1], 1.0*intinfo[2]])
+    end
+
+    # Call the method with coordinates
+    
+    plot_planar_cubical(cc,coords,fname,
+        hfac=hfac,vfac=vfac,cubefac=cubefac,pdim=pdim,pv=pv)
 end
 
