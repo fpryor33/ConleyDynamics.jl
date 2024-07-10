@@ -102,13 +102,13 @@ grid*, in which the coordinates of the vertices are randomly
 perturbed. This can be achieved with the following commands:
 
 ```julia
-n = 51
-lcR, coordsR = create_cubical_rectangle(n,n,p=2,randomize=0.33);
+nR = 75
+lcR, coordsR = create_cubical_rectangle(nR,nR,p=2,randomize=0.33);
 coordsRN = convert_planar_coordinates(coordsR,[-3.0,-3.0],[3.0,3.0]);
 mvfR = create_planar_mvf(lcR, coordsRN, circlevf);
 cmR = connection_matrix(lcR, mvfR);
 fnameR = "cubicalcirclesR.pdf"
-plot_planar_cubical_morse(lcR, coordsRN, fnameR, cmR.morse, pv=true)
+plot_planar_cubical_morse(lcR, coordsRN, fnameR, cmR.morse, pv=true, vfac=1.1, hfac=2.0)
 ```
 
 ![Morse sets of the planar circles vector field via randomized cubes](img/cubicalcirclesR.png)
