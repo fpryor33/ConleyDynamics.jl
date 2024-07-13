@@ -21,6 +21,7 @@ convert_simplices
 ```@docs
 create_cubical_complex
 create_cubical_rectangle
+create_cubical_box
 cube_field_size
 cube_information
 cube_label
