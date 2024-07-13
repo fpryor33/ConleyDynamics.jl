@@ -117,17 +117,18 @@ function create_spatial_mvf(lc::LefschetzComplex, coords::Vector{Vector{Float64}
     # Create a spatial multivector field from a regular vector field
     #
 
-    # Find the indices for the vertices and the edges
+    # Find the indices for the vertices, the edges, and the faces
 
     vi = findall(isequal(0), lc.dimensions)
     ei = findall(isequal(1), lc.dimensions)
+    fi = findall(isequal(2), lc.dimensions)
 
     # Find the vertex to region map
 
     v2r = [Vector{Int}() for _ in 1:length(vi)]
 
     Threads.@threads for k = 1:length(vi)
-        v2r[k] = planar_mvf_vertex2region(vi[k],lc,coords,vf)
+        v2r[k] = spatial_mvf_vertex2region(vi[k],lc,coords,vf)
     end
 
     # Find the edge to region map
@@ -135,7 +136,15 @@ function create_spatial_mvf(lc::LefschetzComplex, coords::Vector{Vector{Float64}
     e2r = [Vector{Int}() for _ in 1:length(ei)]
 
     Threads.@threads for k = 1:length(ei)
-        e2r[k] = planar_mvf_edge2region(ei[k],lc,coords,vf)
+        e2r[k] = spatial_mvf_edge2region(ei[k],lc,coords,vf)
+    end
+
+    # Find the face to region map
+
+    f2r = [Vector{Int}() for _ in 1:length(fi)]
+
+    Threads.@threads for k = 1:length(fi)
+        f2r[k] = spatial_mvf_face2region(fi[k],lc,coords,vf)
     end
 
     # Create the multivector field base
@@ -151,6 +160,12 @@ function create_spatial_mvf(lc::LefschetzComplex, coords::Vector{Vector{Float64}
     for k in 1:length(e2r)
         if length(e2r[k]) > 0
             push!(mvfbase, vcat([ei[k]], e2r[k]))
+        end
+    end
+
+    for k in 1:length(f2r)
+        if length(f2r[k]) > 0
+            push!(mvfbase, vcat([fi[k]], f2r[k]))
         end
     end
 
