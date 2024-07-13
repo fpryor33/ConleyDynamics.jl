@@ -190,7 +190,6 @@ function spatial_mvf_vertex2region(vindex::Int, lc::LefschetzComplex,
     targetregions = Vector{Int}()
     c0 = coords[vindex]
     vfc0 = vf(c0)
-    tc0 = c0 .+ vfc0
 
     for k in adregns
 
@@ -199,10 +198,10 @@ function spatial_mvf_vertex2region(vindex::Int, lc::LefschetzComplex,
         regionvertices = lefschetz_skeleton(lc, [k], 0)
         adregionvertices = intersect(regionvertices, adverts)
 
-        # Determine the barycentric coordinates
+        # Determine the coordinates with respect to the special basis
 
         p1, p2, p3 = adregionvertices
-        c1, c2, c3 = spatial_barycentric_coords(tc0, coords[p1], coords[p2], coords[p3], c0)
+        c1, c2, c3 = spatial_coords(vfc0, coords[p1].-c0, coords[p2].-c0, coords[p3].-c0)
 
         # Add the region if necessary
 
@@ -224,7 +223,8 @@ function spatial_mvf_edge2region(eindex::Int, lc::LefschetzComplex,
     # Find the 3d regions which can be entered from an edge
     #
 
-    npts = 5   # Look at npts-1 points along the edge to determine the flow
+    npts = 5   # Look at npts points along the edge interior to determine the flow
+    nptsf = Float64(npts)
 
     # Determine the boundary of the edge
 
@@ -287,120 +287,49 @@ function spatial_mvf_edge2region(eindex::Int, lc::LefschetzComplex,
         v21 = first(setdiff(lefschetz_boundary(lc, e21), [v1, v2]))
         v22 = first(setdiff(lefschetz_boundary(lc, e22), [v1, v2]))
 
+        # Create the coordinate vectors for these points
 
+        cv11 = coords[v11]
+        cv12 = coords[v12]
+        cv21 = coords[v21]
+        cv22 = coords[v22]
 
+        # Move along the edge until first potential flow into region r
 
+        entered_region = false
+        edgedir = cv2 .- cv1
+        k = 1
 
+        while (k <= npts) & (!entered_region)
 
+            # Find the coordinate of the point along the edge
 
+            t     = k / (nptsf + 1.0)
+            ccur  = (1-t) .* cv1 .+ t .* cv2
+            vfcur = vf(ccur)
 
+            # Find the tangent vectors to the two faces
 
+            cf1 = (1-t) .* (cv11 .- cv1) .+ t .* (cv12 - cv2)
+            cf2 = (1-t) .* (cv21 .- cv1) .+ t .* (cv22 - cv2)
 
+            # Determine the coordinates with respect to the special basis
 
-    end
+            c1, c2, c3 = spatial_coords(vfcur, cf1, cf2, edgedir)
 
+            # Determine whether the flow enters
 
+            if (c1 >= 0.0) & (c2 >= 0.0)
+                push!(targetregions, r)
+                entered_region = true
+            end
 
+            # Increment the counter
 
-
-
-    # Loop through the regions, compute the barycentric
-    # coordinates, and add the relevant regions
-
-    targetregions = Vector{Int}()
-    c0 = coords[vindex]
-    vfc0 = vf(c0)
-    tc0 = c0 .+ vfc0
-
-    for k in adregns
-
-        # Determine the vertices of the region
-
-        regionvertices = lefschetz_skeleton(lc, [k], 0)
-        adregionvertices = intersect(regionvertices, adverts)
-
-        # Determine the barycentric coordinates
-
-        p1, p2, p3 = adregionvertices
-        c1, c2, c3 = spatial_barycentric_coords(tc0, coords[p1], coords[p2], coords[p3], c0)
-
-        # Add the region if necessary
-
-        if (c1 >= 0.0) & (c2 >= 0.0) & (c3 >= 0.0)
-            push!(targetregions, k)
+            k = k + 1
         end
     end
 
-    # Return the target regions
-
-    return targetregions
-
-
-
-
-
-
-    # Create normal vector to the edge
-
-    pvec = coords[v2] .- coords[v1]
-    nvec = [-pvec[2], pvec[1]]
-
-    # Determine sign of the dot products along the edge
-
-    dp_is_p = false
-    dp_is_n = false
-    dp_is_z = false
-
-    nptsf = Float64(npts)
-    p0 = coords[v1]
-    for k = 0:npts
-        pc = p0 .+ ((k / nptsf) .* pvec)
-        pvf = vf(pc)
-        dprod = pvf[1]*nvec[1] + pvf[2]*nvec[2]
-        if dprod > 0.0
-            dp_is_p = true
-        elseif dprod < 0.0
-            dp_is_n = true
-        elseif (k>0) & (k<npts)
-            dp_is_z = true
-        end
-    end
-
-    # Decide whether an adjacent region could be a target
-
-    targetregions = Vector{Int}()
-    midpoint = 0.5 .* coords[v1] .+ 0.5 .* coords[v2]
-
-    for k in adregions
-
-        # Determine the barycenter of the region
-
-        regionvertices = lefschetz_skeleton(lc, [k], 0)
-        nv = 0.0
-        bpoint = [0.0, 0.0]
-        for m in regionvertices
-            bpoint = bpoint .+ coords[m]
-            nv = nv + 1.0
-        end
-        bpoint = bpoint / nv
-
-        # Determine the dot product of the segment from the
-        # midpoint to the barycenter with the normal vector
-
-        dprod = (bpoint[1] - midpoint[1]) * nvec[1] +
-                (bpoint[2] - midpoint[2]) * nvec[2]
-
-        # Add the region, if necessary
-
-        if (dprod > 0.0) & (dp_is_p | dp_is_z)
-            push!(targetregions, k)
-        end
-
-        if (dprod < 0.0) & (dp_is_n | dp_is_z)
-            push!(targetregions, k)
-        end
-    end
-    
     # Return the target regions
 
     return targetregions
@@ -501,14 +430,13 @@ end
 
 ###############################################################################
 
-function spatial_barycentric_coords(p::Vector{<:Real},p1::Vector{<:Real},
-                                   p2::Vector{<:Real},p3::Vector{<:Real},
-                                   p4::Vector{<:Real})
+function spatial_coords(p::Vector{<:Real},p1::Vector{<:Real},
+                       p2::Vector{<:Real},p3::Vector{<:Real})
     #
-    # Compute the barycentric coordinate in the representation
+    # Compute the spatial coordinates in the representation
     #
-    #    p = a * (p1-p4) + b * (p2-p4) + c * (p3-p4) + p4
+    #    p = a * p1 + b * p2 + c * p3
 
-    return [p1-p4;; p2-p4;; p3-p4] \ (p-p4)
+    return [p1;; p2;; p3] \ p
 end
 
