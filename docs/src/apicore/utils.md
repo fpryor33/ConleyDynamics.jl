@@ -53,6 +53,7 @@ permute_lefschetz_complex
 convert_mvf
 create_mvf_hull
 create_planar_mvf
+create_spatial_mvf
 extract_multivectors
 ```
 

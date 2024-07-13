@@ -352,92 +352,19 @@ end
 
 ###############################################################################
 
-
-
-
-
-
-
-
-###############################################################################
-
-function planar_mvf_edge2region(eindex::Int, lc::LefschetzComplex,
-                                coords::Vector{Vector{Float64}}, vf)
+function spatial_mvf_face2region(findex::Int, lc::LefschetzComplex,
+                                 coords::Vector{Vector{Float64}}, vf)
     #
-    # Find the 2d regions which can be entered from an edge
+    # Find the 3d regions which can be entered from a face
     #
 
-    npts = 4   # Look at npts+1 points along the edge to determine the flow
-
-    # Determine the boundary of the edge
-
-    v1, v2 = lefschetz_boundary(lc, eindex)
-
-    # Determine the adjacent region or regions
-
-    adregions = lefschetz_coboundary(lc, eindex)
-
-    # Create normal vector to the edge
-
-    pvec = coords[v2] .- coords[v1]
-    nvec = [-pvec[2], pvec[1]]
-
-    # Determine sign of the dot products along the edge
-
-    dp_is_p = false
-    dp_is_n = false
-    dp_is_z = false
-
+    npts = 5   # Look at npts points along the edge interior to determine the flow
     nptsf = Float64(npts)
-    p0 = coords[v1]
-    for k = 0:npts
-        pc = p0 .+ ((k / nptsf) .* pvec)
-        pvf = vf(pc)
-        dprod = pvf[1]*nvec[1] + pvf[2]*nvec[2]
-        if dprod > 0.0
-            dp_is_p = true
-        elseif dprod < 0.0
-            dp_is_n = true
-        elseif (k>0) & (k<npts)
-            dp_is_z = true
-        end
-    end
 
-    # Decide whether an adjacent region could be a target
+    # Loop through the regions to find all target regions
 
     targetregions = Vector{Int}()
-    midpoint = 0.5 .* coords[v1] .+ 0.5 .* coords[v2]
 
-    for k in adregions
-
-        # Determine the barycenter of the region
-
-        regionvertices = lefschetz_skeleton(lc, [k], 0)
-        nv = 0.0
-        bpoint = [0.0, 0.0]
-        for m in regionvertices
-            bpoint = bpoint .+ coords[m]
-            nv = nv + 1.0
-        end
-        bpoint = bpoint / nv
-
-        # Determine the dot product of the segment from the
-        # midpoint to the barycenter with the normal vector
-
-        dprod = (bpoint[1] - midpoint[1]) * nvec[1] +
-                (bpoint[2] - midpoint[2]) * nvec[2]
-
-        # Add the region, if necessary
-
-        if (dprod > 0.0) & (dp_is_p | dp_is_z)
-            push!(targetregions, k)
-        end
-
-        if (dprod < 0.0) & (dp_is_n | dp_is_z)
-            push!(targetregions, k)
-        end
-    end
-    
     # Return the target regions
 
     return targetregions
