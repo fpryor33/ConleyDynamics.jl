@@ -222,7 +222,7 @@ function planar_mvf_edge2region(eindex::Int, lc::LefschetzComplex,
     # Find the 2d regions which can be entered from an edge
     #
 
-    npts = 4   # Look at npts+1 points along the edge to determine the flow
+    npts = 4   # Look at npts points along the edge interior to determine the flow
 
     # Determine the boundary of the edge
 
@@ -245,15 +245,15 @@ function planar_mvf_edge2region(eindex::Int, lc::LefschetzComplex,
 
     nptsf = Float64(npts)
     p0 = coords[v1]
-    for k = 0:npts
-        pc = p0 .+ ((k / nptsf) .* pvec)
+    for k = 1:npts
+        pc = p0 .+ ((k / (nptsf+1.0)) .* pvec)
         pvf = vf(pc)
         dprod = pvf[1]*nvec[1] + pvf[2]*nvec[2]
         if dprod > 0.0
             dp_is_p = true
         elseif dprod < 0.0
             dp_is_n = true
-        elseif (k>0) & (k<npts)
+        else
             dp_is_z = true
         end
     end
