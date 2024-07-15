@@ -1,17 +1,17 @@
 # Tutorial
 
-This tutorial explains the basic usage of the main components of ConleyDynamics.
-It is not meant to be exhaustive, and more details will be provided in the more
-indiviualized sections. Also, precise mathematical definitions will be delayed
-until then. The presented examples are taken from the papers
-[batko:etal:20a](@cite) and [mrozek:wanner:p21a](@cite), with minor
+This tutorial explains the basic usage of the main components of
+`ConleyDynamics.jl`.  It is not meant to be exhaustive, and more details will be
+provided in the more indiviualized sections. Also, precise mathematical
+definitions will be delayed until then. The presented examples are taken from
+the papers [batko:etal:20a](@cite) and [mrozek:wanner:p21a](@cite), with minor
 modifications.
 
 ## Creating Simplicial Complexes
 
-The fundamental mathematical object for ConleyDynamics is a Lefschetz complex
+The fundamental mathematical object for `ConleyDynamics.jl` is a Lefschetz complex
 [lefschetz:42a](@cite). For now we note that both simplicial complexes and
-cubical complexes are special cases, and ConleyDynamics provides convenient
+cubical complexes are special cases, and `ConleyDynamics.jl` provides convenient
 interfaces for generating them.
 
 For the sake of simplicity, this tutorial only considers the case of a
@@ -44,7 +44,7 @@ complexes are important for this introduction:
   are part of ``K_0`` as well. Thus, a closed subset of a simplicial
   complex is a simplicial complex in its own right.
 
-In ConleyDynamics it is easy to generate a simplicial complex. This requires two
+In `ConleyDynamics.jl` it is easy to generate a simplicial complex. This requires two
 objects:
 
 - The vertices are described by a vector `labels` of string labels
@@ -67,7 +67,7 @@ objects:
 !!! warning "Watch the label length"
     It is expected that the labels in `labels` all have the same
     number of characters. This is due to the fact that when creating
-    the simplicial complex, ConleyDynamics automatically creates 
+    the simplicial complex, `ConleyDynamics.jl` automatically creates 
     labels for each of the simplices in ``K``, by concatenating the
     vertex labels. Not using a fixed label size could lead to 
     ambiguities, and will therefore raise an error message.
@@ -139,7 +139,7 @@ homology(sc)
 This means that the simplicial complex ``K`` has one component, as well as one
 loop, and no cavities. The function `homology` returns a vector of integers,
 whose k-th entry is ``\beta_{k-1}(K)``. We would like to point out that in
-ConleyDynamics all homology computations are performed over fields, and 
+`ConleyDynamics.jl` all homology computations are performed over fields, and 
 therefore homology is completely described by the Betti numbers. Two types
 of fields are supported, and they are selected by the characteristic `p` in
 the sparse boundary matrix:
@@ -148,7 +148,7 @@ the sparse boundary matrix:
 - For any prime number `p`, homology is determined over the finite field
   ``GF(p)`` with `p` elements. 
 
-ConleyDynamics also allows for the computation of *relative homology*. In the
+`ConleyDynamics.jl` also allows for the computation of *relative homology*. In the
 case of relative homology, together with the simplicial complex ``K`` one has to
 specify a closed subcomplex ``K_0``. Intuitively, the relative homology
 ``H_*(K,K_0)`` is the homology of a new space, which is obtained from ``K`` by
@@ -187,7 +187,7 @@ relative_homology(sc, [])
 
 As expected, in this case one obtains the standard homology of `sc`.
 
-In addition to regular and relative homology, ConleyDynamics can also compute
+In addition to regular and relative homology, `ConleyDynamics.jl` can also compute
 *persistent homology*. For this, one has to specify a *filtration* of closed
 Lefschetz complexes
 
@@ -197,7 +197,7 @@ Lefschetz complexes
 
 Persistent homology tracks the appearance and disappearance (also often
 called the *birth* and *death*) of topological features as one moves through
-the complexes in the filtration. In ConleyDynamics, one can specify a Lefschetz
+the complexes in the filtration. In `ConleyDynamics.jl`, one can specify a Lefschetz
 complex filtration by assigning the integer ``k`` to each simplex that first
 appears in ``K_k``. Moreover, it is expected that ``K_m = K``. Then the
 persistent homology is computed via the following command:
@@ -235,7 +235,7 @@ higher dimensions.
 
 ## Forman Vector Fields
 
-The main focus of ConleyDynamics is on the study of *combinatorial topological
+The main focus of `ConleyDynamics.jl` is on the study of *combinatorial topological
 dynamics* on Lefschetz complexes. While the phase space as Lefschetz complex has
 been discussed above, albeit only for the special case of a simplicial complex,
 the dynamics part can be given in the simplest form by a *combinatorial vector
@@ -376,7 +376,7 @@ dynamics.
 
 ## Connection Matrices
 
-One of the main features of ConleyDynamics is its capability to take a given
+One of the main features of `ConleyDynamics.jl` is its capability to take a given
 combinatorial vector or multivector field on an arbitrary Lefschetz complex and
 determine its global dynamical behavior. This is done by computing the
 connection matrix, which in our setting is discussed in detail in
@@ -513,7 +513,7 @@ field. Every critical cell consists of just one simplex, so it trivially
 satisfies the above convexity condition. In addition, the two simplices
 contained in an arrow do not allow for any simplex ``\sigma^- \subset \tau
 \subset \sigma^+`` apart from ``\tau = \sigma^\pm``.  As in the case of Forman
-vector fields, multivector fields in ConleyDynamics only need to list
+vector fields, multivector fields in `ConleyDynamics.jl` only need to list
 multivectors containing at least two simplices. Any simplex not contained on the
 list automatically gives rise to a one-element multivector.
 

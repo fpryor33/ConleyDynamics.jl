@@ -1,9 +1,20 @@
 # Lefschetz Complexes
 
-Here we need a more detailed description of Lefschetz complexes.
-In particular, this should discuss the various field types that
-can be used, as well as all the entries in the [`LefschetzComplex`](@ref)
-data structure.
+The fundamental structure underlying the functionality of `ConleyDynamics.jl` is
+a *Lefschetz complex*. It provides us with the basic model of phase space for
+combinatorial dynamics. In view of the combinatorial, and therefore discrete,
+character of the dynamical behavior, a Lefschetz complex is not a typical phase
+space in the sense of classical dynamics. While the latter one is usually a
+Euclidean space, a Lefschetz complex is basically a combinatorial model of it.
+In the following fairly mathematical discussion, we provide its precise
+mathematical definition, and explain how it can be created and modified within
+the package. We also discuss two important special cases, namely *simplicial
+complexes* and *cubical complexes*.
+
+## Mathematical Definition of a Lefschetz Complex
+
+The original definition of a Lefschetz complex can be found in
+[lefschetz:42a](@cite), where it was simply referred to as a *complex*.
 
 !!! tip "Definition: Lefschetz complex"
     Let ``F`` denote an arbitrary field. Then a pair ``(X,\kappa)``
@@ -34,6 +45,17 @@ data structure.
 
 [dlotko:etal:11a](@cite)
 [lipinski:etal:23a](@cite)
+[mrozek:wanner:p21a](@cite)
+
+
+
+
+Here we need a more detailed description of Lefschetz complexes.
+In particular, this should discuss the various field types that
+can be used, as well as all the entries in the [`LefschetzComplex`](@ref)
+data structure.
+
+
 
 ## Lefschetz Complexes References
 

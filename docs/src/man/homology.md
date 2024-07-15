@@ -2,7 +2,7 @@
 
 Conley's theory for the qualitative study of dynamical systems is based
 on fundamental concepts from algebraic topology. One of these is homology,
-which studies the topological properties of spaces. As part of ConleyDynamics
+which studies the topological properties of spaces. As part of `ConleyDynamics.jl`
 a number of homology methods are included. These are described in detail 
 below. More detailed information on the discussed topics can be found
 in [munkres:84a](@citet*).
@@ -22,7 +22,7 @@ associated nonnegative dimensions, together with a boundary map.
 ```
 
 The boundary map ``\partial_{k}`` is a linear map from the chain group
-``C_k(L)`` to the chain group ``C_{k-1}(L)``. Since ConleyDynamics uses
+``C_k(L)`` to the chain group ``C_{k-1}(L)``. Since `ConleyDynamics.jl` uses
 only field coefficients, these chain groups are in fact vector spaces. As
 such, any linear map induces two important subspaces, which in the context
 of algebraic topology are called as follows:

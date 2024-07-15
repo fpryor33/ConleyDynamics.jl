@@ -8,7 +8,7 @@ one elements from the data type alone. However, a finite field data type
 and especially the ones implemented in the package Nemo, generally also
 depends on additional parameters, such as the characteristic of the field.
 
-Since the algorithms underlying ConleyDynamics only require basic row
+Since the algorithms underlying `ConleyDynamics.jl` only require basic row
 and column operations, we decided to include a specialized sparse matrix
 implementation.
 
