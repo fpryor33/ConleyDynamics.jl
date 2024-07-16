@@ -13,104 +13,18 @@ and output vectors have length three. The function `create_spatial_mvf`
 returns a multivector field `mvf` on `lc`, which can then be further
 analyzed using for example the function `connection_matrix`.
 
-__The following still needs to be adapted to the 3D case!!__
+The input data `lc` and `coords` has to be of one of the following
+two types:
 
-The input data `lc` and `coords` can be generated using one of the following
-methods:
-
-* `create_cubical_rectangle`
-* `create_simplicial_rectangle`
-* `create_simplicial_delaunay`
-
-In each case, the provided coordinate vector can be transformed to the
-correct bounding box using `convert_planar_coordinates`.
-
-# Example 1
-
-Suppose we define a sample vector field using the commands
-
-```julia
-function samplevf(x::Vector{Float64})
-    #
-    # Sample vector field with nontrivial Morse decomposition
-    #
-    x1, x2 = x
-    y1 = x1 * (1.0 - x1*x1 - 3.0*x2*x2)
-    y2 = x2 * (1.0 - 3.0*x1*x1 - x2*x2)
-    return [y1, y2]
-end
-```
-
-One first creates a triangulation of the enclosing box, which in
-this case is given by `[-2,2] x [-2,2]` using the commands
-
-```julia
-n = 21
-lc, coords = create_simplicial_rectangle(n,n);
-coordsN = convert_planar_coordinates(coords,[-2.0,-2.0],[2.0,2.0]);
-```
-
-The multivector field is then generated using
-
-```julia
-mvf = create_planar_mvf(lc,coordsN,samplevf);
-```
-
-and the commands
-
-```julia
-cm = connection_matrix(lc, mvf);
-cm.conley
-full_from_sparse(cm.matrix)
-```
-
-finally show that this vector field gives rise to a Morse decomposition
-with nine Morse sets, and twelve connecting orbits. Using the commands
-
-```julia
-fname = "morse_test.pdf"
-plot_planar_simplicial_morse(lc, coordsN, fname, cm.morse, pv=true)
-```
-
-these Morse sets can be visualized. The image will be saved in `fname`.
-
-# Example 2
-
-An example with periodic orbits can be generated using the
-vector field
-
-```julia
-function samplevf2(x::Vector{Float64})
-    #
-    # Sample vector field with nontrivial Morse decomposition
-    #
-    x1, x2 = x
-    c0 = x1*x1 + x2*x2
-    c1 = (c0 - 4.0) * (c0 - 1.0)
-    y1 = -x2 + x1 * c1
-    y2 =  x1 + x2 * c1
-    return [-y1, -y2]
-end
-```
-
-The Morse decomposition can now be computed via
-
-```julia
-n2 = 51
-lc2, coords2 = create_cubical_rectangle(n2,n2);
-coords2N = convert_planar_coordinates(coords2,[-4.0,-4.0],[4.0,4.0]);
-mvf2 = create_planar_mvf(lc2,coords2N,samplevf2);
-cm2 = connection_matrix(lc2, mvf2);
-cm2.conley
-cm2.poset
-full_from_sparse(cm2.matrix)
-
-fname2 = "morse_test2.pdf"
-plot_planar_cubical_morse(lc2, fname2, cm2.morse, pv=true)
-```
-
-In this case, one obtains three Morse sets: One is a stable equilibrium,
-one is an unstable periodic orbit, and the last is a stable periodic orbit.
+* `lc` is a tetrahedral mesh of a region in three dimensions. In other
+  words, the underlying Lefschetz complex is in fact a simplicial 
+  complex, and the vector `coords` contains the vertex coordinates.
+* `lc` is a three-dimensional cubical complex, i.e., it is the
+  closure of a collection of three-dimensional cubes in space.
+  The vertex coordinates can be slight;y perturbed from the original
+  position in the cubical lattice, as long as the overall structure 
+  of the complex stays intact. In that case, the faces are interpreted
+  as Bezier surfaces with straight edges.
 """
 function create_spatial_mvf(lc::LefschetzComplex, coords::Vector{Vector{Float64}}, vf)
     #
@@ -358,12 +272,169 @@ function spatial_mvf_face2region(findex::Int, lc::LefschetzComplex,
     # Find the 3d regions which can be entered from a face
     #
 
-    npts = 5   # Look at npts points along the edge interior to determine the flow
+    npts = 4   # Look at npts points along the edge interior to determine the flow
     nptsf = Float64(npts)
-
-    # Loop through the regions to find all target regions
-
     targetregions = Vector{Int}()
+
+    # Determine the edges and vertices in the boundary
+
+    faceclosure = lefschetz_closure(lc, [findex])
+    faceclosure_dims = lc.dimensions[facecl]
+    facevertices = faceclosure[findall(isequal(0),faceclosure_dims)]
+    faceedges    = faceclosure[findall(isequal(1),faceclosure_dims)]
+
+    # Distinguish between triangles and Bezier quadrilaterals
+    
+    if length(facevertices) == 3
+
+        # Flow through a triangular face
+        
+        v1, v2, v3 = facevertices
+        cv1 = coords[v1]
+        cv2 = coords[v2]
+        cv3 = coords[v3]
+
+        ce12 = cv2 .- cv1
+        ce13 = cv3 .- cv1
+        ce23 = cv3 .- cv2
+        facenormal = cross(ce12, ce13)
+
+        # Loop through the cofaces
+
+        adregions = lefschetz_coboundary(lc, findex)
+
+        for r in adregions
+
+            # Determine the fourth vertex
+
+            v4 = first(setdiff(lefschetz_skeleton(lc, [r], 0), facevertices))
+            cv4 = coords[v4]
+
+            # Determine the normal vector
+
+            if dot(cv4.-cv1, facenormal) > 0
+                fn = facenormal
+            else
+                fn = -facenormal
+            end
+
+            # Check for flow directions and add region if it is entered
+
+            entered_region = false
+            m1 = 1
+            while (m1 <= npts) & (!entered_region)
+                t1 = m1 / (1.0 + nptsf)
+                m2 = 1
+                while (m2 <= m1) & (!entered_region)
+                    t2 = m2 / (1.0 + nptsf)
+                    cpt = cv1 .+ t1 .* ce12 .+ t2 .* ce23
+                    cvf = vf(cpt)
+                    if dot(cvf, fn) >= 0
+                        push!(targetregions, r)
+                        entered_region = true
+                    end
+                    m2 = m2 + 1
+                end
+                m1 = m1 + 1
+            end
+        end
+
+    elseif length(facevertices) == 4
+
+        # Flow through Bezier quadrilateral
+
+        # Determine the vertices so that the edges are v1v2, v2v4, v3v4, v1v3
+
+        v1 = facevertices[1]
+        adedges = intersect(lefschetz_coboundary(lc, v1), faceedges)
+        v2 = first(setdiff(lefschetz_boundary(lc, adedges[1]), [v1]))
+        v3 = first(setdiff(lefschetz_boundary(lc, adedges[2]), [v1]))
+        v4 = first(setdiff(facevertices, [v1,v2,v3]))
+
+        cv1 = coords[v1]
+        cv2 = coords[v2]
+        cv3 = coords[v3]
+        cv4 = coords[v4]
+
+        # Precompute the edge vectors
+
+        ce12 = cv2 .- cv1
+        ce34 = cv4 .- cv3
+        ce13 = cv3 .- cv1
+        ce24 = cv4 .- cv2
+
+        # Precompute the face normals at the corners
+
+        fnormal1 = cross(ce12, ce13)
+        fnormal2 = cross(ce12, ce24)
+        fnormal3 = cross(ce13, ce34)
+        fnormal4 = cross(ce24, ce34)
+
+        # Loop through the cofaces
+
+        adregions = lefschetz_coboundary(lc, findex)
+
+        for r in adregions
+
+            # Determine the remaining four vertices
+            
+            topvertices = setdiff(lefschetz_skeleton(lc, [r], 0), facevertices)
+            v1b = first(intersect(lefschetz_skeleton(lc,lefschetz_coboundary(lc,v1),0),topvertices))
+            v2b = first(intersect(lefschetz_skeleton(lc,lefschetz_coboundary(lc,v2),0),topvertices))
+            v3b = first(intersect(lefschetz_skeleton(lc,lefschetz_coboundary(lc,v3),0),topvertices))
+            v4b = first(intersect(lefschetz_skeleton(lc,lefschetz_coboundary(lc,v4),0),topvertices))
+
+            # Find the correct normal vectors at the vertices
+
+            if dot(coords[v1b].-cv1, fnormal1) > 0
+                fn1 = fnormal1
+            else
+                fn1 = -fnormal1
+            end
+            if dot(coords[v2b].-cv2, fnormal2) > 0
+                fn2 = fnormal2
+            else
+                fn2 = -fnormal2
+            end
+            if dot(coords[v3b].-cv3, fnormal3) > 0
+                fn3 = fnormal3
+            else
+                fn3 = -fnormal3
+            end
+            if dot(coords[v4b].-cv4, fnormal4) > 0
+                fn4 = fnormal4
+            else
+                fn4 = -fnormal4
+            end
+
+            # Check for flow directions and add region if it is entered
+
+            entered_region = false
+            m1 = 1
+            while (m1 <= npts) & (!entered_region)
+                t1 = m1 / (1.0 + nptsf)
+                m2 = 1
+                while (m2 <= npts) & (!entered_region)
+                    t2 = m2 / (1.0 + nptsf)
+                    cpt = (1-t1).*(1-t2).*cv1 .+ t1.*(1-t2).*cv2 .+ (1-t1).*t2.*cv3 .+ t1.*t2.*cv4
+                    cfn = (1-t1).*(1-t2).*fn1 .+ t1.*(1-t2).*fn2 .+ (1-t1).*t2.*fn3 .+ t1.*t2.*fn4
+                    cvf = vf(cpt)
+                    if dot(cvf, cfn) >= 0
+                        push!(targetregions, r)
+                        entered_region = true
+                    end
+                    m2 = m2 + 1
+                end
+                m1 = m1 + 1
+            end
+        end
+
+    else
+
+        # This case it not covered by the function
+
+        error("Faces have to be triangles or Bezier quadrilaterals!")
+    end
 
     # Return the target regions
 
