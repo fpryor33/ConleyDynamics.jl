@@ -59,6 +59,7 @@ include("./utils/lefschetz_field.jl")
 include("./utils/create_mvf_hull.jl")
 include("./utils/create_planar_mvf.jl")
 include("./utils/create_spatial_mvf.jl")
+include("./utils/manifold_boundary.jl")
 include("./utils/extract_multivectors.jl")
 include("./utils/planar_nontransverse_edges.jl")
 

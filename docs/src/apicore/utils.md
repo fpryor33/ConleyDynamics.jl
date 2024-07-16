@@ -54,6 +54,7 @@ convert_mvf
 create_mvf_hull
 create_planar_mvf
 create_spatial_mvf
+manifold_boundary
 extract_multivectors
 ```
 
