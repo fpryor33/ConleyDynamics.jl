@@ -25,6 +25,49 @@ two types:
   position in the cubical lattice, as long as the overall structure 
   of the complex stays intact. In that case, the faces are interpreted
   as Bezier surfaces with straight edges.
+
+# Example 1
+
+Suppose we define a sample vector field using the commands
+
+```julia
+function samplevf(x::Vector{Float64})
+    #
+    # Sample vector field with nontrivial Morse decomposition
+    #
+    x1, x2, x3 = x
+    y1 = x1 * (1.0 - x1*x1)
+    y2 = -x2
+    y3 = -x3
+    return [y1, y2, y3]
+end
+```
+
+One first creates a cubical complex covering the interesting dynamics,
+say the trapping region `[-1.5,1.5] x [-1,1] x [-1,1]`, using the
+commands
+
+```julia
+lc, coords = create_cubical_box(3,3,3);
+coordsN = convert_spatial_coordinates(coords,[-1.5,-1.0,-1.0],[1.5,1.0,1.0]);
+```
+
+The multivector field is then generated using
+
+```julia
+mvf = create_spatial_mvf(lc,coordsN,samplevf);
+```
+
+and the commands
+
+```julia
+cm = connection_matrix(lc, mvf);
+cm.conley
+full_from_sparse(cm.matrix)
+```
+
+finally show that this vector field gives rise to a Morse decomposition
+with three Morse sets, and two connecting orbits.
 """
 function create_spatial_mvf(lc::LefschetzComplex, coords::Vector{Vector{Float64}}, vf)
     #
@@ -152,7 +195,7 @@ function spatial_mvf_edge2region(eindex::Int, lc::LefschetzComplex,
     # Find the 3d regions which can be entered from an edge
     #
 
-    npts = 5   # Look at npts points along the edge interior to determine the flow
+    npts = 3   # Look at npts points along the edge interior to determine the flow
     nptsf = Float64(npts)
 
     # Determine the boundary of the edge
@@ -272,14 +315,14 @@ function spatial_mvf_face2region(findex::Int, lc::LefschetzComplex,
     # Find the 3d regions which can be entered from a face
     #
 
-    npts = 4   # Look at npts points along the edge interior to determine the flow
+    npts = 3   # Look at npts points along the edge interior to determine the flow
     nptsf = Float64(npts)
     targetregions = Vector{Int}()
 
     # Determine the edges and vertices in the boundary
 
     faceclosure = lefschetz_closure(lc, [findex])
-    faceclosure_dims = lc.dimensions[facecl]
+    faceclosure_dims = lc.dimensions[faceclosure]
     facevertices = faceclosure[findall(isequal(0),faceclosure_dims)]
     faceedges    = faceclosure[findall(isequal(1),faceclosure_dims)]
 

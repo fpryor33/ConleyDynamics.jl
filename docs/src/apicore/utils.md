@@ -62,6 +62,7 @@ extract_multivectors
 
 ```@docs
 convert_planar_coordinates
+convert_spatial_coordinates
 planar_nontransverse_edges
 ```
 

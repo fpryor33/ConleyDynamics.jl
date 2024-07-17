@@ -7,6 +7,7 @@ module ConleyDynamics
 
 using Graphs
 using Combinatorics
+using LinearAlgebra
 using Random
 using Printf
 using Luxor
