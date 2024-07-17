@@ -28,6 +28,8 @@ include("./cmcore/homogeneous_columns.jl")
 include("./cmcore/renumber_poset.jl")
 include("./cmcore/target_columns.jl")
 include("./cmcore/conley_index.jl")
+include("./cmcore/morse_sets.jl")
+include("./cmcore/invariant_hull.jl")
 
 include("./homology/ph_reduce.jl")
 include("./homology/persistent_homology.jl")

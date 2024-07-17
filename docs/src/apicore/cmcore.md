@@ -4,6 +4,8 @@
 
 ```@docs
 conley_index
+morse_sets
+invariant_hull
 ```
 
 ## Connection Matrix Computation
