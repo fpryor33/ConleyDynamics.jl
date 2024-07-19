@@ -49,8 +49,8 @@ permute_lefschetz_complex
 ## Multivector Fields
 
 ```@docs
-convert_clist
-convert_clistvec
+convert_cells
+convert_cellsubsets
 create_mvf_hull
 create_planar_mvf
 create_spatial_mvf

@@ -4,7 +4,7 @@ export plot_planar_simplicial
     plot_planar_simplicial(sc::LefschetzComplex,
                            coords::Vector{<:Vector{<:Real}},
                            fname::String;
-                           [mvf::CellListVector=Vector{Vector{Int}}([]),]
+                           [mvf::CellSubsets=Vector{Vector{Int}}([]),]
                            [labeldir::Vector{<:Real}=Vector{Int}([]),]
                            [labeldis::Real=8,]
                            [hfac::Real=1.2,]
@@ -62,7 +62,7 @@ This command puts all labels in the North-East direction at a distance of 10.
 function plot_planar_simplicial(sc::LefschetzComplex,
                                 coords::Vector{<:Vector{<:Real}},
                                 fname::String;
-                                mvf::CellListVector=Vector{Vector{Int}}([]),
+                                mvf::CellSubsets=Vector{Vector{Int}}([]),
                                 labeldir::Vector{<:Real}=Vector{Int}([]),
                                 labeldis::Real=8,
                                 hfac::Real=1.2,
@@ -116,7 +116,7 @@ function plot_planar_simplicial(sc::LefschetzComplex,
         # First make sure that the multivector field has type Int
 
         if typeof(mvf[1][1]) == String
-            mvfI = convert_clistvec(sc, mvf)
+            mvfI = convert_cellsubsets(sc, mvf)
         else
             mvfI = mvf
         end

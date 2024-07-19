@@ -36,7 +36,7 @@ include("./homology/persistent_homology.jl")
 include("./homology/homology.jl")
 include("./homology/relative_homology.jl")
 
-include("./utils/convert_clist.jl")
+include("./utils/convert_cells.jl")
 include("./utils/convert_coordinates.jl")
 include("./utils/create_simplicial_complex.jl")
 include("./utils/create_simplicial_rectangle.jl")

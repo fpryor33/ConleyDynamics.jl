@@ -56,7 +56,7 @@ function extract_multivectors(lc::LefschetzComplex, mvf::Vector{Vector{String}},
     # Extract all multivectors containing the provided cells
     #
 
-    mvfI = convert_clistvec(lc, mvf)
+    mvfI = convert_cellsubsets(lc, mvf)
 
     scellsI = Vector{Int}()
     for k in scells

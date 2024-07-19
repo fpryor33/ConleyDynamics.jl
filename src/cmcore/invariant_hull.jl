@@ -1,8 +1,8 @@
 export invariant_hull
 
 """
-    invariant_hull(lc::LefschetzComplex, mvf::CellListVector,
-                   ms::CellListVector)
+    invariant_hull(lc::LefschetzComplex, mvf::CellSubsets,
+                   ms::CellSubsets)
 
 Find the isolated invariant hull of a collection of Morse sets.
 
@@ -16,8 +16,8 @@ using the function `morse_sets`!
 The function returns the smallest isolated invariant set which contains
 the Morse sets and their connections as a `Vector{Int}`.
 """
-function invariant_hull(lc::LefschetzComplex, mvf::CellListVector,
-                        ms::CellListVector)
+function invariant_hull(lc::LefschetzComplex, mvf::CellSubsets,
+                        ms::CellSubsets)
     #
     # Find the isolated invariant hull of a collection of Morse sets
     #
@@ -27,13 +27,13 @@ function invariant_hull(lc::LefschetzComplex, mvf::CellListVector,
     if mvf isa Vector{Vector{Int}}
         mvfI = mvf
     else
-        mvfI = convert_clistvec(lc, mvf)
+        mvfI = convert_cellsubsets(lc, mvf)
     end
 
     if ms isa Vector{Vector{Int}}
         msI = ms
     else
-        msI = convert_clistvec(lc, ms)
+        msI = convert_cellsubsets(lc, ms)
     end
     
     # Create the digraph based on the boundary matrix

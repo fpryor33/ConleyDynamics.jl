@@ -1,7 +1,7 @@
 export morse_sets
 
 """
-    morse_sets(lc::LefschetzComplex, mvf::CellListVector)
+    morse_sets(lc::LefschetzComplex, mvf::CellSubsets)
 
 Find the nontrivial Morse sets of a multivector field on a Lefschetz complex.
 
@@ -9,7 +9,7 @@ The input argument `lc` contains the Lefschetz complex, and `mvf` describes
 the multivector field. The function returns the nontrivial Morse sets as
 a `Vector{Vector{Int}}`.
 """
-function morse_sets(lc::LefschetzComplex, mvf::CellListVector)
+function morse_sets(lc::LefschetzComplex, mvf::CellSubsets)
     #
     # Find the nontrivial Morse sets of a multivector field
     #
@@ -19,7 +19,7 @@ function morse_sets(lc::LefschetzComplex, mvf::CellListVector)
     if mvf isa Vector{Vector{Int}}
         mvfI = mvf
     else
-        mvfI = convert_clistvec(lc, mvf)
+        mvfI = convert_cellsubsets(lc, mvf)
     end
     
     # Create the digraph based on the boundary matrix

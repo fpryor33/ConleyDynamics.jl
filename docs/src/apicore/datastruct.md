@@ -18,8 +18,8 @@ LefschetzComplex
 ## Representation of a Multivector Field
 
 ```@docs
-CellList
-CellListVector
+Cells
+CellSubsets
 ```
 
 ## Representation of a Conley-Morse Graph

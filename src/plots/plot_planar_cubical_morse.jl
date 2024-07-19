@@ -4,7 +4,7 @@ export plot_planar_cubical_morse
     plot_planar_cubical_morse(cc::LefschetzComplex,
                               coords::Vector{<:Vector{<:Real}},
                               fname::String,
-                              morsesets::CellListVector;
+                              morsesets::CellSubsets;
                               [hfac::Real=1.2,]
                               [vfac::Real=1.2,]
                               [cubefac::Real=0,]
@@ -33,7 +33,7 @@ to saving the file a preview is displayed.
 function plot_planar_cubical_morse(cc::LefschetzComplex,
                                    coords::Vector{<:Vector{<:Real}},
                                    fname::String,
-                                   morsesets::CellListVector;
+                                   morsesets::CellSubsets;
                                    hfac::Real=1.2,
                                    vfac::Real=1.2,
                                    cubefac::Real=0,
@@ -125,7 +125,7 @@ function plot_planar_cubical_morse(cc::LefschetzComplex,
     if morsesets isa Vector{Vector{Int}}
         msI = morsesets
     else
-        msI = convert_clistvec(cc, morsesets)
+        msI = convert_cellsubsets(cc, morsesets)
     end
 
     col1 = colorant"royalblue4"
@@ -167,7 +167,7 @@ end
 """
     plot_planar_cubical_morse(cc::LefschetzComplex,
                               fname::String,
-                              morsesets::CellListVector;
+                              morsesets::CellSubsets;
                               [hfac::Real=1.2,]
                               [vfac::Real=1.2,]
                               [cubefac::Real=0,]
@@ -182,7 +182,7 @@ of the vertex coordinates. They will be taken from the cube vertex labels.
 """
 function plot_planar_cubical_morse(cc::LefschetzComplex,
                                    fname::String,
-                                   morsesets::CellListVector;
+                                   morsesets::CellSubsets;
                                    hfac::Real=1.2,
                                    vfac::Real=1.2,
                                    cubefac::Real=0,
