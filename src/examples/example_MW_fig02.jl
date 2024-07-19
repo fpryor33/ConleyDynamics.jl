@@ -124,7 +124,7 @@ function example_MW_fig02(mvftype=0)
         error("mvftype must be 0, 1, 2, or 3!")
     end
 
-    strmvf = convert_mvf(lc, mvf)
+    strmvf = convert_clistvec(lc, mvf)
 
     # Return the example data
 

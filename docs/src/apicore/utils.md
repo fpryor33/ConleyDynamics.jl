@@ -13,7 +13,6 @@ end
 create_simplicial_complex
 create_simplicial_rectangle
 create_simplicial_delaunay
-convert_simplices
 ```
 
 ## Cubical Complexes
@@ -50,7 +49,8 @@ permute_lefschetz_complex
 ## Multivector Fields
 
 ```@docs
-convert_mvf
+convert_clist
+convert_clistvec
 create_mvf_hull
 create_planar_mvf
 create_spatial_mvf

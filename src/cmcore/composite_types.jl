@@ -1,4 +1,4 @@
-export LefschetzComplex, ConleyMorseCM, MultiVectorField
+export LefschetzComplex, ConleyMorseCM, CellList, CellListVector
 
 """
     LefschetzComplex
@@ -48,9 +48,24 @@ struct ConleyMorseCM{T}
 end
 
 """
-    MultiVectorField = Union{Vector{Vector{Int}},Vector{Vector{String}}}
+    CellList = Union{Vector{Int},Vector{String}}
 
-Type of a multivector field.
+A list of cells of a Lefschetz complex.
+
+This data type is used to represent subsets of a Lefschetz
+complex. It is used for individual isolated invariant sets,
+locally closed subsets, and multivectors.
 """
-MultiVectorField = Union{Vector{Vector{Int}},Vector{Vector{String}}}
+CellList = Union{Vector{Int},Vector{String}}
+
+"""
+    CellListVector = Union{Vector{Vector{Int}},Vector{Vector{String}}}
+
+A vector of cell lists.
+
+This data type is used to represent a collection of subsets of
+a Lefschetz complex. It is used for Morse decompositions and
+for multivector fields.
+"""
+CellListVector = Union{Vector{Vector{Int}},Vector{Vector{String}}}
 

@@ -4,7 +4,7 @@ export plot_planar_simplicial_morse
     plot_planar_simplicial_morse(sc::LefschetzComplex,
                                  coords::Vector{<:Vector{<:Real}},
                                  fname::String,
-                                 morsesets::MultiVectorField;
+                                 morsesets::CellListVector;
                                  [hfac::Real=1.2,]
                                  [vfac::Real=1.2,]
                                  [sfac::Real=0,]
@@ -33,7 +33,7 @@ to saving the file a preview is displayed.
 function plot_planar_simplicial_morse(sc::LefschetzComplex,
                                       coords::Vector{<:Vector{<:Real}},
                                       fname::String,
-                                      morsesets::MultiVectorField;
+                                      morsesets::CellListVector;
                                       hfac::Real=1.2,
                                       vfac::Real=1.2,
                                       sfac::Real=0,
@@ -112,7 +112,7 @@ function plot_planar_simplicial_morse(sc::LefschetzComplex,
     if morsesets isa Vector{Vector{Int}}
         msI = morsesets
     else
-        msI = convert_mvf(sc, morsesets)
+        msI = convert_clistvec(sc, morsesets)
     end
 
     col1 = colorant"royalblue4"

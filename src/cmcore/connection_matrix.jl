@@ -1,7 +1,7 @@
 export connection_matrix
 
 """
-    connection_matrix(lc::LefschetzComplex, mvf::MultiVectorField;
+    connection_matrix(lc::LefschetzComplex, mvf::CellListVector;
                       [returnbasis::Bool])
 
 Compute a connection matrix for the multivector field `mvf` on the
@@ -13,7 +13,7 @@ argument `returnbasis::Bool=true` is given, then the function also returns
 a dictionary which gives the basis for the connection matrix columns in
 terms of the original labels.
 """
-function connection_matrix(lc::LefschetzComplex, mvfarg::MultiVectorField;
+function connection_matrix(lc::LefschetzComplex, mvfarg::CellListVector;
                            returnbasis::Bool=false)
     #
     # Compute the connection matrix
@@ -22,7 +22,7 @@ function connection_matrix(lc::LefschetzComplex, mvfarg::MultiVectorField;
     # Convert the multivector field to Int if necessary
 
     if mvfarg isa Vector{Vector{String}}
-        mvf = convert_mvf(lc, mvfarg)
+        mvf = convert_clistvec(lc, mvfarg)
     else
         mvf = mvfarg
     end
