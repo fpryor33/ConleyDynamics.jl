@@ -77,7 +77,7 @@ function invariant_hull(lc::LefschetzComplex, mvf::CellSubsets,
 
     # Connect the Morse sets to each other
 
-    for k=2:lenms
+    for k=2:length(msI)
         add_edge!(dg,msI[1][1],msI[k][1])
         add_edge!(dg,msI[k][1],msI[1][1])
     end
