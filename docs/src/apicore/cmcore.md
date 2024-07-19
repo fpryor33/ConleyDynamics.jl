@@ -6,6 +6,7 @@
 conley_index
 morse_sets
 invariant_hull
+restrict_dynamics
 ```
 
 ## Connection Matrix Computation

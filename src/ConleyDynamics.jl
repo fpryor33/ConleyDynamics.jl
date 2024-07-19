@@ -30,6 +30,7 @@ include("./cmcore/target_columns.jl")
 include("./cmcore/conley_index.jl")
 include("./cmcore/morse_sets.jl")
 include("./cmcore/invariant_hull.jl")
+include("./cmcore/restrict_dynamics.jl")
 
 include("./homology/ph_reduce.jl")
 include("./homology/persistent_homology.jl")
