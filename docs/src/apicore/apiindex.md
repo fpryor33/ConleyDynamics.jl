@@ -21,7 +21,7 @@ Pages = ["plots.md"]
 ## Index of Conley Theory Functions
 
 ```@index
-Pages = ["cmcore.md"]
+Pages = ["conley.md"]
 ```
 
 ## Index of Homology Functions

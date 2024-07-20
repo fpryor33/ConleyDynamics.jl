@@ -16,22 +16,17 @@ using Colors
 # Load the type definitions
 
 include("./sparse/sparse_type.jl")
-include("./cmcore/composite_types.jl")
+include("./conley/composite_types.jl")
 
 # Load the methods
 
-include("./cmcore/admissible_order.jl")
-include("./cmcore/cm_columns.jl")
-include("./cmcore/cm_reduce.jl")
-include("./cmcore/connection_matrix.jl")
-include("./cmcore/homogeneous_columns.jl")
-include("./cmcore/renumber_poset.jl")
-include("./cmcore/target_columns.jl")
-include("./cmcore/conley_index.jl")
-include("./cmcore/morse_sets.jl")
-include("./cmcore/invariant_hull.jl")
-include("./cmcore/restrict_dynamics.jl")
-include("./cmcore/remove_exit_set.jl")
+include("./conley/cm_reduce.jl")
+include("./conley/connection_matrix.jl")
+include("./conley/conley_index.jl")
+include("./conley/morse_sets.jl")
+include("./conley/invariant_hull.jl")
+include("./conley/restrict_dynamics.jl")
+include("./conley/remove_exit_set.jl")
 
 include("./homology/ph_reduce.jl")
 include("./homology/persistent_homology.jl")

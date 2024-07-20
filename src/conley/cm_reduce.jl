@@ -91,3 +91,89 @@ function cm_reduce!(matrix::SparseMatrix, psetvec::Vector{Int};
     end
 end
 
+###############################################################################
+
+############################
+#                          #
+#   Auxilliary functions   #
+#                          #
+############################
+
+###############################################################################
+
+function cm_columns(matrix::SparseMatrix, psetvec::Vector{Int})
+    #
+    # Create a vector of column indices for the connection matrix
+    #
+    numcolumns = sparse_size(matrix, 2)
+    hcols      = homogeneous_columns(matrix, psetvec)
+    tcols      = target_columns(matrix, psetvec)
+    ccols      = Vector{Int}()
+
+    for j = 1:numcolumns
+        if (hcols[j] == false) & (tcols[j] == false)
+            push!(ccols,j)
+        end
+    end
+
+    return ccols
+end
+
+###############################################################################
+
+function homogeneous_columns(matrix::SparseMatrix, psetvec::Vector{Int})
+    #
+    # Determine which columns are homogenous columns
+    #
+    numcolumns = sparse_size(matrix, 2)
+    hcols      = Vector(zeros(Bool,numcolumns))
+
+    for j = 1:numcolumns
+        hcols[j] = is_homogeneous(matrix, psetvec, j)
+    end
+
+    return hcols
+end
+
+###############################################################################
+
+function is_homogeneous(matrix::SparseMatrix, psetvec::Vector{Int},
+                        cindex::Int)
+    #
+    # Decide whether a column is homogeneous.
+    #
+
+    lowc = sparse_low(matrix,cindex)
+
+    if lowc == 0
+        return false
+    else
+        targetindex = lowc
+        if psetvec[cindex] == psetvec[targetindex]
+            return true
+        else
+            return false
+        end
+    end
+end
+
+###############################################################################
+
+function target_columns(matrix::SparseMatrix, psetvec::Vector{Int})
+    #
+    # Determine which columns are target columns
+    #
+    numcolumns = sparse_size(matrix, 2)
+    tcols      = Vector(zeros(Bool,numcolumns))
+
+    for j = 1:numcolumns
+        if is_homogeneous(matrix, psetvec, j)
+            tcols[sparse_low(matrix,j)] = true
+        end
+    end
+
+    return tcols
+end
+
+###############################################################################
+
