@@ -24,7 +24,7 @@ include("./conley/cm_reduce.jl")
 include("./conley/connection_matrix.jl")
 include("./conley/conley_index.jl")
 include("./conley/morse_sets.jl")
-include("./conley/invariant_hull.jl")
+include("./conley/morse_interval.jl")
 include("./conley/restrict_dynamics.jl")
 include("./conley/remove_exit_set.jl")
 

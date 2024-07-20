@@ -1,10 +1,10 @@
-export invariant_hull
+export morse_interval
 
 """
-    invariant_hull(lc::LefschetzComplex, mvf::CellSubsets,
+    morse_interval(lc::LefschetzComplex, mvf::CellSubsets,
                    ms::CellSubsets)
 
-Find the isolated invariant hull of a collection of Morse sets.
+Find the isolated invariant set for a Morse set interval.
 
 The input argument `lc` contains the Lefschetz complex, and `mvf` describes
 the multivector field. The collection of Morse sets are contained in`ms`.
@@ -16,10 +16,10 @@ using the function `morse_sets`!
 The function returns the smallest isolated invariant set which contains
 the Morse sets and their connections as a `Vector{Int}`.
 """
-function invariant_hull(lc::LefschetzComplex, mvf::CellSubsets,
+function morse_interval(lc::LefschetzComplex, mvf::CellSubsets,
                         ms::CellSubsets)
     #
-    # Find the isolated invariant hull of a collection of Morse sets
+    # Find the isolated invariant set for a Morse set interval
     #
 
     # Convert the multivector field and the Morse sets to integer form

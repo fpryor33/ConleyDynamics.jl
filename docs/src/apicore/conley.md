@@ -5,7 +5,7 @@
 ```@docs
 conley_index
 morse_sets
-invariant_hull
+morse_interval
 restrict_dynamics
 remove_exit_set
 ```

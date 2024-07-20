@@ -120,7 +120,7 @@ characterized as follows:
   orbits* between them.
 
 The two above steps can be performed in `ConleyDynamics.jl` using
-the function [`invariant_hull`](@ref).
+the function [`morse_interval`](@ref).
 
 In our example, we consider two intervals. The first interval
 consists of the five Morse sets corresponding to all unstable
@@ -132,8 +132,8 @@ can be computed as follows:
 ```@example Cmorseinterval
 subset1 = findall(x -> x[2]+x[3]>0, conleyindices);
 subset2 = findall(x -> x[1]+x[2]>0, conleyindices);
-lcsub1 = invariant_hull(lc, mvf, morsedecomp[subset1]);
-lcsub2 = invariant_hull(lc, mvf, morsedecomp[subset2]);
+lcsub1 = morse_interval(lc, mvf, morsedecomp[subset1]);
+lcsub2 = morse_interval(lc, mvf, morsedecomp[subset2]);
 [length(subset1), length(subset2), length(lcsub1), length(lcsub2)]
 ```
 
