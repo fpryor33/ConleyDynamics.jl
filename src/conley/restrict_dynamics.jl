@@ -34,15 +34,11 @@ function restrict_dynamics(lc::LefschetzComplex, mvf::CellSubsets, lcsub::Cells)
 
     # Create the restricted multivector field
 
-    mvfredI = Vector{Vector{Int}}()
-
-    for cellsub in mvfI
-        cellsubred = intersect(cellsub, lcsubI)
-        if length(cellsubred)>1
-            push!(mvfredI,cellsubred)
-        end
+    mvfredI = deepcopy(mvfI)
+    Threads.@threads for k in eachindex(mvfredI)
+        intersect!(mvfredI[k], lcsubI)
     end
-
+    mvfredI = mvfredI[findall(x -> length(x)>1, mvfredI)]
     mvfredL = convert_cellsubsets(lc, mvfredI)
 
     # Create the reduced Lefschetz complex
