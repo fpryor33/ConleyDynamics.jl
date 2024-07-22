@@ -32,12 +32,6 @@ function restrict_dynamics(lc::LefschetzComplex, mvf::CellSubsets, lcsub::Cells)
         lcsubI = convert_cells(lc, lcsub)
     end
 
-    # Make sure the cell subset is locally closed
-
-    if !lefschetz_is_locally_closed(lc, lcsubI)
-        error("The cell subset has to be locally closed!")
-    end
-
     # Create the restricted multivector field
 
     mvfredI = Vector{Vector{Int}}()

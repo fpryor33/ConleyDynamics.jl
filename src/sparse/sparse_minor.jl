@@ -21,13 +21,14 @@ function sparse_minor(sm::SparseMatrix, rvec::Vector{Int}, cvec::Vector{Int})
     c = Vector{Int}([])
     vals = Vector{typeof(sm.zero)}([])
 
-    for k=1:newnr
-        for m=1:newnc
-            smvalue = sm[rvec[k],cvec[m]]
-            if !(smvalue == sm.zero)
+    for m=1:newnc
+        colm = sparse_get_nz_column(sm, cvec[m])
+        for centry in colm
+            rowind = findall(x -> x==centry, rvec)
+            for k in rowind
                 push!(r,k)
                 push!(c,m)
-                push!(vals,smvalue)
+                push!(vals,sm[rvec[k],cvec[m]])
             end
         end
     end
