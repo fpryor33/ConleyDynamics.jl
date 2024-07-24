@@ -156,22 +156,25 @@ function admissible_order(bndmatrix::SparseMatrix, mvf::Vector{Vector{Int}})
     # Create the digraph based on the boundary matrix
 
     nr, nc, tchar, tzero, tone, r, c, vals = lists_from_sparse(bndmatrix)
-    edgelist = Edge.([(c[k],r[k]) for k in 1:length(c)])
-    dg = SimpleDiGraph(edgelist)
 
-    # Add cliques for the multivectors
+    # Add cycles for the multivectors to the lists c and r
 
     lenmvf = length(mvf)
     for k = 1:lenmvf
         mv  = mvf[k]
         lmv = length(mv)
         for m = 1:lmv-1
-            for n = m+1:lmv
-                add_edge!(dg,mv[m],mv[n])
-                add_edge!(dg,mv[n],mv[m])
-            end
+            push!(c,mv[m])
+            push!(r,mv[m+1])
         end
+        push!(c,mv[lmv])
+        push!(r,mv[1])
     end
+
+    # Create the edge list and the digraph
+
+    edgelist = Edge.([(c[k],r[k]) for k in 1:length(c)])
+    dg = SimpleDiGraph(edgelist)
 
     # Apply Tarjan's algorithm
     

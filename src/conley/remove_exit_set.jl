@@ -38,22 +38,34 @@ function remove_exit_set(lc::LefschetzComplex, mvf::CellSubsets)
 
     # Find all critical cells on the boundary
 
-    iscritical = fill(Int(1), length(lcbnd))
-
-    for mv in mvfI
+    mvfT = deepcopy(mvfI)
+    Threads.@threads for k in eachindex(mvfT)
+        mv = mvfT[k]
         if length(mv) > 1
-            mvbnd = intersect(mv, lcbnd)
-            if length(mvbnd) > 0
-                for k in mvbnd
-                    ki = findfirst(x -> x==k, lcbnd)
-                    iscritical[ki] = 0
-                end
-            end
+            intersect!(mvfT[k], lcbnd)
+        else
+            mvfT[k] = Vector{Int}()
         end
     end
+    criticalcells = setdiff(lcbnd, unique(reduce(vcat,mvfT)))
 
-    criticalindices = findall(x -> x==1, iscritical)
-    criticalcells = lcbnd[criticalindices]
+    # Below is the older and slower code for finding
+    # the critical cells. This should be removed eventually.
+    # 
+    # iscritical = fill(Int(1), length(lcbnd)) 
+    # for mv in mvfI
+    #     if length(mv) > 1
+    #         mvbnd = intersect(mv, lcbnd)
+    #         if length(mvbnd) > 0
+    #             for k in mvbnd
+    #                 ki = findfirst(x -> x==k, lcbnd)
+    #                 iscritical[ki] = 0
+    #             end
+    #         end
+    #     end
+    # end   
+    # criticalindices = findall(x -> x==1, iscritical)
+    # criticalcells = lcbnd[criticalindices]
 
     # Check whether the critical boundary cells form a closed set
 

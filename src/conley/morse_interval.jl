@@ -8,9 +8,9 @@ Find the isolated invariant set for a Morse set interval.
 
 The input argument `lc` contains the Lefschetz complex, and `mvf` describes
 the multivector field. The collection of Morse sets are contained in`ms`.
-All of these sets have to be Morse sets in the sense of being strongly
-connected components of the flow graph. (For runtime issues, this will
-not be checked!) In other words, the sets in `ms` have to be determined
+All of these sets should be Morse sets in the sense of being strongly
+connected components of the flow graph. (Nevertheless, this will be enforced
+in the function!) In other words, the sets in `ms` should be determined
 using the function `morse_sets`!
 
 The function returns the smallest isolated invariant set which contains
@@ -39,48 +39,48 @@ function morse_interval(lc::LefschetzComplex, mvf::CellSubsets,
     # Create the digraph based on the boundary matrix
 
     nr, nc, tchar, tzero, tone, r, c, vals = lists_from_sparse(lc.boundary)
-    edgelist = Edge.([(c[k],r[k]) for k in 1:length(c)])
-    dg = SimpleDiGraph(edgelist)
 
-    # Add cliques for the multivectors
-
+    # Add cycles for the multivectors
+    
     lenmvf = length(mvfI)
     for k = 1:lenmvf
         mv  = mvfI[k]
         lmv = length(mv)
         for m = 1:lmv-1
-            for n = m+1:lmv
-                add_edge!(dg,mv[m],mv[n])
-                add_edge!(dg,mv[n],mv[m])
-            end
+            push!(c,mv[m])
+            push!(r,mv[m+1])
         end
+        push!(c,mv[lmv])
+        push!(r,mv[1])
     end
 
-    # Add cliques for the Morse sets
-    #
-    #  THIS IS NOT NECESSARY IF EACH MORSE SET
-    #  IS A STRONGLY CONNECTED COMPONENT!!
-    #
-    #  That's why it is commented out..
-    #
-    # lenms = length(msI)
-    # for k = 1:lenms
-    #     cs = msI[k]
-    #     lcs = length(cs)
-    #     for m = 1:lcs-1
-    #         for n = m+1:lcs
-    #             add_edge!(dg,cs[m],cs[n])
-    #             add_edge!(dg,cs[n],cs[m])
-    #         end
-    #     end
-    # end
+    # Add cycles for the Morse sets
+    
+    lenms = length(msI)
+    for k = 1:lenms
+        cs = msI[k]
+        lcs = length(cs)
+        for m = 1:lcs-1
+            push!(c,cs[m])
+            push!(r,cs[m+1])
+        end
+        push!(c,cs[lcs])
+        push!(r,cs[1])
+    end
 
     # Connect the Morse sets to each other
 
     for k=2:length(msI)
-        add_edge!(dg,msI[1][1],msI[k][1])
-        add_edge!(dg,msI[k][1],msI[1][1])
+        push!(c,msI[1][1])
+        push!(r,msI[k][1])
+        push!(c,msI[k][1])
+        push!(r,msI[1][1])
     end
+
+    # Create the edge list and the digraph
+
+    edgelist = Edge.([(c[k],r[k]) for k in 1:length(c)])
+    dg = SimpleDiGraph(edgelist)
 
     # Apply Tarjan's algorithm
     

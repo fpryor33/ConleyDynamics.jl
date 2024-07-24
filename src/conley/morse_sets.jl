@@ -7,7 +7,7 @@ Find the nontrivial Morse sets of a multivector field on a Lefschetz complex.
 
 The input argument `lc` contains the Lefschetz complex, and `mvf` describes
 the multivector field. The function returns the nontrivial Morse sets as
-a `Vector{Vector{Int}}`. If the optional argument `poset=true1` is added,
+a `Vector{Vector{Int}}`. If the optional argument `poset=true` is added,
 then the function returns both the Morse sets and the adjacency matrix of
 the Hasse diagram of the underlying poset.
 """
@@ -29,22 +29,25 @@ function morse_sets(lc::LefschetzComplex, mvf::CellSubsets; poset::Bool=false)
     # Create the digraph based on the boundary matrix
 
     nr, nc, tchar, tzero, tone, r, c, vals = lists_from_sparse(lc.boundary)
-    edgelist = Edge.([(c[k],r[k]) for k in 1:length(c)])
-    dg = SimpleDiGraph(edgelist)
 
-    # Add cliques for the multivectors
+    # Add cycles for the multivectors to the lists c and r
 
     lenmvf = length(mvfI)
     for k = 1:lenmvf
         mv  = mvfI[k]
         lmv = length(mv)
         for m = 1:lmv-1
-            for n = m+1:lmv
-                add_edge!(dg,mv[m],mv[n])
-                add_edge!(dg,mv[n],mv[m])
-            end
+            push!(c,mv[m])
+            push!(r,mv[m+1])
         end
+        push!(c,mv[lmv])
+        push!(r,mv[1])
     end
+
+    # Create the edge list and the digraph
+
+    edgelist = Edge.([(c[k],r[k]) for k in 1:length(c)])
+    dg = SimpleDiGraph(edgelist)
 
     # Apply Tarjan's algorithm
     
