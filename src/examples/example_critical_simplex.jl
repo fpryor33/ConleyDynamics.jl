@@ -41,7 +41,7 @@ function example_critical_simplex(dim)
 
     # Create the multivector field
     
-    mvf = Vector{Vector{Int}}([[]])
+    mvf = Vector{Vector{Int}}()
 
     # Return the example data
 
