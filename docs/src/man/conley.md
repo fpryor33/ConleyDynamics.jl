@@ -370,6 +370,166 @@ plot_planar_simplicial_morse(lc2, coords2N, fname3, large_mv, pv=true)
 
 Note that in this example, there are only 20 large multivectors.
 
+## Analyzing a Spatial System using Cubical Complexes
+
+It is also possible to analyze certain three-dimensional ordinary
+differential equations in `ConleyDynamics.jl`. To provide one such
+example, consider the system
+
+```math
+   \begin{array}{rcl}
+     \dot{x}_1 & = & (\lambda-1) x_1 - \frac{3\lambda}{2\pi}
+       \left( (x_1^3 - x_1^2 x_3 + x_2^2 x_3 + 2 x_1
+       \left( x_2^2 + x_3^2 \right) \right) \\[1ex]
+     \dot{x}_2 & = & (\lambda-4) x_2 - \frac{3\lambda}{2\pi} \;
+       x_2 \left( 2 x_1^2 + x_2^2 + 2 x_1 x_3 + 2 x_3^2 \right) \\[1ex]
+     \dot{x}_3 & = & (\lambda-9) x_3 + \frac{\lambda}{2\pi}
+       \left( x_1 \left( x_1^2 - 3 x_2^2 \right) - 3 x_3
+       \left( 2 x_1^2 + 2 x_2^2 + x_3^2 \right) \right)
+   \end{array}
+```
+
+This system arises in the study of the so-called *Allen-Cahn equation*,
+which is the parabolic partial differential equation given by
+
+```math
+   u_t = \Delta u + \lambda \left( u - u^3 \right)
+   \;\;\;\text{ in }\;\;\; \Omega = (0,\pi)
+   \quad\text{ with }\quad
+   u = 0 \;\;\;\text{ on }\;\;\; \partial\Omega \; .
+```
+
+This partial differential equation can be interpreted as an
+infinite-dimensional system of ordinary differential equations,
+see for example [sander:wanner:pdebook; Section 6.1](@cite).
+For this, one has to expand the unknown function ``u(t,\cdot)`` as
+a generalized Fourier series with respect to the basis functions
+
+```math
+   \varphi_k(x) = \sqrt{\frac{2}{\pi}} \, \sin(k \pi x)
+   \quad\text{ for }\quad
+   k \in \mathbb{N} \; .
+```
+
+If one truncates this series representation after three terms, and
+projects the right-hand side of the partial differential equation
+onto the linear space spanned by the first three basis functions,
+then the three coefficients of the approximating sum satisfy the
+above three-dimensional ordinary differential equation. Thus, this
+system provides a model for the dynamics of the partial differential
+equation, at least for sufficiently small values of the parameter
+``\lambda``. It can be implemented in Julia using the following
+commands:
+
+```julia
+function allencahn3d(x::Vector{Float64})
+    #
+    # Allen-Cahn projection
+    #
+    lambda = 3.0 * pi
+    c      = lambda / pi
+    x1, x2, x3 = x
+    y1 = (lambda-1)*x1 - 1.5*c * (x1*x1*x1-x1*x1*x3+x2*x2*x3+2*x1*(x2*x2+x3*x3))
+    y2 = (lambda-4)*x2 - 1.5*c * x2 * (2*x1*x1+x2*x2+2*x1*x3+2*x3*x3)
+    y3 = (lambda-9)*x3 + 0.5*c * (x1*(x1*x1-3*x2*x2)-3*x3*(2*x1*x1+2*x2*x2+x3*x3))
+    return [y1, y2, y3]
+end
+```
+
+Notice that for our example we use the parameter value ``\lambda = 3\pi``.
+In this particular case, one can show numerically that the system has seven
+equilibrium solutions. These are approximately given as follows:
+
+- Two equilibria ``\pm(1.45165, \; 0, \; 0.24396)`` of index 0.
+- Two equilibria ``\pm(0, \; 1.09796, \; 0)`` of index 1.
+- Two equilibria ``\pm(0, \; 0, \; 0.307238)`` of index 2.
+- One equilibrium ``(0, \; 0, \; 0)`` of index 3.
+
+In order to find the associated Morse decomposition, one can use the
+commands
+
+```julia
+N = 25
+bmax = [1.8, 1.5, 0.8]
+lc, coordsI = create_cubical_box(N,N,N);
+coordsN = convert_spatial_coordinates(coordsI, -bmax, bmax);
+mvf = create_spatial_mvf(lc, coordsN, allencahn3d);
+```
+
+These commands create a cubical box of size ``25 \times 25 \times 25``
+which covers the region ``[-1.8,1.8] \times [-1.5,1.5] \times [-0.8,0.8]``.
+In addition, we construct a multivector field `mvf` which encapsulates
+the possible dynamics of the system. After these preparations, the Morse
+decomposition can be computed via
+
+```julia
+morsedecomp = morse_sets(lc, mvf);
+morseinterval = morse_interval(lc, mvf, morsedecomp);
+lci, mvfi = restrict_dynamics(lc, mvf, morseinterval);
+cmi = connection_matrix(lci, mvfi);
+```
+
+While the first command finds the actual Morse decomposition, the second
+one restricts the Lefschetz complex and the multivector field to the
+smallest isolated invariant set which contains all Morse sets and 
+connecting orbits between them. The last command finds the connection
+matrix.
+
+To see whether the above commands did indeed find the correct dynamical
+behavior, we first inspect the computed Conley indices of the Morse
+sets:
+
+```julia
+julia> cmi.conley
+7-element Vector{Vector{Int64}}:
+ [1, 0, 0, 0]
+ [1, 0, 0, 0]
+ [0, 1, 0, 0]
+ [0, 1, 0, 0]
+ [0, 0, 1, 0]
+ [0, 0, 1, 0]
+ [0, 0, 0, 1]
+```
+
+Clearly, these are the correct indices based on our numerical information 
+concerning the stationary states of the system. The connection matrix 
+is given by:
+
+```julia
+julia> full_from_sparse(cmi.matrix)
+7×7 Matrix{Int64}:
+ 0  0  1  1  0  0  0
+ 0  0  1  1  0  0  0
+ 0  0  0  0  1  1  0
+ 0  0  0  0  1  1  0
+ 0  0  0  0  0  0  1
+ 0  0  0  0  0  0  1
+ 0  0  0  0  0  0  0
+```
+
+Thus, there are a total of ten connecting orbits that are induced
+through algebraic topology. The index 3 equilibrium at the origin
+has connections to each of the index 2 solutions, which lie above
+and below the origin in the direction of the ``x_3``-axis. Each of
+the latter two stationary states has connections to both index 1
+equilibria. Finally, each of these is connected to both stable
+states.
+
+![The dynamics of an Allen-Cahn model](img/allencahn3d_3_25.png)
+
+The location of the computed Morse sets is illustrated in the
+accompanying figure, which uses ``x``, ``y``, and ``z`` instead
+of the variable names ``x_1``, ``x_2``, and ``x_3``, respectively.
+Notice that while the stationary states of index 0, 2, and 3 are
+all well-localized, this cannot be said about the two equilibria
+of index 1. The computed enclosures for the latter two are elongated
+cubical sets which are shown along the upper left and lower right
+of the figure. This overestimation is a result of the use of a strict
+cubical grid, combined with the small discretization size `N = 25`.
+Nevertheless, the above simple code does reproduce the overall
+global dynamical behavior of the ordinary differential equation
+correctly.
+
 ## Conley Theory References
 
 See the [full bibliography](@ref References) for a complete list
