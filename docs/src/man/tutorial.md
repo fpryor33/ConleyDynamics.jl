@@ -608,6 +608,8 @@ the Julia function
 
 ```@example T3
 using ..ConleyDynamics # hide
+using Random # hide
+Random.seed!(1234) # hide
 function planarvf(x::Vector{Float64})
     #
     # Sample planar vector field with nontrivial Morse decomposition
