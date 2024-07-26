@@ -7,30 +7,35 @@
 # Here are a number of sample runs:
 #
 # * lambda = 3*pi and N = 25:
-#   This takes about 10 seconds and gives the correct
+#   This takes about 6 seconds and gives the correct
 #   Morse decomposition. There are 2 equilibria each of
 #   index 0, 1, and 2, and one equilibrium of index 3.
+#   (smaller box: 10 seconds)
 #
 # There are also a few other interesting runs:
 #
 # * lambda = 3*pi and N = 41:
-#   This takes 46 seconds and recovers the full Morse
+#   This takes 34 seconds and recovers the full Morse
 #   decomposition.
+#   (smaller box: 102 seconds)
 #
 # * lambda = 3*pi and N = 51:
-#   This takes 120 seconds, gives everything.
+#   This takes 92 seconds, gives everything.
+#   (smaller box: 524 seconds)
 #
 # * lambda = 3*pi and N = 21:
-#   This takes 7.5 seconds but cannot resolve the full
+#   This takes 3.5 seconds but cannot resolve the full
 #   Morse decomposition. It only gives 6 Morse sets.
 #   There are 2 equilibria each of index 0 and 2, and
 #   one of index 3. But the two equilibria of index 1
 #   are part of one Morse set.
+#   (smaller box: 5 seconds)
 #
 # * lambda = 4*pi and N = 51:
-#   This run takes about 370 seconds and gives a total
+#   This run takes about 380 seconds and gives a total
 #   of eleven equilibria: 1 index 3, 2 index 2, 4 index 1,
 #   and 4 index 0. Four of these are spurious!
+#   (smaller box: 2985 seconds)
 #
 
 using ConleyDynamics
@@ -49,6 +54,7 @@ function allencahn3d(x::Vector{Float64})
 end
 
 N = 25
+# bmax = [2.0, 2.0, 2.0]
 bmax = [1.8, 1.5, 1.0]
 lc, coordsI = create_cubical_box(N,N,N);
 coordsN = convert_spatial_coordinates(coordsI, -bmax, bmax);

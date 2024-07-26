@@ -92,8 +92,18 @@ function create_cubical_complex(cubes::Vector{String}; p::Int=2)
 
         # Loop through the cubes and add boundaries
 
-        for curcube in labelvect[k+1]
+        tmpncubes   = length(labelvect[k+1])
+        tmpnewlabelP = [Vector{String}() for _ in 1:tmpncubes]
+        tmpnewlabelN = [Vector{String}() for _ in 1:tmpncubes]
+        emptyvecint  = [Vector{Int}() for _ in 1:k]
+        tmpnewinfoP  = [deepcopy(emptyvecint) for _ in 1:tmpncubes]
+        tmpnewinfoN  = [deepcopy(emptyvecint) for _ in 1:tmpncubes]
 
+        # Create labels and intinfo in parallel
+
+        Threads.@threads for ck in 1:tmpncubes
+
+            curcube    = labelvect[k+1][ck]
             curintinfo = labelintinfodict[curcube]
             curones = findall(x -> x==1, curintinfo[1+pointdim:2*pointdim])
 
@@ -108,10 +118,21 @@ function create_cubical_complex(cubes::Vector{String}; p::Int=2)
                 newintinfoN[1+2*pointdim] -= 1
                 newlabelP = cube_label(pointdim, pointlen, newintinfoP)
                 newlabelN = cube_label(pointdim, pointlen, newintinfoN)
-                push!(labelsets[k], newlabelP)
-                push!(labelsets[k], newlabelN)
-                labelintinfodict[newlabelP] = newintinfoP
-                labelintinfodict[newlabelN] = newintinfoN
+                push!(tmpnewlabelP[ck], newlabelP)
+                push!(tmpnewlabelN[ck], newlabelN)
+                tmpnewinfoP[ck][m] = newintinfoP
+                tmpnewinfoN[ck][m] = newintinfoN
+            end
+        end
+
+        # Incorporate data in serial
+
+        for ck in 1:tmpncubes
+            for m in 1:k
+                push!(labelsets[k], tmpnewlabelP[ck][m])
+                push!(labelsets[k], tmpnewlabelN[ck][m])
+                labelintinfodict[tmpnewlabelP[ck][m]] = tmpnewinfoP[ck][m]
+                labelintinfodict[tmpnewlabelN[ck][m]] = tmpnewinfoN[ck][m]
             end
         end
     end
@@ -137,44 +158,51 @@ function create_cubical_complex(cubes::Vector{String}; p::Int=2)
 
     # Create the boundary map
 
-    Br = Vector{Int}()
-    Bc = Vector{Int}()
-    Bv = Vector{Int}()
-    for k = 1:CCn
-        if CCdimvec[k] > 0
+    pdindices = findall(x -> x>0, CCdimvec)
+    pdsize    = length(pdindices)
+    tmpBr = [Vector{Int}() for _ in 1:pdsize]
+    tmpBc = [Vector{Int}() for _ in 1:pdsize]
+    tmpBv = [Vector{Int}() for _ in 1:pdsize]
 
-            curcdim = CCdimvec[k]
-            curcube = CClabelvec[k]
-            curintinfo = labelintinfodict[curcube]
-            curones = findall(x -> x==1, curintinfo[1+pointdim:2*pointdim])
-            coeff = Int(1)
+    Threads.@threads for ki = 1:pdsize
+        k = pdindices[ki]
+        curcdim = CCdimvec[k]
+        curcube = CClabelvec[k]
+        curintinfo = labelintinfodict[curcube]
+        curones = findall(x -> x==1, curintinfo[1+pointdim:2*pointdim])
 
-            for m=1:curcdim
-                newintinfoP = deepcopy(curintinfo)
-                newintinfoN = deepcopy(curintinfo)
-                ione = curones[m]
-                newintinfoP[ione] += 1
-                newintinfoP[ione+pointdim] = 0
-                newintinfoN[ione+pointdim] = 0
-                newintinfoP[1+2*pointdim] -= 1
-                newintinfoN[1+2*pointdim] -= 1
-                newlabelP = cube_label(pointdim, pointlen, newintinfoP)
-                newlabelN = cube_label(pointdim, pointlen, newintinfoN)
-                bcellP = CClabelindexdict[newlabelP]
-                bcellN = CClabelindexdict[newlabelN]
-
-                push!(Br,bcellP)   # Row index
-                push!(Bc,k)        # Column index
-                push!(Bv,coeff)    # Matrix entry
-                
-                push!(Br,bcellN)   # Row index
-                push!(Bc,k)        # Column index
-                push!(Bv,-coeff)   # Matrix entry
-                
-                coeff = -coeff
+        for m=1:curcdim
+            if mod(m,2) == 1
+                coeff = Int(1)
+            else
+                coeff = Int(-1)
             end
+            newintinfoP = deepcopy(curintinfo)
+            newintinfoN = deepcopy(curintinfo)
+            ione = curones[m]
+            newintinfoP[ione] += 1
+            newintinfoP[ione+pointdim] = 0
+            newintinfoN[ione+pointdim] = 0
+            newintinfoP[1+2*pointdim] -= 1
+            newintinfoN[1+2*pointdim] -= 1
+            newlabelP = cube_label(pointdim, pointlen, newintinfoP)
+            newlabelN = cube_label(pointdim, pointlen, newintinfoN)
+            bcellP = CClabelindexdict[newlabelP]
+            bcellN = CClabelindexdict[newlabelN]
+
+            push!(tmpBr[ki],bcellP)   # Row index
+            push!(tmpBc[ki],k)        # Column index
+            push!(tmpBv[ki],coeff)    # Matrix entry
+                
+            push!(tmpBr[ki],bcellN)   # Row index
+            push!(tmpBc[ki],k)        # Column index
+            push!(tmpBv[ki],-coeff)   # Matrix entry
         end
     end
+
+    Br = reduce(vcat,tmpBr)
+    Bc = reduce(vcat,tmpBc)
+    Bv = reduce(vcat,tmpBv)
 
     if p > 0
         B = sparse_from_lists(CCn,CCn,p,Int(0),Int(1),Br,Bc,Bv)
