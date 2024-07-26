@@ -450,14 +450,14 @@ commands
 
 ```julia
 N = 25
-bmax = [1.8, 1.5, 0.8]
+bmax = [1.8, 1.5, 1.0]
 lc, coordsI = create_cubical_box(N,N,N);
 coordsN = convert_spatial_coordinates(coordsI, -bmax, bmax);
 mvf = create_spatial_mvf(lc, coordsN, allencahn3d);
 ```
 
 These commands create a cubical box of size ``25 \times 25 \times 25``
-which covers the region ``[-1.8,1.8] \times [-1.5,1.5] \times [-0.8,0.8]``.
+which covers the region ``[-1.8,1.8] \times [-1.5,1.5] \times [-1.0,1.0]``.
 In addition, we construct a multivector field `mvf` which encapsulates
 the possible dynamics of the system. After these preparations, the Morse
 decomposition can be computed via
