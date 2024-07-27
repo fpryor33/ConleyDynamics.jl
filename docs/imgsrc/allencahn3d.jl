@@ -69,22 +69,25 @@ cmi.conley
 
 # Create graphics
 
-using GLMakie
+using GLMakie, Colors
 
-colors = zeros(Int64, N, N, N);
+vcolors = zeros(UInt8, N, N, N);
 for k = 1:length(cmi.morse)
     for cube in cmi.morse[k]
         cubeinfo = cube_information(cube)
         if cubeinfo[7] == 3
-            colors[cubeinfo[1]+1,cubeinfo[2]+1,cubeinfo[3]+1] = k
+            vcolors[cubeinfo[1]+1,cubeinfo[2]+1,cubeinfo[3]+1] = k
         end
     end
 end
 
+col1 = colorant"royalblue4"
+col2 = colorant"royalblue3"
+col3 = colorant"steelblue1"
+cols = distinguishable_colors(length(cmi.morse),
+                              [col1,col2,col3], dropseed=true)
+
 f, a, p = voxels(-bmax[1]..bmax[1], -bmax[2]..bmax[2],
-                 -bmax[3]..bmax[3], colors,
-                 colorrange = (1, length(cmi.morse)),
-                 colormap = [:blue, :red],
-                 is_air = x -> (x == 0))
+                 -bmax[3]..bmax[3], vcolors, color = cols)
 save("/Users/wanner/Desktop/allencahn3d_3_25.png",f)
 

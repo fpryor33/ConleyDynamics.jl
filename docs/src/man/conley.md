@@ -530,6 +530,16 @@ Nevertheless, the above simple code does reproduce the overall
 global dynamical behavior of the ordinary differential equation
 correctly.
 
+One can also compute over Morse intervals, rather than the complete
+Morse decomposition. The final two images show two views of the 
+Morse interval which corresponds to one of the index 1 equilibria,
+and the two stable stationary states. These computations were 
+performed with the finer resolution `N = 51`.
+
+![Allen-Cahn Morse interval, View 1](img/acinterval3d_3_51a.png)
+
+![Allen-Cahn Morse interval, View 2](img/acinterval3d_3_51b.png)
+
 ## Conley Theory References
 
 See the [full bibliography](@ref References) for a complete list
