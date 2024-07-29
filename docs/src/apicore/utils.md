@@ -46,15 +46,20 @@ lefschetz_gfp_conversion
 permute_lefschetz_complex
 ```
 
-## Multivector Fields
+## Cell subsets
 
 ```@docs
 convert_cells
 convert_cellsubsets
+manifold_boundary
+```
+
+## Multivector Fields
+
+```@docs
 create_mvf_hull
 create_planar_mvf
 create_spatial_mvf
-manifold_boundary
 extract_multivectors
 ```
 

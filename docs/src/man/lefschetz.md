@@ -2,16 +2,16 @@
 
 The fundamental structure underlying the functionality of `ConleyDynamics.jl` is
 a *Lefschetz complex*. It provides us with the basic model of phase space for
-combinatorial dynamics. In view of the combinatorial, and therefore discrete,
-character of the dynamical behavior, a Lefschetz complex is not a typical phase
-space in the sense of classical dynamics. While the latter one is usually a
-Euclidean space, a Lefschetz complex is basically a combinatorial model of it.
-In the following fairly mathematical discussion, we provide its precise
-mathematical definition, and explain how it can be created and modified within
-the package. We also discuss two important special cases, namely *simplicial
-complexes* and *cubical complexes*.
+combinatorial topological dynamics. In view of the combinatorial, and therefore
+discrete, character of the dynamical behavior, a Lefschetz complex is not a
+typical phase space in the sense of classical dynamics. While the latter one
+is usually a Euclidean space, a Lefschetz complex is basically a combinatorial
+model of it. In the following fairly mathematical discussion, we provide its
+precise mathematical definition, and explain how it can be created and modified
+within the package. We also discuss two important special cases, namely
+*simplicial complexes* and *cubical complexes*.
 
-## Definition of a Lefschetz Complex
+## Basic Lefschetz complex notions
 
 The original definition of a Lefschetz complex can be found in
 [lefschetz:42a](@cite), where it was simply referred to as a *complex*.
@@ -28,17 +28,17 @@ The original definition of a Lefschetz complex can be found in
        x \in X_k
        \quad\mathrm{ and }\quad y \in X_{k-1},
     ```
-    and such that for any ``x,y \in X`` one has
+    and such that for any ``x,z \in X`` one has
     ```math
-       \sum_{z \in X} \kappa(x,z) \kappa(z,y) = 0 \; .
+       \sum_{y \in X} \kappa(x,y) \kappa(y,z) = 0 \; .
     ```
     The elements of ``X`` are referred to as *cells*, the
-    value ``\kappa(x,y)`` is called the *incidence coefficient*
+    value ``\kappa(x,y) \in F`` is called the *incidence coefficient*
     of the cells ``x`` and ``y``, and the map ``\kappa`` is the
     *incidence coefficient map*. In addition, one defines the
-    *dimension* of a cell ``x\in X_k`` as ``k``, and denotes it
-    by ``k = \dim x``. Whenever the incidence coefficient map
-    is clear from context, we often just refer to ``X`` as the
+    *dimension* of a cell ``x\in X_k`` as the integer ``k``, and
+    denotes it by ``k = \dim x``. Whenever the incidence coefficient
+    map is clear from context, we often just refer to ``X`` as the
     *Lefschetz complex*.
 
 At first glance the above definition can seem daunting. However,
@@ -53,8 +53,8 @@ of open two-dimensional membranes.
 
 The incidence coefficient map encodes how these cells are glued
 together to form the Lefschetz complex ``X``. In order to shed
-more light on this gluing process, counsider the *boundary map*
-``\partial`` which is defined on cells via
+more light on this, consider the *boundary map* ``\partial``
+which is defined on cells via
 
 ```math
    \partial x = \sum_{y \in X} \kappa(x,y) y \; .
@@ -80,7 +80,7 @@ equivalent form
 
 In other words, the boundary of any cell is itself boundaryless.
 
-With the help of the boundary map, one can frequently infer the
+With the help of the boundary map, one can often infer the
 overall geometric structure of a Lefschetz complex ``X``. For this,
 think of a Lefschetz complex as being build *from the ground up* in
 the following way. First, start by putting down all vertices of ``X``
@@ -101,10 +101,85 @@ linear combination of cells, with coefficients that can be any
 nonzero numbers in the field ``F``. Yet, in many simple cases
 the above intuition is sufficient.
 
+In addition to the above definitions, there are a handful of other
+concepts which will be important for our discussion of Lefschetz
+complexes. Specifically, the following notions are important:
+
+- A *facet* of a cell ``x \in X`` is any cell ``y`` which satisfies
+  ``\kappa(x,y) \neq 0``.
+- One can define a partial order on the cells of ``X`` by letting
+  ``x \le y`` if and only if for some integer ``n \in \mathbb{N}``
+  there exist cells ``x = x_1, \ldots, x_n = y`` such that ``x_k``
+  is a facet of ``x_{k+1}`` for all ``k = 1, \ldots, n-1``.
+  It is not difficult to show that this defines a partial order on
+  ``X``, i.e., this relation is reflexive, antisymmetric, and
+  transitive. We call this partial order the *face relation*. 
+  Moreover, if ``x \le y`` then ``x`` is called a *face* of ``y``.
+- A subset ``C \subset X`` of a Lefschetz complex is called *closed*,
+  if for every ``x \in C`` all the faces of the cell ``x`` are also
+  contained in the subset ``C``.
+- The *closure* of a subset ``C \subset X`` is the collection of all
+  faces of all cells in ``C``, and it is denoted by ``\mathrm{cl}\, C``.
+  Thus, a subset of a Lefschetz complex is closed if and only if it
+  equals its closure.
+- A subset ``S \subset X`` is called *locally closed*, if its *mouth*
+  ``\mathrm{mo}\, S = \mathrm{cl}\, S \setminus S`` is closed. Note
+  that every closed set is automatically locally closed, but the
+  reverse implication is usually false.
+
+While the first two points merely introduce notation for describing
+the combinatorial boundary of cells, the remaining three points establish
+important *topological concepts*. In fact, the above definition of
+closedness defines a topology on the Lefschetz complex ``X``, which
+is the so-called *Alexandrov topology* from [alexandrov:37a](@cite).
+As usual in the field of topology, a subset of a Lefschetz complex
+will be called *open*, if and only if its complement is closed.
+
+We would like to point out that while the concept of local closedness
+is rarely considered in standard topology courses, it is of utmost important
+for the study of combinatorial topological dynamics. For the moment, we
+just mention the following result:
+
+!!! danger "Theorem: Lefschetz subcomplexes"
+    Let ``X`` be a Lefschetz complex over a field ``F``, and let
+    ``\kappa : X \times X \to F`` denote its incidence coefficient
+    map. Then a subset ``S \subset X`` is again a Lefschetz complex,
+    with respect to the restriction of ``\kappa`` to ``S \times S``,
+    if and only if the subset ``S`` is locally closed.
+
+This result goes back to [mrozek:batko:09a; Theorem 3.1](@cite), where
+it was shown that local closedness is sufficient. In other words, in the
+category of Lefschetz complexes local closedness arises naturally. Due
+to its importance, we also mention the following two equivalent
+formulations:
+
+- A subset ``S \subset X`` is locally closed, if and only if it is the
+  difference of two closed subsets of ``X``.
+- A subset ``S \subset X`` is locally closed, if and only if it is an
+  interval with respect to the face relation on ``X``, i.e., whenever
+  we have three cells with ``S \ni x \le y \le z \in S``, then one
+  has to have ``y \in S`` as well.
+
+The proof of these characterizations can be found in
+[mrozek:wanner:p21a; Proposition 3.2](@cite) and
+[lipinski:etal:23a; Proposition 3.10](@cite), respectively.
+
+Lefschetz complexes are a very general mathematical concept, and they
+can be rather confusing at first sight. Nevertheless, they do encompass
+other complex types, which are more geometric in nature. As we already
+saw in the tutorial, every *simplicial complex* is automatically a
+Lefschetz complex, and we will further ellaborate on this connection
+below. In addition, we will also demonstrate that *cubical complexes*
+are Lefschetz complexes. More general, any *regular CW complex* is 
+a Lefschetz complex as well. For more details on this, we refer to
+the definition in [massey:91a](@cite) and the discussion in
+[dlotko:etal:11a](@cite).
+
 ## Lefschetz complex data structure
 
-In `ConleyDynamics.jl` a Lefschetz complex is implemented as the
-following specific composite data type:
+For the efficient and easy manipulation of Lefschetz complexes
+in `ConleyDynamics.jl` we make use of a specific composite
+data type:
 
 ```@docs; canonical=false
 LefschetzComplex
@@ -114,25 +189,25 @@ The fields of this struct relate to the mathematical definition
 of a Lefschetz complex ``X`` in the following way:
 
 - The integer `ncells` gives the total number of cells in ``X``.
-  Internally, these cells are numbered by integers ranging from 1
+  Internally, these cells are numbered by integers ranging from `1`
   to `ncells`.
 - The vector `dimensions` is a `Vector{Int}` and collects the 
   dimensions of the cells. In other words, the cell which is indexed
-  by `k` has dimension `dimensions[k]`.
+  by the integer `k` has dimension `dimensions[k]`.
 - The integer `dim` describes the overall dimension of the Lefschetz
   complex, which is the largest dimension of a cell.
 - The incidence coefficient map ``\kappa`` is encoded in the sparse
   matrix `boundary`. This matrix is a square matrix with `ncells` 
   rows and columns. The ``k``-th column contains the incidence
-  coefficients ``\kappa(k,\cdot)`` in the sense that ``\kappa(k,m)``
-  equals the entry in row ``m`` and column ``k``. Since for most
-  Lefschetz complexes the majority of the incidence coefficients
-  is zero, the matrix is represented using the sparse format
-  [`SparseMatrix`](@ref), which is described in more detail
+  coefficients ``\kappa(k,\cdot)`` in the sense that the entry
+  in row ``m`` and column ``k`` equals the value ``\kappa(k,m)``.
+  Since for most Lefschetz complexes the majority of the incidence
+  coefficients is zero, the matrix is represented using the sparse
+  format [`SparseMatrix`](@ref), which is described in more detail
   in [Sparse Matrices](@ref).
 - While the internal representation of cells as integers is 
   computationally convenient, it does make interpreting the
-  results more cumbersome. Each Lefschetz complex therefore has
+  results more difficult. Each Lefschetz complex therefore has
   to have string labels assigned to each cell as well. These are
   contained in `labels::Vector{String}`, where `labels[k]` gives
   the label of cell `k`.
@@ -142,13 +217,14 @@ of a Lefschetz complex ``X`` in the following way:
   example, if a cell has the label `"124.010"`, then the associated
   integer index is given by `indices["124.010"]`.
 
-A object of type `LefschetzComplex` is created by passing the
+An object of type `LefschetzComplex` is created by passing the
 field items in the order given in [`LefschetzComplex`](@ref).
 Consider for example the Lefschetz complex from Figure 4
 in [mrozek:wanner:p21a](@cite), see also the left complex in the
-next image. This complex consists of six cells, and we initialize
-the vector of labels, the cell index dictionary, and the cell 
-dimensions via the commands
+next image. This complex consists of six cells with labels `A`, 
+`B`, `a`, `b`, `c`, and `alpha`, and we initialize the vector of
+labels, the cell index dictionary, and the cell dimensions via
+the commands
 
 ```julia
 ncL = 6
@@ -196,31 +272,64 @@ bndsparseR = sparse_from_full(bndmatrixR, p=2)
 lcR = LefschetzComplex(ncR, 2, bndsparseR, labelsR, indicesR, cdimsR)
 ```
 
-## Basic concepts in Lefschetz complexes
-
-
+While Lefschetz complexes can always be created in `ConleyDynamics.jl`
+in this direct way, it is often more convenient to make use of special
+types, such as simplicial and cubical complexes, and then restrict the
+complex to a locally closed set. This is described in more detail below.
 
 ## Simplicial complexes
+
+[munkres:84a](@cite)
+
+[`create_simplicial_complex`](@ref)
+[`create_simplicial_rectangle`](@ref)
+[`create_simplicial_delaunay`](@ref)
+
+
+
 
 
 ## Cubical complexes
 
 
+[kaczynski:etal:04a](@cite)
+
+
+[`create_cubical_complex`](@ref)
+[`create_cubical_rectangle`](@ref)
+[`create_cubical_box`](@ref)
+[`cube_field_size`](@ref)
+[`cube_information`](@ref)
+[`cube_label`](@ref)
 
 
 
-[dlotko:etal:11a](@cite)
-[lipinski:etal:23a](@cite)
+
+
+## Lefschetz complex operations
 
 
 
+[`lefschetz_field`](@ref)
+[`lefschetz_boundary`](@ref)
+[`lefschetz_coboundary`](@ref)
+[`lefschetz_openhull`](@ref)
+[`lefschetz_closure`](@ref)
+[`lefschetz_lchull`](@ref)
+[`lefschetz_is_closed`](@ref)
+[`lefschetz_is_locally_closed`](@ref)
+[`lefschetz_clomo_pair`](@ref)
+[`lefschetz_skeleton`](@ref)
+[`lefschetz_subcomplex`](@ref)
+[`lefschetz_closed_subcomplex`](@ref)
+[`lefschetz_filtration`](@ref)
+[`lefschetz_gfp_conversion`](@ref)
+[`permute_lefschetz_complex`](@ref)
 
 
-Here we need a more detailed description of Lefschetz complexes.
-In particular, this should discuss the various field types that
-can be used, as well as all the entries in the [`LefschetzComplex`](@ref)
-data structure.
-
+[`convert_cells`](@ref)
+[`convert_cellsubsets`](@ref)
+[`manifold_boundary`](@ref)
 
 
 ## Lefschetz Complexes References

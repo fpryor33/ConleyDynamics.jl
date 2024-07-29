@@ -52,6 +52,13 @@ complex ``L``.
 
 ## Persistent Homology of Filtrations
 
+[dlotko:wanner:16a](@cite)
+[dlotko:wanner:18a](@cite)
+[gameiro:etal:05a](@cite)
+[edelsbrunner:harer:10a](@cite)
+
+
+
 
 ## Tutorial References
 

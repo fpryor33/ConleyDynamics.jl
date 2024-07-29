@@ -7,7 +7,9 @@ structure.
 
 [kaczynski:etal:16a](@cite)
 [mrozek:wanner:21a](@cite)
-
+[dey:etal:24a](@cite)
+[stephens:wanner:14a](@cite)
+[isoblockval:website](@cite)
 
 ## Intervals in a planar Morse decomposition
 
