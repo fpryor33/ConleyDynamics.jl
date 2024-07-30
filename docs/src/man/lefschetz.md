@@ -11,7 +11,7 @@ precise mathematical definition, and explain how it can be created and modified
 within the package. We also discuss two important special cases, namely
 *simplicial complexes* and *cubical complexes*.
 
-## Basic Lefschetz complex notions
+## Basic Lefschetz Complex Notions
 
 The original definition of a Lefschetz complex can be found in
 [lefschetz:42a](@cite), where it was simply referred to as a *complex*.
@@ -175,7 +175,7 @@ a Lefschetz complex as well. For more details on this, we refer to
 the definition in [massey:91a](@cite) and the discussion in
 [dlotko:etal:11a](@cite).
 
-## Lefschetz complex data structure
+## Lefschetz Complex Data Structure
 
 For the efficient and easy manipulation of Lefschetz complexes
 in `ConleyDynamics.jl` we make use of a specific composite
@@ -277,60 +277,195 @@ in this direct way, it is often more convenient to make use of special
 types, such as simplicial and cubical complexes, and then restrict the
 complex to a locally closed set. This is described in more detail below.
 
-## Simplicial complexes
+## Simplicial Complexes
 
-[munkres:84a](@cite)
+One of the earliest types of complexes that have been studied in 
+topology are *simplicial complexes*. As already mentioned in the
+tutorial, an *abstract simplicial complex* ``X`` is a finite collection
+of finite sets, called *simplices*, which is closed under taking subsets.
+Each simplex ``\sigma`` has a *dimension* ``\dim\sigma``, which is one
+less than the number of its elements.
 
-[`create_simplicial_complex`](@ref)
-[`create_simplicial_rectangle`](@ref)
-[`create_simplicial_delaunay`](@ref)
+In order to see why every simplicial complex is automatically a 
+Lefschetz complex, we need to be able to define the incidence 
+coefficient map ``\kappa``. For this, we make use of some notions
+from [munkres:84a](@cite). Let ``X_0`` denote the collection of all
+vertices of the simplicial complex ``X``. Then we use the notation
 
+```math
+   \sigma = \left[ v_0, v_1, \ldots, v_d \right]
+   \quad\text{ with }\quad
+   v_k \in X_0
+```
 
+to describe a ``d``-dimensional simplex. Note that even though every
+simplex in ``X`` is just the set of its vertices, in the above 
+representation we pick an order of the vertices, called an *orientation*
+of the simplex. This orientation can be chosen arbitrarily, and there
+are two equivalence classes of orientations. To get from one orientation
+to the other, one just has to exchange two vertices, and we write
 
+```math
+   \left[ \ldots, v_i, \ldots, v_j, \ldots \right] \; = \;
+   -\left[ \ldots, v_j, \ldots, v_i, \ldots \right] \; .
+```
 
+For more complicated reorderings, one has to represent the
+corrresponding vertex permutation as a sequence of such exchanges.
+Using these oriented simplices we can define the boundary operator
 
-## Cubical complexes
+```math
+   \partial \sigma \; = \;
+   \partial \left[ v_0, \ldots, v_d \right] \; = \;
+   \sum_{i=0}^d (-1)^i \left[ v_0, \ldots, \hat{v}_i,
+     \ldots, v_d \right] \; ,
+```
+
+where the notation ``\hat{v}_i`` means that in the simplex behind
+the summation sign on the right-hand side the vertex ``v_i`` is
+omitted. For example, for a two-dimensional simplex one obtains
+
+```math
+   \partial \left[ v_0, v_1, v_2 \right] \; = \;
+   \left[ v_1, v_2 \right] - 
+   \left[ v_0, v_2 \right] + 
+   \left[ v_0, v_1 \right] \; .
+```
+
+Thus, if one chooses a consistent order of all the vertices in the
+simplicial complex, and orients the simplices in such a way that 
+its vertices are ordered in the same way, then the incidence 
+coefficient map is given by
+
+```math
+   \kappa \left( \left[ v_0, \ldots, v_i, \ldots, v_d \right], \;
+     \left[ v_0, \ldots, \hat{v}_i, \ldots, v_d \right] \right)
+   \; = \; (-1)^i \; .
+```
+
+If some or all of the simplices are represented by different orientations,
+one simply has to multiply the value ``(-1)^i`` by the sign of a suitable
+vertex permutation. In either case, the so-defined map ``\kappa`` does
+indeed satisfy the definition of a Lefschetz complex. For more details,
+see [munkres:84a; Lemma 5.3](@cite).
+
+In `ConleyDynamics.jl` there are three basic commands for defining
+a simplicial complex:
+
+- [`create_simplicial_complex`](@ref) is the most general method, and it
+  expects two input arguments. The first is usually called `labels`, and 
+  it has to have the data type `Vector{String}`. This vector lists the
+  labels for each vertex. It is important that all of these labels have
+  exactly the same number of characters. The second argument is usually
+  called `simplices`, and it lists as many simplices as necessary for
+  defining the underlying simplicial complex. This means that in practice
+  one only needs to include the simplices which are not faces of
+  higher-dimensional ones, see also the example below. The variable
+  `simplices` can either be of type `Vector{Vector{String}}` or
+  `Vector{Vector{Int}}`, depending on whether the vertices are identified
+  via their labels or integer indices, respectively. Finally, the optional
+  parameter `p` can be used to specify the underlying field for the 
+  boundary matrix. If `p` is a prime, then ``F = GF(p)``, while for
+  `p = 0` the function uses ``F = \mathbb{Q}``. If the argument `p`
+  is ommitted, the function defaults to `p = 2`.
+- [`create_simplicial_rectangle`](@ref) expects two integer arguments
+  `nx` and `ny`, and then creates a triangulation of the square
+  ``[0,nx] \times [0,ny]`` by subdividing every unit square into
+  four triangles which meet at the center of the square. As before,
+  the optional parameter `p` specifies the underlying field.
+- [`create_simplicial_delaunay`](@ref) creates a planar Delaunay
+  triangulation inside a planar rectangle. The function selects a
+  random sample of points inside the box, while either trying to
+  maintain a minimum distance between the points, or just using a
+  prespecified number of points. More details on these two options
+  can be found in the documentation for the function.
+
+To illustrate the first of these functions, consider the commands
+
+```julia
+labels = ["A","B","C","D","E","F","G","H"]
+simplices = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
+sc = create_simplicial_complex(labels,simplices)
+```
+
+These create the simplicial complex `sc`, in the form of a  Lefschetz
+complex. It can be visualized using the commands
+
+```julia
+coords = [[0,0],[2,0],[4,0],[6,0],[8,0],[1,2],[4,2],[6,2]]
+ldir   = [3,3,3,3,3,1,1,1]
+fname  = "lefschetzex2.pdf"
+plot_planar_simplicial(sc,coords,fname,labeldir=ldir,labeldis=10,hfac=2,vfac=1.5,sfac=50)
+```
+
+![First sample simplicial complex](img/lefschetzex2.png)
+
+Similarly, the commands
+
+```julia
+sc2, coords2 = create_simplicial_rectangle(5,2)
+fname2 = "lefschetzex3.pdf"
+plot_planar_simplicial(sc2,coords2,fname2,hfac=2.0,vfac=1.2
+```
+
+define and illustrate a second simplicial complex.
+
+![Second sample simplicial complex](img/lefschetzex3.png)
+
+For a demonstration of the Delaunay triangulation approach,
+please see [Analyzing Planar Vector Fields](@ref).
+
+## Cubical Complexes
 
 
 [kaczynski:etal:04a](@cite)
 
 
-[`create_cubical_complex`](@ref)
-[`create_cubical_rectangle`](@ref)
-[`create_cubical_box`](@ref)
-[`cube_field_size`](@ref)
-[`cube_information`](@ref)
-[`cube_label`](@ref)
+- [`create_cubical_complex`](@ref)
+- [`create_cubical_rectangle`](@ref)
+- [`create_cubical_box`](@ref)
+- [`cube_field_size`](@ref)
+- [`cube_information`](@ref)
+- [`cube_label`](@ref)
 
 
 
 
 
-## Lefschetz complex operations
+## Lefschetz Complex Operations
 
+Once a Lefschetz complex has been created, there are a number
+of manipulations and queries that one would like to be able to
+perform on the comlex. At the moment, `ConleyDynamics,jl` provides
+the following functions:
 
+- [`lefschetz_field`](@ref)
+- [`lefschetz_boundary`](@ref)
+- [`lefschetz_coboundary`](@ref)
+- [`lefschetz_openhull`](@ref)
+- [`lefschetz_closure`](@ref)
+- [`lefschetz_lchull`](@ref)
+- [`lefschetz_is_closed`](@ref)
+- [`lefschetz_is_locally_closed`](@ref)
+- [`lefschetz_clomo_pair`](@ref)
+- [`lefschetz_skeleton`](@ref)
+- [`lefschetz_subcomplex`](@ref)
+- [`lefschetz_closed_subcomplex`](@ref)
+- [`lefschetz_filtration`](@ref)
+- [`lefschetz_gfp_conversion`](@ref)
+- [`permute_lefschetz_complex`](@ref)
+- [`manifold_boundary`](@ref)
 
-[`lefschetz_field`](@ref)
-[`lefschetz_boundary`](@ref)
-[`lefschetz_coboundary`](@ref)
-[`lefschetz_openhull`](@ref)
-[`lefschetz_closure`](@ref)
-[`lefschetz_lchull`](@ref)
-[`lefschetz_is_closed`](@ref)
-[`lefschetz_is_locally_closed`](@ref)
-[`lefschetz_clomo_pair`](@ref)
-[`lefschetz_skeleton`](@ref)
-[`lefschetz_subcomplex`](@ref)
-[`lefschetz_closed_subcomplex`](@ref)
-[`lefschetz_filtration`](@ref)
-[`lefschetz_gfp_conversion`](@ref)
-[`permute_lefschetz_complex`](@ref)
+In addition, `ConleyDynamics.jl` provides the following helper
+functions for the fundamental objects of cells and cell subsets,
+which can be represented either by integer cell indices or by
+cell labels:
 
+- [`convert_cells`](@ref)
+- [`convert_cellsubsets`](@ref)
 
-[`convert_cells`](@ref)
-[`convert_cellsubsets`](@ref)
-[`manifold_boundary`](@ref)
-
+For more details on the usage of any of these functions, please
+see their documentation in the API section of the manual. 
 
 ## Lefschetz Complexes References
 
