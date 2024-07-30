@@ -1,5 +1,5 @@
 ---
-title: 'ConleyDynamics.jl: A Julia package for multivector field dynamics on Lefschetz complexes'
+title: 'ConleyDynamics.jl: A Julia package for multivector dynamics on Lefschetz complexes'
 tags:
   - Julia
   - dynamics
