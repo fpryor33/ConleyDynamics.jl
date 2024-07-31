@@ -417,20 +417,215 @@ please see [Analyzing Planar Vector Fields](@ref).
 
 ## Cubical Complexes
 
+The second important special case of a Lefschetz complex is called
+*cubical complex*, and it has been discussed in detail in
+[kaczynski:etal:04a](@cite). In the following, we only present the
+definitions that are essential for our purposes.
 
-[kaczynski:etal:04a](@cite)
+Loosely speaking, a cubical complex is a collection of cubes of
+varying dimensions in some Euclidean space ``\mathbb{R}^d``.
+More precisely, we say that an interval ``I \subset \mathbb{R}``
+is an *elementary interval* if it is of the form
 
+```math
+   I = [\ell, \ell+1]
+   \quad\text{ or }\quad
+   I = [\ell, \ell]
+   \quad\text{ for some integer }\quad
+   \ell \in \mathbb{Z} \; .
+```
 
-- [`create_cubical_complex`](@ref)
-- [`create_cubical_rectangle`](@ref)
-- [`create_cubical_box`](@ref)
-- [`cube_field_size`](@ref)
-- [`cube_information`](@ref)
-- [`cube_label`](@ref)
+If the elementary interval ``I`` consists of only one point,
+then it is called *degenerate*, and if it has length one, then
+it is called *nondegenerate*. Elementary intervals are the
+building blocks for the cubes in a cubical complex. For a
+complex in ``\mathbb{R}^d``, an *elementary cube* ``Q`` is
+of the form
 
+```math
+   Q \; = \;
+   I_1 \times I_2 \times \ldots \times I_d \; \subset \;
+   \mathbb{R}^d \; ,
+```
 
+where ``I_1, \ldots, I_d`` are elementary intervals. The *dimension*
+``\dim Q`` of an elementary cube is given by the number of nondegenerate
+intervals in its representation. For example, the cube ``Q = [0,0] 
+\times [1,1]`` is a zero-dimensional elementary cube in ``\mathbb{R}^2``
+which contains only the point ``(0,1)``, while the elementary cube
+``R = [2,2] \times [3,4]`` is one-dimensional, and consists of the 
+closed vertical line segment between the points ``(2,3)`` and ``(2,4)``.
 
+After these preparations, the definition of a cubical complex is now
+straightforward. A *cubical complex* ``X`` in ``\mathbb{R}^d`` is a
+finite collection of elementary cubes in ``\mathbb{R}^d`` which is
+closed under the inclusion of elementary subcubes. More precisely,
+if ``Q \in X`` is an elementary cube in the cubical complex, and if
+``R \subset Q`` is any elementary cube contained in ``Q``, then one
+also has ``R \in X``.
 
+The definition of a cubical complex is reminiscent of that of a
+simplicial complex. It is therefore not surprising that also in
+the cubical case one can describe the incidence coefficient map
+``\kappa`` explicitly, and thus recognize a cubical complex as a
+Lefschetz complex. For this, we need more notation.
+
+Let ``Q = I_1 \times I_2 \times \ldots \times I_d`` denote an
+elementary cube, and let the nondegenerate elementary intervals
+in this decomposition be given by ``I_{i_1}, \ldots, I_{i_n}``,
+where ``I_{i_j} = [k_j, k_j + 1]`` and ``j = 1,\ldots,n = \dim Q``.
+For every index ``j``, we further define the two ``n-1``-dimensional
+elementary cubes
+
+```math
+   \begin{array}{ccccccc}
+   Q_j^- & = & I_1 \times \ldots \times I_{i_j - 1} & \times &
+           [k_j, k_j] & \times & I_{i_j - 1} \times \ldots
+           \times I_d \\[2ex]
+   Q_j^+ & = & I_1 \times \ldots \times I_{i_j - 1} & \times &
+           [k_j + 1, k_j + 1] & \times & I_{i_j - 1} \times
+           \times \ldots I_d
+   \end{array}
+```
+
+Geometrically, the two elementary cubes ``Q_j^-`` and ``Q_j^+`` are
+directly opposite sides of the elementary cube ``Q``. Using them,
+one can define the algebraic *boundary* of the cube as
+
+```math
+   \partial Q \; = \;
+   \sum_{j=1}^n (-1)^{j-1} \left( Q_j^+ - Q_j^- \right) .
+```
+
+This formula is the cubical analogue of the boundary operator in
+a simplicial complex, and it allows us to define the incidence
+coefficient map via
+
+```math
+   \kappa\left( Q, \, Q_j^+ \right) \; = \; (-1)^{j-1}
+   \quad\text{ and }\quad
+   \kappa\left( Q, \, Q_j^- \right) \; = \; (-1)^j \; ,
+   \quad\text{ for all }\quad
+   j = 1, \ldots, n \; .
+```
+
+For all remaining pairs of elementary cubes in ``X`` we let ``\kappa = 0``.
+Then it was shown in [kaczynski:etal:04a; Proposition 2.37](@cite) that the
+so-defined incidence coefficient map satisfies the summation condition in
+the definition of a Lefschetz complex, i.e., we have ``\partial(\partial Q)
+= 0`` for every ``Q \in X``. This in turn implies that every cubical complex
+is indeed a Lefschetz complex.
+
+Cubical complexes in `ConleyDynamics.jl` are a little more restricted.
+Since a cubical complex in the above sense is always finite, one can
+assume without loss of generality that the left endpoints of all
+involved elementary intervals are nonnegative. In other words, we
+always assume that the cubical complex only contains elementary cubes
+from the set ``(\mathbb{R}_0^+)^d``. This allows for a simple encoding
+of elementary cubes via labels of a fixed length.
+
+To describe this, fix a dimension ``d`` of the ambient space. Then
+every elementary cube in ``(\mathbb{R}_0^+)^d`` has the following
+label, which depends on a *coordinate width* ``L``:
+
+- The first ``d \cdot L`` characters of the label encode the 
+  starting points of the elementary intervals ``I_1, \ldots, I_d``
+  in the standard representation of the elementary cube. For this,
+  the starting points, which are nonnegative integers, are concatenated
+  without spaces, but with leading zeros. For example, the string
+  `"010203"` would correspond to the starting points ``1``, ``2``, 
+  and ``3``. Note that for given coordinate width ``L``, one can only
+  encode starting points between ``0`` and ``10^L-1``.
+- The next entry in the label string is a period `.`.
+- The remaining ``d`` characters of the string are integers 0 or 1,
+  which give the interval lengths of ``I_1, \ldots, I_d``.
+
+For example, the string `"030600.000"` corresponds to the point
+``(3,6,0)`` in three dimensions. Similarly, the label `"030600.101"`
+represents the two-dimensional elementary cube ``[3,4] \times [6,6]
+\times [0,1] \subset \mathbb{R}^3``. We would like to point out that
+the label representation is not unique, since the latter cube could
+also be written as `"360.101"` or by `"003006000.101"`. As we will
+see in a moment, though, **within a given cubical complex all labels
+have to use the same coordinate width** ``L``! This implies in
+particular that for given coordinate width ``L`` one can only 
+represent cubical complexes which are subsets of ``[0,10^L-1]^d``.
+
+The following three helper functions simplify the work with these
+types of cube labels:
+
+- [`cube_field_size`](@ref) determines the field sizes of a
+  given cube label. The first return value gives the dimension
+  ``d`` of the ambient space, while the second value returns
+  the coordinate width ``L``.
+- [`cube_information`](@ref) returns all information encoded
+  in the cube label. The function returns an integer vector
+  of length ``2d+1``, where ``d`` is the dimension of the ambient
+  space. The first ``d`` entries give the vector or elementary
+  intervals starting points, while the next ``d`` values gives
+  the corresponding interval lengths. The last entry specifies
+  the dimension of the cube.
+- [`cube_label`](@ref) creates a label from a cube's coordinate
+  information. As function parameters, one has to specify ``d``
+  and ``L``, and then pass an integer vector of length six which
+  specifies the coordinates of the starting points and the interval
+  lengths as in the previous item.
+
+In `ConleyDynamics.jl` there are three basic commands for defining
+a cubical complex:
+
+- [`create_cubical_complex`](@ref) creates a cubical complex in the
+  Lefschetz complex data format. The complex is specified via a list
+  of all the highest-dimensional cubes which are necessary to define
+  the cubical complex. For this, every cube has to be given using the
+  above-described special label format, with the same coordinate width
+  ``L``. In other words, all label strings have to be of the same length!
+  If the optional parameter `p` is specified, the complex will be defined
+  over a field with characteristic `p`, analogous to the case of a
+  simplicial complex. If the characteristic is not specified, then
+  the function defaults to the field ``GF(2)``.
+- [`create_cubical_rectangle`](@ref) creates a cubical complex
+  covering a rectangle in the plane. The rectangle is given by
+  the subset ``[0,nx] x [0,ny]`` of the plane, where the nonnegative
+  integers `nx` and `ny` have to be passed as arguments to the function.
+  The function returns the cubical complex, and a vector of coordinates
+  for the vertices. The latter can also be randomly perturbed as described
+  in more detail in the function documentation.
+- [`create_cubical_box`](@ref) creates a cubical complex covering a box
+  in three-dimensional Euclidean space. The box is given by the subset
+  ``[0,nx] x [0,ny] x [0,nz]`` of space, where the nonnegative integers
+  `nx`, `ny`, and `nz` have to be passed as arguments to the function.
+  The optional parameters are the same as in the planar version.
+
+To illustrate the first of these functions, consider the commands
+
+```julia
+cubes = ["00.11", "01.01", "02.10", "11.10", "11.01", "22.00", "20.11", "31.01"]
+cc = create_cubical_complex(cubes)
+```
+
+These create the cubical complex `cc`, in the form of a  Lefschetz
+complex. It can be visualized using the commands
+
+```julia
+coords = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2],[3,0],[3,1],[3,2]]
+fname  = "lefschetzex4.pdf"
+plot_planar_cubical(cc,coords,fname,hfac=2.2,vfac=1.1,cubefac=60)
+```
+
+![First sample cubical complex](img/lefschetzex4.png)
+
+Similarly, the commands
+
+```julia
+cc2, coords2 = create_cubical_rectangle(5,2)
+fname2 = "lefschetzex5.pdf"
+plot_planar_cubical(cc2,coords2,fname2,hfac=1.7,vfac=1.2,cubefac=75)
+```
+
+define and illustrate a second cubical complex.
+
+![Second sample cubical complex](img/lefschetzex5.png)
 
 ## Lefschetz Complex Operations
 
@@ -526,8 +721,14 @@ Finally, there are a couple of *ccordinate helper functions*
 which allow for the transformation of vertex coordinates
 in a Lefschetz complex:
 
-- [`convert_planar_coordinates`](@ref)
-- [`convert_spatial_coordinates`](@ref)
+- [`convert_planar_coordinates`](@ref) transforms a given
+  collection of planar coordinates in such a way that the
+  extreme coordinates fit precisely in a given rectangle
+  in the plane.
+- [`convert_spatial_coordinates`](@ref) transforms a given
+  collection of spatial coordinates in such a way that the
+  extreme coordinates fit precisely in a given rectangular
+  box in space.
 
 For more details on the usage of any of these functions, please
 see their documentation in the API section of the manual. 
