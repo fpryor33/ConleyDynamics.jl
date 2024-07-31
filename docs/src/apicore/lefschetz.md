@@ -24,6 +24,7 @@ create_cubical_box
 cube_field_size
 cube_information
 cube_label
+get_cubical_coords
 ```
 
 ## Lefschetz Complex Queries

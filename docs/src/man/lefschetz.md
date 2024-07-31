@@ -571,8 +571,8 @@ types of cube labels:
   specifies the coordinates of the starting points and the interval
   lengths as in the previous item.
 
-In `ConleyDynamics.jl` there are three basic commands for defining
-a cubical complex:
+In `ConleyDynamics.jl` there are four basic commands for defining
+a cubical complex and working with it:
 
 - [`create_cubical_complex`](@ref) creates a cubical complex in the
   Lefschetz complex data format. The complex is specified via a list
@@ -584,6 +584,9 @@ a cubical complex:
   over a field with characteristic `p`, analogous to the case of a
   simplicial complex. If the characteristic is not specified, then
   the function defaults to the field ``GF(2)``.
+- [`get_cubical_coords`](@ref) determines the coordinates of all 
+  vertices of a given cubical complex from the cube labels. This
+  vector can then be used for plotting purposes, see below.
 - [`create_cubical_rectangle`](@ref) creates a cubical complex
   covering a rectangle in the plane. The rectangle is given by
   the subset ``[0,nx] x [0,ny]`` of the plane, where the nonnegative
@@ -608,7 +611,7 @@ These create the cubical complex `cc`, in the form of a  Lefschetz
 complex. It can be visualized using the commands
 
 ```julia
-coords = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2],[3,0],[3,1],[3,2]]
+coords = get_cubical_coords(cc)
 fname  = "lefschetzex4.pdf"
 plot_planar_cubical(cc,coords,fname,hfac=2.2,vfac=1.1,cubefac=60)
 ```
@@ -673,10 +676,11 @@ features* from a Lefschetz complex:
   ``k``-skeleton of the closure of the given subset.
 - [`manifold_boundary`](@ref) returns a list of cells which form
   the "manifold boundary" of the given Lefschetz complex. More 
-  precisely, if the complex has dimension ``d``, then it returns
+  precisely, if the complex has dimension ``d``, then it determines
   all cells of dimension ``d-1`` which have at most one cell in
   their coboundary, as well as all cells of dimensions less
-  than ``d-1``.
+  than ``d-1`` which have no cell in their coboundary, and
+  finally returns the closure of this cell subset.
 
 The following functions *Lefschetz subcomplexes* from a Lefschetz
 complex:

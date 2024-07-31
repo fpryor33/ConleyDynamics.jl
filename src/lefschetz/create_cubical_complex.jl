@@ -1,4 +1,4 @@
-export create_cubical_complex, cube_field_size, cube_information, cube_label
+export create_cubical_complex, cube_field_size, cube_information, cube_label, get_cubical_coords
 
 """
     create_cubical_complex(cubes::Vector{String}; p::Int=2)
@@ -362,5 +362,33 @@ function cube_label(pointdim::Int, pointlen::Int, pointinfo::Vector{Int})
     end
 
     return join(labelvec)
+end
+
+"""
+    get_cubical_coords(cc::LefschetzComplex)
+
+Compute the vertex coordinates for a cubical complex.
+
+The variable `cc` has to contain a cubical complex, and the function
+returns a vector of coordinates for the vertices of the complex, that
+can then be used for plotting.
+```
+"""
+function get_cubical_coords(cc::LefschetzComplex)
+    #
+    # Compute the vertex coordinates for a cubical complex
+    #
+
+    vindices = findall(x -> x==0, cc.dimensions)
+    coords = Vector{Vector{Int}}()
+    d, L = cube_field_size(cc.labels[1])
+
+    for k in vindices
+        cubeinfo  = cube_information(cc.labels[k])
+        cubecoord = cubeinfo[1:d]
+        push!(coords,cubecoord)
+    end
+
+    return coords
 end
 
