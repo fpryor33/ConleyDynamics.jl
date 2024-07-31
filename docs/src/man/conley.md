@@ -11,7 +11,7 @@ structure.
 [stephens:wanner:14a](@cite)
 [isoblockval:website](@cite)
 
-## Intervals in a planar Morse decomposition
+## Morse Decomposition Intervals
 
 We briefly return to one of the examples in the tutorial. More precisely, we
 consider the planar ordinary differential equation given by
@@ -234,7 +234,7 @@ Morse decomposition interval. In this case, it covers eight different
 heteroclinic orbits, which are in fact better approximated than the
 four in the previous image.
 
-## Analyzing a Planar System using Cubical Complexes
+## Cubical Analysis of a Planar System
 
 Our next example illustrates how `ConleyDynamics.jl` can be used to analyze
 the global dynamics of a planar ordinary differential equations. For this,
@@ -372,7 +372,7 @@ plot_planar_simplicial_morse(lc2, coords2N, fname3, large_mv, pv=true)
 
 Note that in this example, there are only 20 large multivectors.
 
-## Analyzing a Spatial System using Cubical Complexes
+## Cubical Analysis of a Spatial System
 
 It is also possible to analyze certain three-dimensional ordinary
 differential equations in `ConleyDynamics.jl`. To provide one such
@@ -542,7 +542,7 @@ performed with the finer resolution `N = 51`.
 
 ![Allen-Cahn Morse interval, View 2](img/acinterval3d_3_51b.png)
 
-## Conley Theory References
+## [References](@id refconley)
 
 See the [full bibliography](@ref References) for a complete list
 of references cited throughout this documentation. This section cites

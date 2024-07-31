@@ -1,6 +1,6 @@
 # Composite Data Structures
 
-The package relies on three basic composite data structures that
+The package relies on a number of basic composite data structures that
 encompass more complicated objects. For the internal representation
 of sparse matrices we refer to
 [Internal Sparse Matrix Representation](@ref).
@@ -9,20 +9,20 @@ of sparse matrices we refer to
 ConleyDynamics
 ```
 
-## Representation of a Lefschetz Complex 
+## Lefschetz Complex Type
 
 ```@docs
 LefschetzComplex
 ```
 
-## Representation of a Multivector Field
+## Cell Subset Types
 
 ```@docs
 Cells
 CellSubsets
 ```
 
-## Representation of a Conley-Morse Graph
+## Conley-Morse Graph Type
 
 ```@docs
 ConleyMorseCM

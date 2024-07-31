@@ -1,5 +1,15 @@
 # Conley Theory Functions
 
+## Multivector Fields
+
+```@docs
+create_mvf_hull
+create_planar_mvf
+create_spatial_mvf
+extract_multivectors
+planar_nontransverse_edges
+```
+
 ## Conley Index Computations
 
 ```@docs

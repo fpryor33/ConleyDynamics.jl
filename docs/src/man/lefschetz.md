@@ -11,7 +11,7 @@ precise mathematical definition, and explain how it can be created and modified
 within the package. We also discuss two important special cases, namely
 *simplicial complexes* and *cubical complexes*.
 
-## Basic Lefschetz Complex Notions
+## Basic Lefschetz Terminology
 
 The original definition of a Lefschetz complex can be found in
 [lefschetz:42a](@cite), where it was simply referred to as a *complex*.
@@ -405,7 +405,7 @@ Similarly, the commands
 ```julia
 sc2, coords2 = create_simplicial_rectangle(5,2)
 fname2 = "lefschetzex3.pdf"
-plot_planar_simplicial(sc2,coords2,fname2,hfac=2.0,vfac=1.2
+plot_planar_simplicial(sc2,coords2,fname2,hfac=2.0,vfac=1.2,sfac=75)
 ```
 
 define and illustrate a second simplicial complex.
@@ -436,38 +436,103 @@ please see [Analyzing Planar Vector Fields](@ref).
 
 Once a Lefschetz complex has been created, there are a number
 of manipulations and queries that one would like to be able to
-perform on the comlex. At the moment, `ConleyDynamics,jl` provides
-the following functions:
+perform on the comlex. At the moment, `ConleyDynamics.jl` provides
+a number of functions for this. The following three functions 
+provide *basic information*:
 
-- [`lefschetz_field`](@ref)
-- [`lefschetz_boundary`](@ref)
-- [`lefschetz_coboundary`](@ref)
-- [`lefschetz_openhull`](@ref)
-- [`lefschetz_closure`](@ref)
-- [`lefschetz_lchull`](@ref)
-- [`lefschetz_is_closed`](@ref)
-- [`lefschetz_is_locally_closed`](@ref)
-- [`lefschetz_clomo_pair`](@ref)
-- [`lefschetz_skeleton`](@ref)
-- [`lefschetz_subcomplex`](@ref)
-- [`lefschetz_closed_subcomplex`](@ref)
-- [`lefschetz_filtration`](@ref)
-- [`lefschetz_gfp_conversion`](@ref)
-- [`permute_lefschetz_complex`](@ref)
-- [`manifold_boundary`](@ref)
+- [`lefschetz_field`](@ref) returns the field ``F`` over which the
+  Lefschetz complex is defined as a `String`.
+- [`lefschetz_is_closed`](@ref) checks whether a given Lefschetz
+  complex cell subset is closed or not.
+- [`lefschetz_is_locally_closed`](@ref) determines whether a given
+  Lefschetz complex cell subset is closed or not.
+
+The next set of functions can be used to extract certain *topological
+features* from a Lefschetz complex:
+
+- [`lefschetz_boundary`](@ref) computes the support of the boundary
+  ``\partial\sigma`` of a Lefschetz complex cell ``\sigma``. In
+  other words, it returns the vector of all facets of ``\sigma``.
+  The cell can either be specified via its index or its label,
+  and the return format corresponds to the input format.
+- [`lefschetz_coboundary`](@ref) returns all cells which lie
+  in the coboundary of the specified cell ``\sigma``, i.e., it
+  returns all cells which have ``\sigma`` as a facet.
+- [`lefschetz_closure`](@ref) determines the closure of a 
+  given cell subset, i.e., the union of all faces of cells
+  in the cell subset.
+- [`lefschetz_openhull`](@ref) computes the open hull of a
+  cell subset, i.e., the smallest open set which contains
+  the given cell subset.
+- [`lefschetz_lchull`](@ref) finds the locally closed hull of a
+  Lefschetz complex subset. This is the smallest locally closed
+  set which contains the given cell subset. One can show, that 
+  it is the intersection of the closure and the open hull of the
+  cell subset.
+- [`lefschetz_clomo_pair`](@ref) determines the closure-mouth-pair
+  associated with a Lefschetz complex subset.
+- [`lefschetz_skeleton`](@ref) computes the ``k``-dimensional
+  skeleton of a Lefschetz complex or of a given Lefschetz complex
+  subset. While in the first case the ``k``-skeleton of the full
+  Lefschetz complex is returned, in the second case it returns the
+  ``k``-skeleton of the closure of the given subset.
+- [`manifold_boundary`](@ref) returns a list of cells which form
+  the "manifold boundary" of the given Lefschetz complex. More 
+  precisely, if the complex has dimension ``d``, then it returns
+  all cells of dimension ``d-1`` which have at most one cell in
+  their coboundary, as well as all cells of dimensions less
+  than ``d-1``.
+
+The following functions *Lefschetz subcomplexes* from a Lefschetz
+complex:
+
+- [`lefschetz_subcomplex`](@ref) determines a Lefschetz subcomplex
+  from a given Lefschetz complex. The subcomplex has to be locally
+  closed, and it is given by the collection of cell subsets.
+- [`lefschetz_closed_subcomplex`](@ref) extracts a closed Lefschetz
+  subcomplex from the given Lefschetz complex. The subcomplex is the
+  closure of the specified collection of cell subsets.
+- [`permute_lefschetz_complex`](@ref) determines a new Lefschetz
+  complex which is obtained from the original by a permutation
+  of the cells.
+
+There are also two *helper functions* which can sometimes 
+be useful:
+
+- [`lefschetz_gfp_conversion`](@ref) changes the base field
+  of the given Lefschetz complex from the rationals
+  ``\mathbb{Q}`` to a finite field ``GF(p)``. Note that it
+  is not possible to perform the reverse conversion.
+- [`lefschetz_filtration`](@ref) computes a filtration on a
+  Lefschetz subset. Based on integer filtration values assigned
+  to some cells of the given Lefschetz complex, it determines
+  the smallest closed subcomplex `lcsub` which contains all
+  cells with nonzero filtration values, as well as filtration
+  values `fvalsub` on this subcomplex, which gives rise to
+  a filtration of closed subcomplexes, and which can be used
+  to compute persistent homology.
 
 In addition, `ConleyDynamics.jl` provides the following helper
-functions for the fundamental objects of cells and cell subsets,
+functions for the fundamental objects of *cells and cell subsets*,
 which can be represented either by integer cell indices or by
 cell labels:
 
-- [`convert_cells`](@ref)
-- [`convert_cellsubsets`](@ref)
+- [`convert_cells`](@ref) converts a vector of cells from
+  integer to label format, or vice versa.
+- [`convert_cellsubsets`](@ref) converts a vector of cell
+  subsets from integer to label format, and vice versa.
+
+Finally, there are a couple of *ccordinate helper functions*
+which allow for the transformation of vertex coordinates
+in a Lefschetz complex:
+
+- [`convert_planar_coordinates`](@ref)
+- [`convert_spatial_coordinates`](@ref)
 
 For more details on the usage of any of these functions, please
 see their documentation in the API section of the manual. 
 
-## Lefschetz Complexes References
+## [References](@id reflefschetz)
 
 See the [full bibliography](@ref References) for a complete list
 of references cited throughout this documentation. This section cites

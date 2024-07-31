@@ -1,4 +1,4 @@
-# Utility Functions
+# Lefschetz Complex Functions
 
 ```@meta
 DocTestSetup = quote
@@ -26,48 +26,53 @@ cube_information
 cube_label
 ```
 
-## General Lefschetz complexes
+## Lefschetz Complex Queries
 
 ```@docs
 lefschetz_field
-lefschetz_boundary
-lefschetz_coboundary
-lefschetz_openhull
-lefschetz_closure
-lefschetz_lchull
 lefschetz_is_closed
 lefschetz_is_locally_closed
+```
+
+## Topological Features
+
+```@docs
+lefschetz_boundary
+lefschetz_coboundary
+lefschetz_closure
+lefschetz_openhull
+lefschetz_lchull
 lefschetz_clomo_pair
 lefschetz_skeleton
+manifold_boundary
+```
+
+## Lefschetz Subcomplexes
+
+```@docs
 lefschetz_subcomplex
 lefschetz_closed_subcomplex
-lefschetz_filtration
-lefschetz_gfp_conversion
 permute_lefschetz_complex
 ```
 
-## Cell subsets
+## Lefschetz Helper Functions
+
+```@docs
+lefschetz_gfp_conversion
+lefschetz_filtration
+```
+
+## Cell Subset Helper Functions
 
 ```@docs
 convert_cells
 convert_cellsubsets
-manifold_boundary
 ```
 
-## Multivector Fields
-
-```@docs
-create_mvf_hull
-create_planar_mvf
-create_spatial_mvf
-extract_multivectors
-```
-
-## General Helper Functions
+## Coordinate Helper Functions
 
 ```@docs
 convert_planar_coordinates
 convert_spatial_coordinates
-planar_nontransverse_edges
 ```
 

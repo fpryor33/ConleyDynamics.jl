@@ -7,7 +7,7 @@ a number of homology methods are included. These are described in detail
 below. More detailed information on the discussed topics can be found
 in [munkres:84a](@citet*).
 
-## Homology of Lefschetz Complexes
+## Lefschetz Complex Homology
 
 As we saw earlier, a Lefschetz complex is a collection of cells which
 associated nonnegative dimensions, together with a boundary map.
@@ -50,7 +50,7 @@ complex ``L``.
 ## Relative Homology
 
 
-## Persistent Homology of Filtrations
+## Persistent Homology
 
 [dlotko:wanner:16a](@cite)
 [dlotko:wanner:18a](@cite)
@@ -60,7 +60,7 @@ complex ``L``.
 
 
 
-## Tutorial References
+## [References](@id refhomology)
 
 See the [full bibliography](@ref References) for a complete list
 of references cited throughout this documentation. This section cites

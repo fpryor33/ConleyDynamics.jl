@@ -1,36 +1,36 @@
 # Complete API Index
 
-## Index of Composite Data Structures
+## [Composite Data Structures](@id indexdata)
 
 ```@index
 Pages = ["datastruct.md"]
 ```
 
-## Index of Utility Functions
+## [Lefschetz Complex Functions](@id indexlefschetz)
 
 ```@index
-Pages = ["utils.md"]
+Pages = ["lefschetz.md"]
 ```
 
-## Index of Plotting Functions
-
-```@index
-Pages = ["plots.md"]
-```
-
-## Index of Conley Theory Functions
-
-```@index
-Pages = ["conley.md"]
-```
-
-## Index of Homology Functions
+## [Homology Functions](@id indexhomology)
 
 ```@index
 Pages = ["homology.md"]
 ```
 
-## Index of Sparse Matrix Functions
+## [Conley Theory Functions](@id indexconley)
+
+```@index
+Pages = ["conley.md"]
+```
+
+## [Plotting Functions](@id indexplot)
+
+```@index
+Pages = ["plots.md"]
+```
+
+## [Sparse Matrix Functions](@id indexsparse)
 
 ```@index
 Pages = ["sparse.md"]

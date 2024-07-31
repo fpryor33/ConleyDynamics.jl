@@ -9,19 +9,19 @@ end
 
 In the following we discuss a number of connection matrix examples.
 
-## Critical flow on a simplex
+## Critical Flow on a Simplex
 
 ```@docs
 example_critical_simplex(::Int)
 ```
 
-## Combinatorial flows on a cylinder and a Moebius strip
+## Flow on a Moebius Strip
 
 ```@docs
 example_moebius(::Int)
 ```
 
-## Nonunique connection matrices
+## Nonunique Connection Matrices
 
 ![An example with nonunique connection matrices](img/multiconn.png)
 
@@ -29,7 +29,7 @@ example_moebius(::Int)
 example_nonunique()
 ```
 
-## Examples from MW-2023
+## Further Connection Matrix Examples
 
 The following examples are taken from [mrozek:wanner:p21a](@cite).
 
@@ -46,7 +46,7 @@ example_MW_fig04()
 example_MW_fig11()
 ```
 
-## Examples from BKMW-2020
+## Forman Vector Field Examples
 
 The following examples are taken from [batko:etal:20a](@cite).
 
@@ -55,7 +55,7 @@ example_BKMW20_fig1()
 example_BKMW20_fig3()
 ```
 
-## Examples References
+## [References](@id refexamples)
 
 See the [full bibliography](@ref References) for a complete list
 of references cited throughout this documentation. This section cites

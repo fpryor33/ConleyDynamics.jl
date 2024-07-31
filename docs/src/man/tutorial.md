@@ -687,7 +687,7 @@ plot_planar_simplicial_morse(lc, coordsN, fname, cm.morse, pv=true)
 
 ![Morse sets of a planar vector field](img/tutorialplanar.png)
 
-## Tutorial References
+## [References](@id reftutorial)
 
 See the [full bibliography](@ref References) for a complete list
 of references cited throughout this documentation. This section cites
