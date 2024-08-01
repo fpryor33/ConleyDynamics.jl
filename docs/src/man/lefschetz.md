@@ -6,10 +6,10 @@ combinatorial topological dynamics. In view of the combinatorial, and therefore
 discrete, character of the dynamical behavior, a Lefschetz complex is not a
 typical phase space in the sense of classical dynamics. While the latter one
 is usually a Euclidean space, a Lefschetz complex is basically a combinatorial
-model of it. In the following fairly mathematical discussion, we provide its
-precise mathematical definition, and explain how it can be created and modified
-within the package. We also discuss two important special cases, namely
-*simplicial complexes* and *cubical complexes*.
+model of it. In the following, we provide its precise mathematical definition,
+and explain how it can be created and modified within the package. We also
+discuss two important special cases, namely *simplicial complexes* and
+*cubical complexes*.
 
 ## Basic Lefschetz Terminology
 
@@ -101,9 +101,10 @@ linear combination of cells, with coefficients that can be any
 nonzero numbers in the field ``F``. Yet, in many simple cases
 the above intuition is sufficient.
 
-In addition to the above definitions, there are a handful of other
-concepts which will be important for our discussion of Lefschetz
-complexes. Specifically, the following notions are important:
+In addition to the Lefschetz complex definition, there are
+a handful of other concepts which will be important for our
+discussion of Lefschetz complexes. Specifically, the following
+notions are important:
 
 - A *facet* of a cell ``x \in X`` is any cell ``y`` which satisfies
   ``\kappa(x,y) \neq 0``.
@@ -168,7 +169,7 @@ Lefschetz complexes are a very general mathematical concept, and they
 can be rather confusing at first sight. Nevertheless, they do encompass
 other complex types, which are more geometric in nature. As we already
 saw in the tutorial, every *simplicial complex* is automatically a
-Lefschetz complex, and we will further ellaborate on this connection
+Lefschetz complex, and we will further elaborate on this connection
 below. In addition, we will also demonstrate that *cubical complexes*
 are Lefschetz complexes. More general, any *regular CW complex* is 
 a Lefschetz complex as well. For more details on this, we refer to
@@ -247,8 +248,10 @@ bndsparseL = sparse_from_full(bndmatrixL, p=2)
 Notice that we first create the matrix as a regular integer 
 matrix, and then use the function [`sparse_from_full`](@ref) 
 to turn it into sparse format over the field ``GF(2)`` with
-characteristic `p = 2`. Finally, the Lefschetz complex is
-created using
+characteristic `p = 2`. This is the most convenient method for
+small boundary matrices, yet for larger ones it is better to
+use the function [`sparse_from_lists`](@ref). Finally, the
+Lefschetz complex is created using
 
 ```julia
 lcL = LefschetzComplex(ncL, 2, bndsparseL, labelsL, indicesL, cdimsL)
@@ -275,7 +278,8 @@ lcR = LefschetzComplex(ncR, 2, bndsparseR, labelsR, indicesR, cdimsR)
 While Lefschetz complexes can always be created in `ConleyDynamics.jl`
 in this direct way, it is often more convenient to make use of special
 types, such as simplicial and cubical complexes, and then restrict the
-complex to a locally closed set. This is described in more detail below.
+complex to a locally closed set using the function
+[`lefschetz_subcomplex`](@ref).
 
 ## Simplicial Complexes
 
@@ -332,10 +336,10 @@ omitted. For example, for a two-dimensional simplex one obtains
    \left[ v_0, v_1 \right] \; .
 ```
 
-Thus, if one chooses a consistent order of all the vertices in the
-simplicial complex, and orients the simplices in such a way that 
-its vertices are ordered in the same way, then the incidence 
-coefficient map is given by
+Thus, if one chooses a total order of all the vertices in the
+simplicial complex, and orients the individual simplices in such a
+way that their vertices are arranged using this overall order, then
+the incidence coefficient map is given by
 
 ```math
    \kappa \left( \left[ v_0, \ldots, v_i, \ldots, v_d \right], \;
@@ -345,9 +349,9 @@ coefficient map is given by
 
 If some or all of the simplices are represented by different orientations,
 one simply has to multiply the value ``(-1)^i`` by the sign of a suitable
-vertex permutation. In either case, the so-defined map ``\kappa`` does
-indeed satisfy the definition of a Lefschetz complex. For more details,
-see [munkres:84a; Lemma 5.3](@cite).
+vertex permutation. In either case, one can show that the so-defined map
+``\kappa`` does indeed satisfy the definition of a Lefschetz complex.
+For more details, see [munkres:84a; Lemma 5.3](@cite).
 
 In `ConleyDynamics.jl` there are three basic commands for defining
 a simplicial complex:
@@ -389,7 +393,23 @@ sc = create_simplicial_complex(labels,simplices)
 ```
 
 These create the simplicial complex `sc`, in the form of a  Lefschetz
-complex. It can be visualized using the commands
+complex. Note that the above commands only specify the labels for the
+vertices. The labels for simplices of dimension at least one are
+automatically generated by concatenating the labels for their vertices,
+sorted in lexicographic order. This can be seen in the following
+Julia output:
+
+```julia
+julia> sc.labels[end-4:end]
+5-element Vector{String}:
+ "DH"
+ "EH"
+ "GH"
+ "BCG"
+ "DEH"
+```
+
+The simplicial complex `sc` can be visualized using the commands
 
 ```julia
 coords = [[0,0],[2,0],[4,0],[6,0],[8,0],[1,2],[4,2],[6,2]]
@@ -408,7 +428,8 @@ fname2 = "lefschetzex3.pdf"
 plot_planar_simplicial(sc2,coords2,fname2,hfac=2.0,vfac=1.2,sfac=75)
 ```
 
-define and illustrate a second simplicial complex.
+define and illustrate a second simplicial complex, which triangularizes
+a rectangle in the plane.
 
 ![Second sample simplicial complex](img/lefschetzex3.png)
 
@@ -436,11 +457,10 @@ is an *elementary interval* if it is of the form
 ```
 
 If the elementary interval ``I`` consists of only one point,
-then it is called *degenerate*, and if it has length one, then
-it is called *nondegenerate*. Elementary intervals are the
-building blocks for the cubes in a cubical complex. For a
-complex in ``\mathbb{R}^d``, an *elementary cube* ``Q`` is
-of the form
+then it is called *degenerate*, and it is *nondegenerate* if
+it is of length one. Elementary intervals are the building
+blocks for the cubes in a cubical complex. For a complex in
+``\mathbb{R}^d``, an *elementary cube* ``Q`` is of the form
 
 ```math
    Q \; = \;
@@ -474,17 +494,17 @@ Let ``Q = I_1 \times I_2 \times \ldots \times I_d`` denote an
 elementary cube, and let the nondegenerate elementary intervals
 in this decomposition be given by ``I_{i_1}, \ldots, I_{i_n}``,
 where ``I_{i_j} = [k_j, k_j + 1]`` and ``j = 1,\ldots,n = \dim Q``.
-For every index ``j``, we further define the two ``n-1``-dimensional
+For every index ``j``, we further define the two ``(n-1)``-dimensional
 elementary cubes
 
 ```math
    \begin{array}{ccccccc}
    Q_j^- & = & I_1 \times \ldots \times I_{i_j - 1} & \times &
-           [k_j, k_j] & \times & I_{i_j - 1} \times \ldots
-           \times I_d \\[2ex]
+           [k_j, k_j] & \times & I_{i_j + 1} \times \ldots
+           \times I_d \; , \\[2ex]
    Q_j^+ & = & I_1 \times \ldots \times I_{i_j - 1} & \times &
-           [k_j + 1, k_j + 1] & \times & I_{i_j - 1} \times
-           \times \ldots I_d
+           [k_j + 1, k_j + 1] & \times & I_{i_j + 1} \times
+           \ldots \times I_d \; .
    \end{array}
 ```
 
@@ -522,7 +542,8 @@ assume without loss of generality that the left endpoints of all
 involved elementary intervals are nonnegative. In other words, we
 always assume that the cubical complex only contains elementary cubes
 from the set ``(\mathbb{R}_0^+)^d``. This allows for a simple encoding
-of elementary cubes via labels of a fixed length.
+of elementary cubes via labels of a fixed length, and without having
+to worry about the sign of an integer.
 
 To describe this, fix a dimension ``d`` of the ambient space. Then
 every elementary cube in ``(\mathbb{R}_0^+)^d`` has the following
@@ -532,24 +553,27 @@ label, which depends on a *coordinate width* ``L``:
   starting points of the elementary intervals ``I_1, \ldots, I_d``
   in the standard representation of the elementary cube. For this,
   the starting points, which are nonnegative integers, are concatenated
-  without spaces, but with leading zeros. For example, the string
-  `"010203"` would correspond to the starting points ``1``, ``2``, 
-  and ``3``. Note that for given coordinate width ``L``, one can only
-  encode starting points between ``0`` and ``10^L-1``.
+  without spaces, but with leading zeros. For example, with ``L = 2``
+  the string `"010203"` would correspond to the starting points ``1``,
+  ``2``, and ``3``. Note that for given coordinate width ``L``, one
+  can only encode starting points between ``0`` and ``10^L-1``.
 - The next entry in the label string is a period `.`.
 - The remaining ``d`` characters of the string are integers 0 or 1,
   which give the interval lengths of ``I_1, \ldots, I_d``.
 
-For example, the string `"030600.000"` corresponds to the point
-``(3,6,0)`` in three dimensions. Similarly, the label `"030600.101"`
-represents the two-dimensional elementary cube ``[3,4] \times [6,6]
-\times [0,1] \subset \mathbb{R}^3``. We would like to point out that
-the label representation is not unique, since the latter cube could
-also be written as `"360.101"` or by `"003006000.101"`. As we will
-see in a moment, though, **within a given cubical complex all labels
-have to use the same coordinate width** ``L``! This implies in
-particular that for given coordinate width ``L`` one can only 
-represent cubical complexes which are subsets of ``[0,10^L-1]^d``.
+For example, for ``L = 2`` the string `"030600.000"` corresponds to
+the point ``(3,6,0)`` in three dimensions. Similarly, the label
+`"030600.101"` represents the two-dimensional elementary cube
+``[3,4] \times [6,6] \times [0,1] \subset \mathbb{R}^3``. Note,
+however, that the label representation is not unique, since
+it depends on the coordinate width ``L``. Thus, with ``L = 1`` the
+latter cube could also be written as `"360.101"`, or with ``L = 3``
+as `"003006000.101"`. As we will see in a moment, though, **within
+a given cubical complex all labels have to use the same coordinate
+width** ``L``! This implies in particular that for a given
+coordinate width ``L`` one can only represent bounded cubical
+complexes which are contained in the ``d``-dimensional box
+``[0,10^L-1]^d``.
 
 The following three helper functions simplify the work with these
 types of cube labels:
@@ -561,8 +585,8 @@ types of cube labels:
 - [`cube_information`](@ref) returns all information encoded
   in the cube label. The function returns an integer vector
   of length ``2d+1``, where ``d`` is the dimension of the ambient
-  space. The first ``d`` entries give the vector or elementary
-  intervals starting points, while the next ``d`` values gives
+  space. The first ``d`` entries give the vector of elementary
+  interval starting points, while the next ``d`` values yield
   the corresponding interval lengths. The last entry specifies
   the dimension of the cube.
 - [`cube_label`](@ref) creates a label from a cube's coordinate
@@ -589,16 +613,16 @@ a cubical complex and working with it:
   vector can then be used for plotting purposes, see below.
 - [`create_cubical_rectangle`](@ref) creates a cubical complex
   covering a rectangle in the plane. The rectangle is given by
-  the subset ``[0,nx] x [0,ny]`` of the plane, where the nonnegative
+  the subset ``[0,nx] \times [0,ny]`` of the plane, where the nonnegative
   integers `nx` and `ny` have to be passed as arguments to the function.
   The function returns the cubical complex, and a vector of coordinates
   for the vertices. The latter can also be randomly perturbed as described
   in more detail in the function documentation.
 - [`create_cubical_box`](@ref) creates a cubical complex covering a box
   in three-dimensional Euclidean space. The box is given by the subset
-  ``[0,nx] x [0,ny] x [0,nz]`` of space, where the nonnegative integers
-  `nx`, `ny`, and `nz` have to be passed as arguments to the function.
-  The optional parameters are the same as in the planar version.
+  ``[0,nx] \times [0,ny] \times [0,nz]`` of space, where the nonnegative
+  integers `nx`, `ny`, and `nz` have to be passed as arguments to the
+  function. The optional parameters are the same as in the planar version.
 
 To illustrate the first of these functions, consider the commands
 
@@ -633,17 +657,17 @@ define and illustrate a second cubical complex.
 ## Lefschetz Complex Operations
 
 Once a Lefschetz complex has been created, there are a number
-of manipulations and queries that one would like to be able to
-perform on the comlex. At the moment, `ConleyDynamics.jl` provides
+of manipulations and queries that one has to be able to perform
+on the complex. At the moment, `ConleyDynamics.jl` supplies
 a number of functions for this. The following three functions 
 provide *basic information*:
 
 - [`lefschetz_field`](@ref) returns the field ``F`` over which the
   Lefschetz complex is defined as a `String`.
-- [`lefschetz_is_closed`](@ref) checks whether a given Lefschetz
+- [`lefschetz_is_closed`](@ref) determines whether a given Lefschetz
   complex cell subset is closed or not.
-- [`lefschetz_is_locally_closed`](@ref) determines whether a given
-  Lefschetz complex cell subset is closed or not.
+- [`lefschetz_is_locally_closed`](@ref) checks whether a given
+  Lefschetz complex cell subset is locally closed or not.
 
 The next set of functions can be used to extract certain *topological
 features* from a Lefschetz complex:
@@ -664,7 +688,7 @@ features* from a Lefschetz complex:
   the given cell subset.
 - [`lefschetz_lchull`](@ref) finds the locally closed hull of a
   Lefschetz complex subset. This is the smallest locally closed
-  set which contains the given cell subset. One can show, that 
+  set which contains the given cell subset. One can show that 
   it is the intersection of the closure and the open hull of the
   cell subset.
 - [`lefschetz_clomo_pair`](@ref) determines the closure-mouth-pair
@@ -680,19 +704,19 @@ features* from a Lefschetz complex:
   all cells of dimension ``d-1`` which have at most one cell in
   their coboundary, as well as all cells of dimensions less
   than ``d-1`` which have no cell in their coboundary, and
-  finally returns the closure of this cell subset.
+  finally returns the closure of the resulting cell subset.
 
-The following functions *Lefschetz subcomplexes* from a Lefschetz
+The following functions create *Lefschetz subcomplexes* from a Lefschetz
 complex:
 
 - [`lefschetz_subcomplex`](@ref) determines a Lefschetz subcomplex
   from a given Lefschetz complex. The subcomplex has to be locally
-  closed, and it is given by the collection of cell subsets.
+  closed, and it is given by a collection of cells.
 - [`lefschetz_closed_subcomplex`](@ref) extracts a closed Lefschetz
   subcomplex from the given Lefschetz complex. The subcomplex is the
-  closure of the specified collection of cell subsets.
+  closure of the specified collection of cells.
 - [`permute_lefschetz_complex`](@ref) determines a new Lefschetz
-  complex which is obtained from the original by a permutation
+  complex which is obtained from the original one by a permutation
   of the cells.
 
 There are also two *helper functions* which can sometimes 
@@ -707,7 +731,7 @@ be useful:
   to some cells of the given Lefschetz complex, it determines
   the smallest closed subcomplex `lcsub` which contains all
   cells with nonzero filtration values, as well as filtration
-  values `fvalsub` on this subcomplex, which gives rise to
+  values `fvalsub` on this subcomplex, which give rise to
   a filtration of closed subcomplexes, and which can be used
   to compute persistent homology.
 
