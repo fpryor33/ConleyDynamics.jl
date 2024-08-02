@@ -654,6 +654,21 @@ define and illustrate a second cubical complex.
 
 ![Second sample cubical complex](img/lefschetzex5.png)
 
+Finally, it is also possible to perturb the vertices in a cubical
+rectangle to obtain a Lefschetz complex consisting of quadrilaterals
+in the plane. This can be accomplied as follows:
+
+```julia
+cc3, coords3 = create_cubical_rectangle(5,2,randomize=0.2)
+fname3 = "lefschetzex6.pdf"
+plot_planar_cubical(cc3,coords3,fname3,hfac=1.7,vfac=1.2,cubefac=75)
+```
+
+The resulting Lefschetz complex is visualized in the last figure
+of this section.
+
+![A randomly perturbed cubical complex](img/lefschetzex6.png)
+
 ## Lefschetz Complex Operations
 
 Once a Lefschetz complex has been created, there are a number
