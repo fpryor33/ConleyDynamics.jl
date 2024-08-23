@@ -137,7 +137,7 @@ contains the two nonzero chains
 ``c_1 = \mathrm{AB} + \mathrm{BC} + \mathrm{AC}`` and
 ``c_2 = \mathrm{DE} + \mathrm{EF} + \mathrm{DF}``,
 since one can verify that ``\partial c_1 = \partial c_2 = 0``.
-These are, however, not all nontrivial ``1``-cycles, since their sum
+These are, however, not all nontrivial ``1``-cycles, as their sum
 ``c_1 + c_2`` is another one. Thus, the first cycle group is given by
 ``Z_1(X) = \{ 0, c_1, c_2, c_1 + c_2 \}``. It is a vector space over
 ``F = GF(2)`` of dimension two, and any two nonzero elements of
@@ -157,15 +157,15 @@ consists of the two equivalence classes
 where the class ``B_1(X)`` is the zero element in ``H_1(X)``.
 This implies that the first homology group is one-dimensional,
 and we have ``\beta_1(X) = 1``. In some sense, the basis element
-of ``H_1(X)``, which is the unique nonzero class given by
-``c_1 + B_1(X)``, is *represented* by the cycle ``c_1``.
+of ``H_1(X)``, which is the unique nonzero equivalence class
+given by ``c_1 + B_1(X)``, is *represented* by the cycle ``c_1``.
 
 The above mathematically precise description can be summarized
 as follows. All three cycles in ``Z_1(X)`` have the potential to
-enclose holes in the simplicial complex ``X``, since they are
-chains without boundary. However, some of these potential holes
-have been filled in by two-dimensional cells. Thus, while
-``c_1`` does indeed represent a hole in ``X``, the chain ``c_2``
+enclose two-dimensional holes in the simplicial complex ``X``,
+since they are chains without boundary. However, some of these
+potential holes have been filled in by two-dimensional cells. Thus,
+while ``c_1`` does indeed represent a hole in ``X``, the chain ``c_2``
 does not, since its interior is filled in by ``\mathrm{DEF}``.
 Note that the cycle ``c_1 + c_2`` does not create a second hole,
 since we have ``(c_1 + c_2) - c_1 = c_2 \in B_1(X)``. In other
@@ -187,55 +187,111 @@ In general, one can show that ``\beta_k(X)`` represents the
 number of independent ``(k+1)``-dimensional holes in the
 Lefschetz complex ``X``. For more details, see [munkres:84a](@cite).
 
+The package `ConleyDynamics.jl` provides one function to compute
+standard homology:
 
+- [`homology`](@ref) expects one input argument, which has to be 
+  of the Lefschetz complex type [`LefschetzComplex`](@ref). It
+  returns a vector `betti` of integers, whose length is one more than 
+  the dimension of the complex. The ``k``-th Betti number ``\beta_k(X)``
+  is returned in `betti[k+1]`.
 
-
-
-
-
-
-
-
-
-
+We would like to point out that the field ``F`` is implicit in the
+data structure for the Lefschetz complex ``X``, and therefore it does
+not have to be specified. It can always be queried using the function
+[`lefschetz_field`](@ref). For the above example one obtains
 
 ```julia
-labels = ["A","B","C","D","E","F","G","H"]
-simplices = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
-sc = create_simplicial_complex(labels,simplices)
+julia> homology(sc)
+3-element Vector{Int64}:
+ 1
+ 1
+ 0
 ```
 
+This clearly gives the correct Betti numbers, as we have already seen
+that this simplicial complex has one hole, and it is obviously connected.
 
 ![Sample simplicial complex](img/lefschetzex2.png)
 
+The simplicial complex shown in the second figure can be created using
+the commands
 
+```julia
+labels2 = ["A","B","C","D","E","F","G","H"]
+simplices2 = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
+sc2 = create_simplicial_complex(labels2,simplices2)
+```
 
+and its homology can then be determined as follows:
 
+```julia
+julia> homology(sc2)
+3-element Vector{Int64}:
+ 1
+ 2
+ 0
+```
 
+This complex is also connected, and therefore one has ``\beta_0(X) = 1``.
+However, this time one obtains two independent holes, which results in
+``\beta_1(X) = 2``.
 
+![Sample cubical complex](img/lefschetzex4.png)
+
+Similarly, the cubical complex depicted in the next figure can be generated via
 
 ```julia
 cubes = ["00.11", "01.01", "02.10", "11.10", "11.01", "22.00", "20.11", "31.01"]
 cc = create_cubical_complex(cubes)
 ```
 
+and its Betti numbers are given by
 
+```julia
+julia> homology(cc)
+3-element Vector{Int64}:
+ 2
+ 1
+ 0
+```
 
-![Sample cubical complex](img/lefschetzex4.png)
+In  this case, the complex has two components and one hole. As a final example,
+consider a simplicial complex which consists of the manifold boundary of a 
+single cube. Such a complex can be generated using the commands
 
+```julia
+cc2,~ = create_cubical_box(1, 1, 1)
+mbcells = manifold_boundary(cc2)
+cc2bnd = lefschetz_subcomplex(cc2, mbcells)
+```
 
+This time, the homology of the resulting cubical complex is given
+by the Betti numbers
 
+```julia
+julia> homology(cc2bnd)
+3-element Vector{Int64}:
+ 1
+ 0
+ 1
+```
 
+This complex is connected and has no holes, but it does have one
+cavity. As shown, these observations translate into the Betti numbers
+``\beta_0(X) = 1`` and ``\beta_1(X) = 0``, as well as ``\beta_2(X) = 1``.
 
+Beyond these simple illustrative examples, homology can be a useful
+tool in a variety of applied settings. For example, it can be used to
+quantify the evolution of material microstructures during phase
+separation processes, see for example [gameiro:etal:05a](@cite).
 
 ## Relative Homology
 
 
 ## Persistent Homology
 
-[dlotko:wanner:16a](@cite)
 [dlotko:wanner:18a](@cite)
-[gameiro:etal:05a](@cite)
 [edelsbrunner:harer:10a](@cite)
 
 
