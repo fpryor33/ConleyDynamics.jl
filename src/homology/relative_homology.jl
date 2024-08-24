@@ -1,8 +1,7 @@
 export relative_homology
 
 """
-    relative_homology(lc::LefschetzComplex,
-                      subc::Union{Vector{Int},Vector{String}})
+    relative_homology(lc::LefschetzComplex,subc::Cells)
 
 Compute the relative homology of a Lefschetz complex with
 respect to a subcomplex. The computation is performed over
@@ -13,8 +12,7 @@ can be given either as indices or labels. The homology is
 returned as a vector `betti` of Betti numbers, where `betti[k]`
 is the Betti number in dimension `k-1`.
 """
-function relative_homology(lc::LefschetzComplex,
-                           subc::Union{Vector{Int},Vector{String}})
+function relative_homology(lc::LefschetzComplex,subc::Cells)
     #
     # Compute the homology of a Lefschetz complex
     #
@@ -82,9 +80,7 @@ function relative_homology(lc::LefschetzComplex, subc::Vector{Any})
 end
 
 """
-    relative_homology(lc::LefschetzComplex,
-                      subc::Union{Vector{Int},Vector{String}},
-                      subc0::Union{Vector{Int},Vector{String}})
+    relative_homology(lc::LefschetzComplex,subc::Cells,subc0::Cells)
 
 Compute the relative homology of a Lefschetz complex with
 respect to a subcomplex. The computation is performed over
@@ -96,9 +92,7 @@ In this implementation, relative homology of the pair
 returned as a vector `betti` of Betti numbers, where `betti[k]`
 is the Betti number in dimension `k-1`.
 """
-function relative_homology(lc::LefschetzComplex,
-                           subc::Union{Vector{Int},Vector{String}},
-                           subc0::Union{Vector{Int},Vector{String}})
+function relative_homology(lc::LefschetzComplex,subc::Cells,subc0::Cells)
     #
     # Compute the homology of a Lefschetz complex
     #

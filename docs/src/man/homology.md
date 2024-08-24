@@ -288,6 +288,189 @@ separation processes, see for example [gameiro:etal:05a](@cite).
 
 ## Relative Homology
 
+For the definition of the Conley index of an isolated invariant set
+another notion of homology is essential, namely *relative homology*.
+For this, we assume that ``X`` is a Lefschetz complex, and
+``Y \subset X`` is a closed subset. In other words, for every 
+cell in ``Y``, all of its faces are contained in ``Y`` as well. 
+Then *relative homology* defines a sequence of groups
+``H_k(X,Y)`` for ``k \in \mathbb{Z}`` which basically measures
+the topological properties of ``X`` if the subset ``Y`` is contracted
+to a point and then forgotten.
+
+This admittedly very vague definition can be made precise in a number
+of ways. Two of these can easily be described:
+
+- We have already seen that any locally closed subset of a Lefschetz
+  complex is again a Lefschetz complex. Since the subset ``Y \subset X``
+  is closed, its complement ``X \setminus Y`` is open, and hence locally
+  closed as well. Thus, the complement ``X \setminus Y`` is again a Lefschetz
+  complex. It has been shown in [mrozek:batko:09a; Theorem 3.5](@cite)
+  that then
+  ```math
+     H_k(X,Y) \cong H_k(X \setminus Y)
+     \quad\text{ for all }\quad
+     k \in \mathbb{Z} .
+  ```
+  In other words, the *relative homology* of the pair ``(X,Y)`` is just
+  the regular homology of the Lefschetz complex given by the set
+  ``X \setminus Y``.
+- On a more topological level, one can also think of the relative
+  homology of ``(X,Y)`` in the following way. In the complex ``X``,
+  identify all cells in ``Y`` to a single point, in the sense of
+  the *quotient space* ``X / Y`` defined in a standard topology course.
+  Then one can show that
+  ```math
+     H_k(X,Y) \cong \tilde{H}_k(X / Y)
+     \quad\text{ for all }\quad
+     k \in \mathbb{Z} ,
+  ```
+  where ``\tilde{H}_k(Z)`` denotes the *reduced homology* of a space
+  ``Z``. While the details of this latter notion of homology can be
+  found in [munkres:84a; Section 7](@cite), for our purposes it suffices
+  to note that the Betti numbers in reduced homology can be obtained
+  from the one in regular homology by decreasing the ``0``-th Betti
+  number by ``1``. All other Betti numbers remain unchanged.
+
+The precise mathematical definition of relative homology can be found
+in [munkres:84a; Section 9](@cite), and it is briefly introduced in the
+following. Since the ``k``-th chain group of a Lefschetz complex consists
+of all formal linear combinations of ``k``-dimensional cells, one can
+consider the vector space ``C_k(Y)`` as a subspace of ``C_k(X)``. Thus,
+it makes sense to form the quotient groups
+
+```math
+   C_k(X,Y) = C_k(X) / C_k(Y)
+```
+
+as in linear algebra. Moreover, if one considers a class ``[x] \in
+C_k(X,Y)`` represented by some ``x \in C_k(X)``, then the definition
+
+```math
+   \partial [x] = [\partial x] \in C_{k-1}(X, Y)
+   \quad\text{ for }\quad
+   [x] \in C_k(X, Y)
+```
+
+gives a well-defined linear map ``\partial : C_k(X,Y) \to C_{k-1}(X,Y)``
+which satisfies ``\partial \circ \partial = 0``. In other words, the
+collection ``(C_k(X,Y))_{k \in \mathbb{Z}}`` equipped with this boundary
+operator ``\partial`` is a chain complex, and its associated homology
+groups ``H_k(X,Y)`` are called the *relative homology groups of the
+pair ``(X,Y)``*. Notice that by forming the quotient spaces
+``C_k(X) / C_k(Y)``, the chains in the subspace are all identified
+and set to zero, as mentioned earlier.
+
+In `ConleyDynamics.jl`, relative homology can be computed using
+[`relative_homology`](@ref). There are two possible ways to
+invoke this function:
+
+- The method
+  [`relative_homology(lc::LefschetzComplex, subc::Cells)`](@ref)
+  expects a Lefschetz complex `lc` which represents ``X``, together
+  with a list of cells `subc`. The closure of this cell list
+  determines the closed subcomplex ``Y``.
+- The method
+  [`relative_homology(lc::LefschetzComplex, subc::Cells, subc0::Cells)`](@ref)
+  expects some ambient Lefschetz complex specified by the argument `lc`.
+  The Lefschetz complex ``X`` is then the closure of the cell list
+  `subc`, while the subcomplex ``Y`` is given by the clourse of the
+  cell list `subc0`. These closures are automatically computed by the
+  function.
+
+Both versions of [`relative_homology`](@ref) return the relative 
+homology as a vector `betti` of Betti numbers, where `betti[k]`
+is the Betti number in dimension `k-1`. Notice also that the
+necessary cell list arguments have to be variables of the type
+`Cells = Union{Vector{Int},Vector{String}}`, i.e., they can be
+given in either label or index form.
+
+![Sample simplicial complex](img/lefschetzex2.png)
+
+In order to briefly illustrate the different usages of the command
+[`relative_homology`](@ref), we consider again the simplicial
+complex shown in the figure, which can be generated using the
+commands
+
+```julia
+labels2 = ["A","B","C","D","E","F","G","H"]
+simplices2 = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
+sc2 = create_simplicial_complex(labels2,simplices2)
+```
+
+If we identify the vertices ``\mathrm{A}`` and ``\mathrm{E}``,
+then an additional loop is created along the bottom of the original
+simplicial complex. This leads to the following relative homology:
+
+```julia
+julia> relative_homology(sc2, ["A","E"])
+3-element Vector{Int64}:
+ 0
+ 3
+ 0
+```
+
+Note that the ``0``-th Betti number becomes zero, since these
+identified vertices are considered as zero in the chain
+group ``C_0(X,Y)``.
+On the other hand, if we consider the boundary of the triangle
+``\mathrm{DEH}`` as the subcomplex ``Y``, then one obtains:
+
+```julia
+julia> relative_homology(sc2, ["DE","DH","EH"])
+3-element Vector{Int64}:
+ 0
+ 2
+ 1
+```
+
+Again, the ``0``-th Betti number is reduced by one. But this time,
+the first Betti number does not change, as no new holes are created.
+Nevertheless, collapsing the boundary of the triangle to a point
+does create a cavity, and therefore the ``2``-nd Betti is now one.
+One can also just consider the closure of the triangle 
+``\mathrm{BCG}`` as a Lefschetz complex ``X``, and use its
+boundary as subcomplex ``Y``. In this case we get:
+
+```julia
+julia> relative_homology(sc2, ["BCG"], ["BC","BG","CG"])
+3-element Vector{Int64}:
+ 0
+ 0
+ 1
+```
+
+This is the reduced homology of a two-dimensional sphere,
+which is the topological space obtained from the quotient
+space ``X / Y``.
+As our final example, consider the closed edge ``\mathrm{AB}``
+as Lefschetz complex ``X``, and the vertex ``\mathrm{B}`` as
+subcomplex ``Y``, then the relative homology of the pair
+``(X,Y)`` is given by
+
+```julia
+julia> relative_homology(sc2, ["AB"], ["B"])
+3-element Vector{Int64}:
+ 0
+ 0
+ 0
+```
+
+In this case, all Betti numbers are zero. This can also be
+seen by recalling that this relative homology is isomorphic
+to the relative homology of the two-element Lefschetz complex
+which consists only of the edge ``\mathrm{AB}`` and the
+vertex ``\mathrm{A}``:
+
+```julia
+julia> homology(lefschetz_subcomplex(sc2, ["A","AB"]))
+2-element Vector{Int64}:
+ 0
+ 0
+```
+
+Note that one obtains a Betti number vector of length
+two, since this subcomplex has dimension one.
 
 ## Persistent Homology
 
