@@ -474,8 +474,96 @@ two, since this subcomplex has dimension one.
 
 ## Persistent Homology
 
+Even though the notion of persistence is not strictly necessary
+for the study of combinatorial topological dynamics, the package
+`ConleyDynamics.jl` provides rudimentary support for the computation
+of persistence intervals for filtrations of Lefschetz complexes.
+A detailed introduction to persistence can be found in the book
+[edelsbrunner:harer:10a](@cite), and we briefly provide an
+intuitive definition and some examples below.
+
+Persistent homology is concerned with the creation and destruction
+of topological features in a sequence of nested Lefschetz complexes.
+More precisely, consider the sequence of Lefschetz complexes
+
+```math
+   X^{(1)} \subset X^{(2)}
+   \subset \ldots \subset X^{(n)} ,
+```
+
+where we assume that ``X^{(k)}`` is closed in ``X^{(n)}`` for 
+all ``1 \le k < n``. This is called a *filtration* of Lefschetz
+complexes. As we have seen above, every one of the complexes
+``X^{(k)}`` has associated homology groups, and the notion of
+persistence is concerned with how these groups change as ``k``
+is increased from ``1`` to ``n``. More precisely, this is
+based on the following intuition:
+
+- For ``k = 1``, the Betti numbers of the Lefschetz complex
+  ``X^{(1)}`` describe how many nontrivial holes the complex
+  has in each dimension. Each of these holes is represented
+  by a cycle which generates the associated homology class.
+  One then says that each of these homology classes is
+  *born* at ``k=1``.
+- As one passes from the complex ``X^{(k)}`` to the 
+  complex ``X^{(k+1)}``, for ``k = 1,\ldots,n-1,`` these
+  Betti numbers can change in the following ways:
+  - A new homology class is created in ``X^{(k+1)}``, which
+    leads to an increase in the corresponding Betti number.
+    As before, this means that a new homology class
+    is *born* at level ``k+1``.
+  - A homology class that was present in ``X^{(k)}``
+    is no longer present in ``X^{(k+1)}``. On the one hand,
+    this could be the result of the merging of two separate
+    topological features, such as for example two
+    separate connected components of the complex
+    ``X^{(k)}`` which become one connected component
+    in ``X^{(k+1)}``. On the other hand, the corresponding
+    hole in the complex could have been filled in through
+    the introduction of cells in the set difference
+    ``X^{(k+1)} \setminus X^{(k)}``. In either case,
+    we say that the homology class *died* at level ``k+1``.
+- The *persistent homology* associated with this filtration
+  then consists of a collection of *persistence intervals*
+  for each dimension. All of these intervals are of the form
+  ``[b,d)``, where ``b`` denotes the *birth time* and ``d``
+  the *death time* of a topological feature. Note that some
+  homology classes might still be present in the homology of
+  the final Lefschetz complex ``X^{(n)},`` and in this case
+  one obtains an interval of the form ``[b,\infty)``, i.e.,
+  the *feature never dies*.
+
+With the above intuitive description one usually can work
+out the collection of persistence intervals for small and
+simple examples. There is, however, one final ambiguity
+that has to be resolved. Suppose that two topological
+features are born at times ``b_1`` and ``b_2``, and they
+merge to a single feature at time ``d``. Which of these
+survives into the next complex, and which dies? In this
+situation, the *elder rule* applies, which says that the
+older feature persists. Thus, if ``b_1 \ge b_2``, then 
+one obtains the persistence interval ``[b_1,d)``, while
+the death time ``e`` in the interval ``[b_2,e)`` will be
+determined by a later level, i.e., we have ``e > d``.
+
+
+
+![The 1-st complex in the filtration](img/persistence1.png)
+![The 2-nd complex in the filtration](img/persistence2.png)
+![The 3-rd complex in the filtration](img/persistence3.png)
+![The 4-th complex in the filtration](img/persistence4.png)
+
+
+
+
+[`persistent_homology`](@ref)
+[`lefschetz_filtration`](@ref)
+
+
+
+
 [dlotko:wanner:18a](@cite)
-[edelsbrunner:harer:10a](@cite)
+
 
 
 
