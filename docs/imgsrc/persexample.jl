@@ -36,37 +36,36 @@ plot_planar_simplicial(sc4,coords4,fname4,labeldir=ldir4,labeldis=10,hfac=2,vfac
 
 # Computation of the persistence intervals
 
-labels    = ["A","B","C","D","E","F","G","H"]
-simplices = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
-sc = create_simplicial_complex(labels,simplices)
-
+labels     = ["A","B","C","D","E","F","G","H"]
+simplices  = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
+sc         = create_simplicial_complex(labels,simplices)
 filtration = [1,1,1,1,1,2,1,2,
               1,2,1,2,1,1,1,1,3,3,4,
               1,4]
-ph = persistent_homology(sc, filtration)
+pinf, ppairs = persistent_homology(sc, filtration)
 
-length.(ph[1])
+pinf
 
+ppairs
 
-
-
-
-
+length.(pinf)
 
 # Example for a subcomplex
 
-tmpfil = fill(Int(0),sc.ncells)
-tmpfil[sc.indices["BC"]]  = 1
-tmpfil[sc.indices["BG"]]  = 1
-tmpfil[sc.indices["CG"]]  = 1
-tmpfil[sc.indices["DE"]]  = 2
-tmpfil[sc.indices["DH"]]  = 2
-tmpfil[sc.indices["EH"]]  = 2
-tmpfil[sc.indices["CD"]]  = 3
-tmpfil[sc.indices["DEH"]] = 4
-tmpfil[sc.indices["BCG"]] = 5
-scsub, filtrationsub = lefschetz_filtration(sc, tmpfil)
-phsub = persistent_homology(scsub, filtrationsub)
+labels    = ["A","B","C","D","E","F","G","H"]
+simplices = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
+sc        = create_simplicial_complex(labels,simplices)
+tmpfil    = fill(Int(0),sc.ncells)
+tmpfil[sc.indices["CD"]]  = 1
+tmpfil[sc.indices["GH"]]  = 1
+tmpfil[sc.indices["BC"]]  = 2
+tmpfil[sc.indices["BG"]]  = 2
+tmpfil[sc.indices["DEH"]] = 2
+tmpfil[sc.indices["BCG"]] = 3
+scsub, filtration = lefschetz_filtration(sc, tmpfil)
+psinf, pspairs = persistent_homology(scsub, filtration)
 
-length.(phsub[1])
+psinf
+
+pspairs
 

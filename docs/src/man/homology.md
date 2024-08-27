@@ -22,7 +22,7 @@ a brief introduction in the following. For more details, see
 [lefschetz:42a](@cite).
 
 As we saw earlier, a Lefschetz complex ``X`` is a collection of cells
-which associated nonnegative dimensions, together with a boundary map
+with associated nonnegative dimensions, together with a boundary map
 ``\partial`` which is induced by the incidence coefficient map ``\kappa``.
 The fundamental idea behind homology is to turn this underlying information
 into an algebraic form in such a way that the boundary map becomes a linear
@@ -44,7 +44,7 @@ groups is ``C(X) = (C_k(X))_{k \in {\mathbb Z}}``, where we let
 ``C_k(X) = \{ 0 \}`` for all ``k < 0`` and ``k > \dim X``.
 
 We now turn our attention to the boundary map. It was already explained how
-the incidence coefficient map ``\kappa`` can be used to define a boundary
+the incidence coefficient map ``\kappa`` can be used to define the boundary
 ``\partial \sigma \in C_{k-1}(X)`` for every ``k``-dimensional cell
 ``\sigma \in X_k``. If one further defines
 
@@ -110,7 +110,7 @@ Lefschetz complex ``X``. It is again a vector space over ``F``,
 and therefore its dimension provides important information. In
 view of this, the dimension of the ``k``-th homology group ``H_k(X)``
 is called the *``k``-th Betti number of ``X``*, and abbreviated
-as ``\beta_k = \dim H_k(X)``.
+as ``\beta_k(X) = \dim H_k(X)``.
 
 In order to shed some light on the actual meaning of homology,
 and in particular the Betti numbers, we turn to an example.
@@ -160,12 +160,12 @@ and we have ``\beta_1(X) = 1``. In some sense, the basis element
 of ``H_1(X)``, which is the unique nonzero equivalence class
 given by ``c_1 + B_1(X)``, is *represented* by the cycle ``c_1``.
 
-The above mathematically precise description can be summarized
-as follows. All three cycles in ``Z_1(X)`` have the potential to
-enclose two-dimensional holes in the simplicial complex ``X``,
+The above mathematically precise description can be summarized as
+follows. All three nontrivial cycles in ``Z_1(X)`` have the potential
+to enclose two-dimensional holes in the simplicial complex ``X``,
 since they are chains without boundary. However, some of these
 potential holes have been filled in by two-dimensional cells. Thus,
-while ``c_1`` does indeed represent a hole in ``X``, the chain ``c_2``
+while ``c_1`` does indeed represent a hole, the chain ``c_2``
 does not, since its interior is filled in by ``\mathrm{DEF}``.
 Note that the cycle ``c_1 + c_2`` does not create a second hole,
 since we have ``(c_1 + c_2) - c_1 = c_2 \in B_1(X)``. In other
@@ -314,7 +314,8 @@ of ways. Two of these can easily be described:
   ```
   In other words, the *relative homology* of the pair ``(X,Y)`` is just
   the regular homology of the Lefschetz complex given by the set
-  ``X \setminus Y``.
+  ``X \setminus Y``, with the incidence coefficient map inherited 
+  from ``X``.
 - On a more topological level, one can also think of the relative
   homology of ``(X,Y)`` in the following way. In the complex ``X``,
   identify all cells in ``Y`` to a single point, in the sense of
@@ -329,8 +330,8 @@ of ways. Two of these can easily be described:
   ``Z``. While the details of this latter notion of homology can be
   found in [munkres:84a; Section 7](@cite), for our purposes it suffices
   to note that the Betti numbers in reduced homology can be obtained
-  from the one in regular homology by decreasing the ``0``-th Betti
-  number by ``1``. All other Betti numbers remain unchanged.
+  from the ones in regular homology by decreasing the ``0``-th Betti
+  number by ``1``, and keeping all other Betti numbers unchanged.
 
 The precise mathematical definition of relative homology can be found
 in [munkres:84a; Section 9](@cite), and it is briefly introduced in the
@@ -427,8 +428,8 @@ julia> relative_homology(sc2, ["DE","DH","EH"])
 Again, the ``0``-th Betti number is reduced by one. But this time,
 the first Betti number does not change, as no new holes are created.
 Nevertheless, collapsing the boundary of the triangle to a point
-does create a cavity, and therefore the ``2``-nd Betti is now one.
-One can also just consider the closure of the triangle 
+does create a cavity, and therefore the ``2``-nd Betti number is
+now one. One can also just consider the closure of the triangle 
 ``\mathrm{BCG}`` as a Lefschetz complex ``X``, and use its
 boundary as subcomplex ``Y``. In this case we get:
 
@@ -507,7 +508,7 @@ based on the following intuition:
   *born* at ``k=1``.
 - As one passes from the complex ``X^{(k)}`` to the 
   complex ``X^{(k+1)}``, for ``k = 1,\ldots,n-1,`` these
-  Betti numbers can change in the following ways:
+  Betti numbers can change in a number of ways:
   - A new homology class is created in ``X^{(k+1)}``, which
     leads to an increase in the corresponding Betti number.
     As before, this means that a new homology class
@@ -546,27 +547,193 @@ one obtains the persistence interval ``[b_1,d)``, while
 the death time ``e`` in the interval ``[b_2,e)`` will be
 determined by a later level, i.e., we have ``e > d``.
 
-
+In order to illustrate this informal definition, we consider
+the filtration given by the four simplicial complexes shown
+in the figures. All of these are subcomplexes of, and the
+last one is equal to, one of our earlier examples.
 
 ![The 1-st complex in the filtration](img/persistence1.png)
 ![The 2-nd complex in the filtration](img/persistence2.png)
 ![The 3-rd complex in the filtration](img/persistence3.png)
 ![The 4-th complex in the filtration](img/persistence4.png)
 
+In this simple example, the persistence intervals in each
+dimension can be determined easily:
 
+- **Dimension 0**: The first complex has one connected 
+  component. A second component, namely the vertex
+  ``\mathrm{H}``, is added in ``X^{(2)}``. Both of these 
+  components merge in ``X^{(3)}``, and no additional
+  components are created. In view of the elder rule, this
+  gives the two persistence intervals ``[1,\infty)``
+  and ``[2,3)``.
+- **Dimension 1**: The first hole is created in ``X^{(2)},``
+  given by the cycle ``\mathrm{AB} + \mathrm{AF} +
+  \mathrm{BF}``. Moreover, in ``X^{(3)}`` the hole determined
+  by the chain ``\mathrm{DE} + \mathrm{DH} + \mathrm{EH}``
+  is added to the mix. Finally, in ``X^{(4)}`` the latter hole
+  is removed through filling in the triangle ``\mathrm{DEH}``,
+  while the hole bounded by the cycle ``\mathrm{CD} + \mathrm{DH} +
+  \mathrm{CG} + \mathrm{GH}`` is created. This gives the
+  unbounded persistence intervals ``[2,\infty)`` and
+  ``[4,\infty)``, as well as the bounded one ``[3,4)``.
+- **Dimension 2**: None of the complexes form any cavities,
+  and therefore there are no persistence intervals in 
+  dimension two.
 
+In `ConleyDynamics.jl`, there are two functions that provide
+basic persistence functionality:
 
-[`persistent_homology`](@ref)
-[`lefschetz_filtration`](@ref)
+- The function [`persistent_homology`](@ref) computes the persistence
+  intervals, and it is usually invoked using the command
+  `pinf, ppairs = persistent_homology(lc, filtration)`.
+  It expects two arguments: The first is an underlying
+  Lefschetz complex `lc` of type [`LefschetzComplex`](@ref), which has
+  to be the complex ``X^{(n)}`` in the above notation. The second
+  argument `filtration` is of type `Vector{Int}` and has to have
+  length `lc.ncells`. For each cell index, it contains the integer
+  level ``k`` of the the first complex ``X^{(k)}`` in which the
+  cell appears. The function returns two vectors, `pinf` and `ppairs`,
+  each of which have length `1 + lc.dim`, and which contain
+  the following information:
+  - `pinf[k]` contains a vector of birth times for all unbounded
+    persistence intervals in dimension ``k-1``. It is an empty
+    vector if no such intervals exist.
+  - `ppairs[k]` contains a vector of pairs `(b,d)` for each of the
+    bounded persistence interval ``[b,d)`` in dimension ``k-1``.
+    Again, this vector is empty if no such intervals exist.
+  Note that the integer vector `filtration` has to contain every
+  integer between ``1`` and ``n`` at least once, and only these
+  integers. An error is raised if this is not the case, or if the
+  resulting subcomplexes ``X^{(k)}`` are not closed.
+- The function [`lefschetz_filtration`](@ref) is meant to simplify
+  the construction of the input argument `filtration`, especially
+  in the situation that ``X^{(n)}`` is a proper subcomplex of some
+  ambient Lefschetz complex ``X``. The function is invoked using
+  the form `lcsub, filtration = lefschetz_filtration(lc, partialfil)`.
+  The argument `lc` contains the Lefschetz complex ``X``. The 
+  argument `partialfil` has the type `Vector{Int}` and is of length
+  `lc.ncells`. For each cell index `j` it contains an integer
+  `partialfil[j]` between ``0`` and ``n``. If the cell appears first
+  in complex ``X^{(k)}``, then `partialfil[j] = k`. This time, however,
+  not all cells have to be specified, since the function automatically
+  computes the complex closure at every level. Clearly, this means
+  that the final complex is the closure of all cells with positive
+  `partialfil`-values, and this can be a proper subcomplex of `lc`.
+  The function therefore returns this subcomplex `lcsub`, together
+  with a filtration `filtration` which satisfies the requirements
+  of the function [`persistent_homology`](@ref).
 
+We close this section with two examples illustrating these 
+functions. As first example, we consider the filtration
+given above, which consists of four simplicial complexes.
+In this case the persistence can be computed using the 
+commands:
 
+```julia
+labels     = ["A","B","C","D","E","F","G","H"]
+simplices  = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
+sc         = create_simplicial_complex(labels,simplices)
+filtration = [1,1,1,1,1,2,1,2,
+              1,2,1,2,1,1,1,1,3,3,4,
+              1,4]
+pinf, ppairs = persistent_homology(sc, filtration)
+```
 
+The first three lines establish the simplicial complex
+``X^{(4)}``, while the next command defines the filtration.
+For easier reading, we used different lines for the cells of each
+dimension. Finally, the last command computes the persistence
+intervals. The unbounded ones have the birth times
 
-[dlotko:wanner:18a](@cite)
+```julia
+julia> pinf
+3-element Vector{Vector{Int64}}:
+ [1]
+ [2, 4]
+ []
+```
 
+while the bounded ones are given by
 
+```julia
+julia> ppairs
+3-element Vector{Vector{Tuple{Int64, Int64}}}:
+ [(2, 3)]
+ [(3, 4)]
+ []
+```
 
+This is in accordance with our earlier observations. Notice also
+that the Betti numbers of the final complex ``X^{(4)}`` in the
+filtration can easily be determined via
 
+```julia
+julia> length.(pinf)
+3-element Vector{Int64}:
+ 1
+ 2
+ 0
+```
+
+With the second example we illustrate the use of the function
+[`lefschetz_filtration`](@ref). For this, suppose that the ambient
+Lefschetz complex ``X`` is the final simplicial complex in the
+filtration of the previous example. Within this complex, we 
+consider the following new filtration:
+
+- The complex ``X^{(1)}`` is the closure of ``\{ \mathrm{CD},
+  \mathrm{GH} \}.``
+- The complex ``X^{(2)}`` is the closure of ``X^{(1)} \cup
+  \{ \mathrm{BC}, \mathrm{BG}, \mathrm{DEH} \}.``
+- The complex ``X^{(3)}`` is the closure of ``X^{(2)} \cup
+  \{ \mathrm{BCG} \}.``
+
+The persistent intervals of this filtration can be determined
+using the following commands:
+
+```julia
+labels    = ["A","B","C","D","E","F","G","H"]
+simplices = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
+sc        = create_simplicial_complex(labels,simplices)
+tmpfil    = fill(Int(0),sc.ncells)
+tmpfil[sc.indices["CD"]]  = 1
+tmpfil[sc.indices["GH"]]  = 1
+tmpfil[sc.indices["BC"]]  = 2
+tmpfil[sc.indices["BG"]]  = 2
+tmpfil[sc.indices["DEH"]] = 2
+tmpfil[sc.indices["BCG"]] = 3
+scsub, filtration = lefschetz_filtration(sc, tmpfil)
+psinf, pspairs = persistent_homology(scsub, filtration)
+```
+
+The unbounded persistence intervals have birth times
+
+```julia
+julia> psinf
+3-element Vector{Vector{Int64}}:
+ [1]
+ [2]
+ []
+```
+
+while the bounded persistence intervals are
+
+```julia
+julia> pspairs
+3-element Vector{Vector{Tuple{Int64, Int64}}}:
+ [(1, 2)]
+ []
+ []
+```
+
+Their correctness can immediately be established.
+
+As we mentioned earlier, more information on persistence can be found
+in [edelsbrunner:harer:10a](@cite), which also contains a detailed 
+discussion of the implemented persistence algorithm in the context
+of simplicial complexes. Further examples of persistence computations
+for general Lefschetz complexes are given in [dlotko:wanner:18a](@cite).
 
 ## [References](@id refhomology)
 
