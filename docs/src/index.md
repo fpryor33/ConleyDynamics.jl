@@ -11,6 +11,10 @@ as important special cases. The concept of combinatorial multivector field
 generalizes Forman vector fields, which were originally introduced to study
 Morse theory in a discrete combinatorial setting.
 
+!!! note
+
+     This package and the documentation is still very much work in progress!
+
 ## Features
 
 - Data structures for Lefschetz complexes, in particular simplicial and

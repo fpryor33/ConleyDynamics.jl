@@ -6,7 +6,7 @@ export sparse_from_lists, lists_from_sparse
 Create sparse matrix from lists describing the entries.
 
 The vectors `r`, `c`, and `v` have to have the same length
-and the matric has entry `v[k]` at `(r[k],c[k])`. Zero
+and the matrix has entry `v[k]` at `(r[k],c[k])`. Zero
 entries will be ignored, and multiple entries for the same
 matrix position raise an error.
 

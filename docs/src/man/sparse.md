@@ -73,38 +73,156 @@ methods, it can be added at a later point in time.
 
 ## Creating Sparse Matrices
 
-- [`sparse_from_full`](@ref)
-- [`full_from_sparse`](@ref)
-- [`sparse_from_lists`](@ref)
-- [`lists_from_sparse`](@ref)
-- [`sparse_identity`](@ref)
+The package provides a number of methods for creating sparse 
+matrices with the data type [`SparseMatrix`](@ref). These are
+geared towards their usage within `ConleyDynamics.jl` and are 
+therefore by no means exhaustive:
+
+- [`sparse_from_full`](@ref) is usually invoked in the form
+  `A = sparse_from_full(AF, p=PP)`. The first input argument `AF`
+  has to be a regular Julia integer matrix. This matrix is then
+  converted to sparse format and returned as `A`. If the optional
+  parameter `p` is omitted, the resulting sparse matrix is over
+  the rational numbers ``\mathbb{Q}``, otherwise it is over the
+  finite field with characteristic `PP`.
+- [`full_from_sparse`](@ref) converts a given sparse matrix into
+  a standard full matrix in Julia. The data type of the entries is
+  either `Rational{Int}` or `Int`, depending on whether the sparse
+  input matrix is considered over the rationals ``\mathbb{Q}`` or
+  over a finite field, respectively. When invoking this command, 
+  be mindful of the size of the sparse matrix!
+- [`sparse_from_lists`](@ref) creates a sparse matrix solely
+  based on its nonzero entries and their locations. It expects
+  the following required input arguments, in the order they are
+  listed:
+  - `nr::Int`: Number of rows
+  - `nc::Int`: Number of columns
+  - `tchar`: Field characteristic, which has to be 0 if
+    ``F = \mathbb{Q}`` and a positive prime otherwise
+  - `tzero::T`: Number 0 of type `T`
+  - `tone::T`:  Number 1 of type `T`
+  - `r::Vector{Int}`: Vector of row indices
+  - `c::Vector{Int}`: Vector of column indices
+  - `v::Vector{T}`: Vector of matrix entries
+  The function assumes that the vectors `r`, `c`, and `v` have
+  the same length and that the matrix has entry `v[k]` at the
+  location `(r[k],c[k])`. Zero entries will be ignored, and multiple
+  entries for the same matrix position raise an error. Furthermore,
+  if `tchar>0`, then the entries in `v` are all replaced by their
+  values modulo `tchar`. As mentioned before, if `tchar=0` then
+  the entry type has to be `T = Rational{Int}`, otherwise
+  we have `T = Int`.
+- [`lists_from_sparse`](@ref) takes a sparse matrix and
+  disassembles it into the separate ingredients specified
+  in the discussion of the previous function. In this sense, it
+  is precisely the inverse method of [`sparse_from_lists`](@ref).
+- [`sparse_identity`](@ref) creates a sparse identity matrix.
+  It is invoked as `A = sparse_identity(n, p=PP)`, and returns
+  a sparse identity matrix `A` with `n` rows and `n` columns.
+  If the optional characteristic parameter specified and positive,
+  then the matrix is considered over the finite field with
+  characteristic `PP``, otherwise it is over the rationals
+  ``\mathbb{Q}``.
+
+Of these methods, the function [`sparse_from_lists`](@ref)
+provides the easiest and quickest way to create a sparse
+matrix.
 
 ## Sparse Matrix Access
 
-- [`sparse_get_entry`](@ref)
-- [`sparse_set_entry!`](@ref)
-- [`sparse_get_column`](@ref)
-- [`sparse_get_nz_column`](@ref)
-- [`sparse_minor`](@ref)
+Access to the entries of sparse matrices is provided via the
+following commands:
 
-You can also use `y = A[i,j]` and `A[i,j] = val`.
+- [`sparse_get_entry`](@ref) extracts the matrix entry `val`
+  of the matrix `A` located in row `ri` and column `ci`, if it
+  is invoked using the command `val = sparse_get_entry(A,ri,ci)`.
+- [`sparse_set_entry!`](@ref) sets the matrix entry of the matrix
+  `A` located in row `ri` and column `ci` to the value 'val', if it
+  is invoked using the command `sparse_set_entry!(A,ri,ci,val)`.
+  Internally, this commands makes sure that the above-defined
+  format of the fields of a sparse matrix is preserved. Note that
+  the data type of `val` has to match the type of `A.zero`. Moreover,
+  if the matrix is considered over a finite field the value `val`
+  has to be given as an integer between `0` and `A.char-1`.
+- [`sparse_get_column`](@ref) is invoked as
+  `Acol = sparse_get_column(A,ci)`, and it returns the full `ci`-th
+  column of the matrix `A` as a `Vector{T}` of length `A.nrow`.
+- [`sparse_get_nz_column`](@ref) returns the row indices for the
+  nonzero entries in the `ci`-th column of the sparse matrix `A`,
+  if invoked as `rivec = sparse_get_nz_column(A,ci)`.
+- [`sparse_minor`](@ref) creates a minor from a given sparse
+  matrix `A`. For this, one needs to specify the row and column
+  indices of the minor in the integer vectors `rvec` and `cvec`,
+  respectively, and then invoke the function using the command
+  `AM = sparse_minor(A,rvec,cvec)`. Note that the entries in
+  `rvec` and `cvec` do not have to be in increasing order, but
+  they are not allowed to contain repeated indices.
+
+One can also read and set sparse matrix values using the overloaded
+methods `y = A[i,j]` and `A[i,j] = val`. In the latter case, it is
+up to the user to make sure that `val` respects the underlying sparse
+matrix field.
 
 ## Elementary Matrix Operations
 
-- [`sparse_add_column!`](@ref)
-- [`sparse_add_row!`](@ref)
-- [`sparse_permute`](@ref)
-- [`sparse_remove!`](@ref)
-- [`sparse_multiply`](@ref)
+The following commands perform the basic sparse matrix operations
+that are needed for the functionality of the package:
 
-You can also use `A*A` to compute the product of sparse matrices.
+- [`sparse_add_column!`](@ref) is invoked using the form
+  `sparse_add_column!(A,ci1,ci2,cn,cd)`, and it replaces the
+  `ci1`-th column `column[ci1]` of `A` by `column[ci1] +
+  (cn/cd) * column[ci2]`. This operation automatically performs
+  the computations over the field ``F`` underlying the sparse
+  matrix `A`. In other words, if this field is finite, then it
+  determines the inverse of the argument `cd` as part of the
+  computation.
+- [`sparse_add_row!`](@ref) is invoked using the form
+  `sparse_add_row!(A,ri1,ri2,cn,cd)`, and it replaces the
+  `ri1`-th row `row[ri1]` of `A` by `row[ri1] + (cn/cd) *
+  row[ri2]`. As before, this operation automatically performs
+  the computations over the field ``F`` underlying the sparse
+  matrix `A`.
+- [`sparse_permute`](@ref) creates a new sparse matrix by
+  permuting the row and column indices. It is invoked using the
+  command `AP = sparse_permute(A,pr,pc)`, and the integer
+  vectors `pr` and `pc` have to describe the row and column
+  permutations, respectively.
+- [`sparse_remove!`](@ref) is invoked as `sparse_remove!(A,ri,ci)`
+  and removes the sparse matrix entry in the `ri`-th row
+  and `ci`-th colum, i.e., it effectively sets the entry
+  equal to zero.
+- [`sparse_multiply`](@ref) computes the matrix product of 
+  two sparse matrices. Exceptions are raised if the matrix
+  product is not defined, or if the involved sparse matrices
+  are defined over different fields. One can also use the
+  operator form `A*B` to compute the product of sparse matrices.
+
+As mentioned earlier, additional operations can easily be
+implemented if they become necessary.
 
 ## Sparse Matrix Information
 
-- [`sparse_size`](@ref)
-- [`sparse_low`](@ref)
-- [`sparse_is_sut`](@ref)
-- [`sparse_fullness`](@ref)
-- [`sparse_sparsity`](@ref)
-- [`sparse_show`](@ref)
+Finally, `ConleyDynamics.jl` provides the following functions 
+for quickly extracting certain information from sparse matrices:
+
+- [`sparse_size`](@ref) is invoked as `size = sparse_size(A,dim)`,
+  and it returns the number of rows if `dim=1`, or the number of
+  columns for `dim=2`.
+- [`sparse_low`](@ref) returns the largest row index `ri` of a
+  nonzero entry in the `ci`-th column of the matrix `A`, if used
+  in the form `ri = sparse_low(A,ci)`. In other words, it returns
+  the row index of the lowest nonzero matrix entry in the column.
+- [`sparse_is_sut`](@ref) checks whether a given sparse matrix is
+  strictly upper triangular, and returns either `true` or `false`.
+- [`sparse_fullness`](@ref) returns the fullness of a sparse
+  matrix as a floating point number. Here fullness refers to
+  the ratio of the number of nonzero matrix elements and the
+  total number of matrix entries.
+- [`sparse_sparsity`](@ref) computes the sparseness of a sparse
+  matrix, which is defined as ``1`` minus its fullness, i.e., it
+  is the ratio of the number of zero matrix elements and the total
+  number of matrix entries.
+- [`sparse_show`](@ref) can be used to display a sparse matrix
+  in traditional matrix form at the Julia REPL prompt.
+
 
