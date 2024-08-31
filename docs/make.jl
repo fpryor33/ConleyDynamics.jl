@@ -29,8 +29,8 @@ pageslist = ["Overview" => "index.md",
                  "man/lefschetz.md",
                  "man/homology.md",
                  "man/conley.md",
-                 "man/sparse.md",
                  "man/examples.md",
+                 "man/sparse.md",
                  "man/references.md"
                   ],
              "Core API" => Any[
@@ -38,6 +38,7 @@ pageslist = ["Overview" => "index.md",
                  "apicore/lefschetz.md",
                  "apicore/homology.md",
                  "apicore/conley.md",
+                 "apicore/examples.md",
                  "apicore/plots.md",
                  "apicore/sparse.md",
                  "apicore/apiindex.md"

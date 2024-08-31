@@ -24,6 +24,12 @@ Pages = ["homology.md"]
 Pages = ["conley.md"]
 ```
 
+## [Example Functions](@id indexexample)
+
+```@index
+Pages = ["examples.md"]
+```
+
 ## [Plotting Functions](@id indexplot)
 
 ```@index
