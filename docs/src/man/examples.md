@@ -35,11 +35,111 @@ outlined in the following description for the function
 example_critical_simplex(::Int)
 ```
 
-## Flow on a Moebius Strip
+## Flow on a Cylinder and a Moebius Strip
+
+The next example considers again Forman vector fields, but this
+time on a cylinder and on a Moebius strip. The underlying simplicial
+complexes are given by a horizontal strip of eight triangles, whose
+left and right vertical edges are identified. For the first complex
+`lc1` these edges are identified without twist, while for the
+complex `lc2` they are twisted. See also the labels in the figure.
+
+![Combinatorial flow on cylinder and Moebius strip](img/examplemoebius.png)
+
+Both complexes consist of eight vertices, sixteen edges, and eight
+triangles. The two complexes and Forman vector fields can be generated
+using the function [`example_critical_simplex`](@ref), whose usage
+can be described as follows.
 
 ```@docs; canonical=false
 example_moebius
 ```
+
+Note that for the combinatorial flow on the Moebius strip `lc2` the
+choice of field characteristic ``p`` leads to potentially different 
+connection matrices. While for characteristic ``p=2`` the connection
+matrix has only one nontrivial entry, it has two for ``p=7``.
+
+We only briefly include some sample computations for the latter case.
+One can create the complexes, Forman vector fields, and associated
+connection matrices for ``p=7`` using the following commands:
+
+```julia
+lc1, mvf1, lc2, mvf2 = example_moebius(7)
+cm1 = connection_matrix(lc1,mvf1)
+cm2 = connection_matrix(lc2,mvf2)
+```
+
+For the first example, the combinatorial flow on the cylinder has
+four Morse sets. Two critical equilibria of indices 1 and 2, as well
+as two periodic orbits. This can be shown as follows:
+
+```julia
+julia> cm1.morse
+4-element Vector{Vector{String}}:
+ ["A", "C", "E", "G", "AC", "AG", "CE", "EG"]
+ ["B", "D", "F", "H", "BD", "BH", "DF", "FH"]
+ ["AB"]
+ ["EFG"]
+
+julia> cm1.conley
+4-element Vector{Vector{Int64}}:
+ [1, 1, 0]
+ [1, 1, 0]
+ [0, 1, 0]
+ [0, 0, 1]
+
+julia> sparse_show(cm1.matrix)
+[0   0   0   0   6   0]
+[0   0   0   0   0   1]
+[0   0   0   0   1   0]
+[0   0   0   0   0   6]
+[0   0   0   0   0   0]
+[0   0   0   0   0   0]
+
+julia> print(cm1.labels)
+["A", "AG", "B", "BH", "AB", "EFG"]
+```
+
+In fact, the connection matrix implies the existence of
+connecting orbits from both the index 2 and the index 1
+equilibrium to the two periodic orbits. The connections
+between the stationary states cannot be detected 
+algebraically.
+
+For the second example, the combinatorial flow on the
+Moebius strip, one only obtains three Morse sets. This
+time, there is only one periodic orbit which loops
+around both the top and bottom edges in the figure.
+This is confirmed by the commands
+
+```julia
+julia> cm2.morse
+3-element Vector{Vector{String}}:
+ ["A", "B", "C", "D", "E", "F", "G", "H", "AC", "AH", "BD", "BG", "CE", "DF", "EG", "FH"]
+ ["AB"]
+ ["EFG"]
+
+julia> cm2.conley
+3-element Vector{Vector{Int64}}:
+ [1, 1, 0]
+ [0, 1, 0]
+ [0, 0, 1]
+
+julia> sparse_show(cm2.matrix)
+[0   0   0   0]
+[0   0   0   1]
+[0   0   0   2]
+[0   0   0   0]
+
+julia> print(cm2.labels)
+["A", "BG", "AB", "EFG"]
+```
+
+In this case, the connection matrix is able to identify the
+connecting orbits between the index 2 stationary state and
+both the periodic orbit and the index 1 equilibrium. The 
+latter one is not recognized over the field ``GF(2)``.
 
 ## Nonunique Connection Matrices
 
