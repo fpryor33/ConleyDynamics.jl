@@ -253,15 +253,26 @@ edge on the center triangle. This time, up to a permutation of the
 columns and the rows, this connection matrix is the same as `cm2`
 in the example.
 
-## Further Connection Matrix Examples
+## Forcing Three Different Connection Matrices
 
 The following examples are taken from [mrozek:wanner:p21a](@cite).
 
-![Four sample combinatorial vector fields](img/connectionex.png)
+![Four sample combinatorial vector fields](img/connectionex1.png)
 
 ```@docs; canonical=false
 example_MW_fig02()
 ```
+
+
+![Four sample combinatorial vector fields](img/connectionex2.png)
+
+
+![Four sample combinatorial vector fields](img/connectionex3.png)
+
+
+## Further Connection Matrix Examples
+
+The following examples are taken from [mrozek:wanner:p21a](@cite).
 
 ```@docs; canonical=false
 example_MW_fig01()
