@@ -143,11 +143,115 @@ latter one is not recognized over the field ``GF(2)``.
 
 ## Nonunique Connection Matrices
 
-![An example with nonunique connection matrices](img/multiconn.png)
+Our next example is concerned with another Forman vector field,
+but this time on a larger simplicial complex, as shown in the
+figure.
+
+![An example with nonunique connection matrices](img/examplenonunique1.png)
+
+The simplicial complex is topologically a disk, and it consists
+of 9 vertices, 18 edges, and 10 triangles. The Forman vector field
+has 1 critical vertex, 3 critical edges, and 3 critical triangles,
+as well as 15 Forman arrows. The following example shows that
+for this combinatorial dynamical system, there are two fundamentally
+different connection matrices.
 
 ```@docs; canonical=false
 example_nonunique()
 ```
+
+As mentioned in the docstring for the function [`example_nonunique`](@ref),
+the two Lefschetz complexes `lc1` and `lc2` both represent the above
+simplicial complex. However, they differ in the ordering of the vertex
+labels. This can be seen from the commands
+
+```julia
+julia> print(lc1.labels[1:9])
+["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+julia> print(lc2.labels[1:9])
+["1", "2", "3", "4", "5", "6", "8", "9", "7"]
+```
+
+In other words, `lc1` and `lc2` are different representations of
+the same complex. Nevertheless, computing the connection matrices
+as in the example gives two distinct connection matrices. This is
+purely a consequence of the different ordering of the rows and 
+columns in the boundary matrix.
+
+To shed further light on this issue, notice that the triangle
+at the center of the complex forms an attracting periodic orbit, 
+whose Conley index has Betti numbers 1 in dimensions 0 and 1.
+One can break this periodic orbit by removing one of its three
+arrows, and replacing it with two critical cells of dimensions
+0 and 1. The next image shows two different ways of doing this.
+
+![Forcing different connection matrices](img/examplenonunique2.png)
+
+In the image on the left, the vector `["7", "79"]` is removed,
+while the one on the right breaks up `["8", "78"]`. The corresponding
+modified Forman vector fields, and their connection matrices, can be
+created as follows:
+
+```julia
+mvf1 = deepcopy(mvf);
+mvf2 = deepcopy(mvf);
+deleteat!(mvf1,6);
+deleteat!(mvf2,8);
+cm1mod = connection_matrix(lc1, mvf1);
+cm2mod = connection_matrix(lc2, mvf2);
+```
+
+Both of the new Forman vector fields are gradient vector fields, and
+in view of a result in [mrozek:wanner:p21a](@cite), their connection
+matrices are therefore uniquely determined. The connection matrix for
+the vector field `mvf1` is of the form
+
+```julia
+julia> sparse_show(cm1mod.matrix)
+[0   0   1   0   1   0   0   0   0]
+[0   0   1   0   1   0   0   0   0]
+[0   0   0   0   0   0   1   1   0]
+[0   0   0   0   0   0   0   1   0]
+[0   0   0   0   0   0   1   1   0]
+[0   0   0   0   0   0   0   1   1]
+[0   0   0   0   0   0   0   0   0]
+[0   0   0   0   0   0   0   0   0]
+[0   0   0   0   0   0   0   0   0]
+
+julia> print(cm1mod.labels)
+["2", "7", "29", "45", "67", "79", "168", "349", "789"]
+```
+
+Notice that this matrix shows that there is a connection from
+the triangle `349` to the edge `79`, but there are no connections
+from the triangle `168` to the critical edge on the center triangle.
+In fact, up to reordering the columns and rows, this connection 
+matrix is the same as `cm1` in the example.
+
+Similarly, the connection matrix for the second modified Forman
+vector field `mvf2` is uniquely determined, and it is given by
+
+```julia
+julia> sparse_show(cm2mod.matrix)
+[0   0   1   0   1   0   0   0   0]
+[0   0   1   0   1   0   0   0   0]
+[0   0   0   0   0   0   1   1   0]
+[0   0   0   0   0   0   0   1   0]
+[0   0   0   0   0   0   1   1   0]
+[0   0   0   0   0   0   1   0   1]
+[0   0   0   0   0   0   0   0   0]
+[0   0   0   0   0   0   0   0   0]
+[0   0   0   0   0   0   0   0   0]
+
+julia> print(cm2mod.labels)
+["2", "8", "29", "45", "67", "78", "168", "349", "789"]
+```
+
+Now there is a connection from the triangle `168` to the edge `78`,
+but there are no connections from the triangle `349` to the critical
+edge on the center triangle. This time, up to a permutation of the
+columns and the rows, this connection matrix is the same as `cm2`
+in the example.
 
 ## Further Connection Matrix Examples
 
