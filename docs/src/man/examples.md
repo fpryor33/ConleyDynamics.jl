@@ -255,20 +255,127 @@ in the example.
 
 ## Forcing Three Different Connection Matrices
 
-The following examples are taken from [mrozek:wanner:p21a](@cite).
+The next example is taken from [mrozek:wanner:p21a](@cite), and it 
+revolves around the combinatorial vector field on a simplicial 
+complex shown in the top left part of the figure.
 
-![Four sample combinatorial vector fields](img/connectionex1.png)
+![An example with three connection matrices](img/connectionex1.png)
+
+This combinatorial vector field is again of Forman type. It has 
+a periodic orbit, which is shown in yellow in the top right part
+of the figure. In addition to three index 1 equilibria, there are
+two of index 2. The top right part shows that from these two index
+2 cells there are a combined total of five connecting orbits to
+the index 1 cells and to the periodic orbit. Its Morse decomposition
+is shown in the lower part of the figure. While the Morse sets are
+indicated by different colors, the Conley-Morse graph is shown on
+the lower right.
+
+As the following docstring for [`example_MW_fig02`](@ref) demonstrates,
+the connection matrix, which this time is computed over the rationals
+``\mathbb{Q}``, only identifies three of the five connecting orbits
+between index 2 invariant sets and index 1 sets.
 
 ```@docs; canonical=false
 example_MW_fig02()
 ```
 
+It turns out that this combinatorial dynamical system has multiple
+possible connection matrices as well. In fact, it has three. In order
+to find them we use the same approach as in the last example, and 
+break the periodic orbit by turning one of its arrows into two
+critical cells. Since there are three arrows in the periodic 
+orbit, this can be accomplished in three different ways. They
+are indicated in the next figure.
 
-![Four sample combinatorial vector fields](img/connectionex2.png)
+![Three different ways to break up the periodic orbit](img/connectionex2.png)
 
+The resulting Forman vector fields are all of gradient type, and
+therefore have a unique connection matrix. These three vector
+fields can be obtained via the function [`example_MW_fig02`](@ref)
+by specifying the integer argument as `1`, `2`, or `3`. For the
+first vector field one obtains the following connection matrix:
 
-![Four sample combinatorial vector fields](img/connectionex3.png)
+```julia
+julia> lc1, mvf1 = example_MW_fig02(1);
 
+julia> cm1 = connection_matrix(lc1, mvf1);
+
+julia> print(cm1.labels)
+["A", "C", "AC", "BD", "CD", "DF", "ABC", "EFG"]
+
+julia> full_from_sparse(cm1.matrix)
+8×8 Matrix{Rational{Int64}}:
+ 0  0  -1  -1  0  0   0  0
+ 0  0   1   1  0  0   0  0
+ 0  0   0   0  0  0  -1  0
+ 0  0   0   0  0  0   1  0
+ 0  0   0   0  0  0  -1  0
+ 0  0   0   0  0  0   0  1
+ 0  0   0   0  0  0   0  0
+ 0  0   0   0  0  0   0  0
+```
+
+In contrast, the second vector field leads to:
+
+```julia
+julia> lc2, mvf2 = example_MW_fig02(2);
+
+julia> cm2 = connection_matrix(lc2, mvf2);
+
+julia> print(cm2.labels)
+["A", "D", "AC", "BD", "DE", "DF", "ABC", "EFG"]
+
+julia> full_from_sparse(cm2.matrix)
+8×8 Matrix{Rational{Int64}}:
+ 0  0  -1  -1  0  0   0   0
+ 0  0   1   1  0  0   0   0
+ 0  0   0   0  0  0  -1   0
+ 0  0   0   0  0  0   1   0
+ 0  0   0   0  0  0   0  -1
+ 0  0   0   0  0  0   0   1
+ 0  0   0   0  0  0   0   0
+ 0  0   0   0  0  0   0   0
+```
+
+Finally, the third gradient vector field gives:
+
+```julia
+julia> lc3, mvf3 = example_MW_fig02(3);
+
+julia> cm3 = connection_matrix(lc3, mvf3);
+
+julia> print(cm3.labels)
+["A", "E", "AC", "BD", "CE", "DF", "ABC", "EFG"]
+
+julia> full_from_sparse(cm3.matrix)
+8×8 Matrix{Rational{Int64}}:
+ 0  0  -1  -1  0  0   0  0
+ 0  0   1   1  0  0   0  0
+ 0  0   0   0  0  0  -1  0
+ 0  0   0   0  0  0   1  0
+ 0  0   0   0  0  0   0  0
+ 0  0   0   0  0  0   0  1
+ 0  0   0   0  0  0   0  0
+ 0  0   0   0  0  0   0  0
+```
+
+This is finally the connection matrix that was originally returned
+for the Forman vector field with periodic orbit. One could have
+obtained the remaining two also through cell permutations.
+
+Notice that these three matrices combined do identify all of the
+above connections. It was shown in [mrozek:wanner:p21a](@cite)
+that these matrices are different connection matrices for the
+original Forman vector field with periodic orbit, as long as the
+newly introduced index 1 and 0 equilibria are identified with the
+Conley index of the periodic solution. For the sake of completeness,
+the next figure shows the Morse decompositions for all three
+combinatorial gradient flows. In the Conley-Morse graphs, blue
+arrows correspond to the heteroclinic orbits that are identified
+by the associated connection matrix.
+
+![Morse decompositions for the three gradient vector fields](img/connectionex3.png)
 
 ## Further Connection Matrix Examples
 
