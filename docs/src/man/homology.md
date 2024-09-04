@@ -184,7 +184,7 @@ following informal interpretations of the Betti numbers:
   in ``X``.
 
 In general, one can show that ``\beta_k(X)`` represents the
-number of independent ``(k+1)``-dimensional holes in the
+number of independent ``k``-dimensional holes in the
 Lefschetz complex ``X``. For more details, see [munkres:84a](@cite).
 
 The package `ConleyDynamics.jl` provides one function to compute
