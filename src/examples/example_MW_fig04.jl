@@ -30,12 +30,18 @@ julia> full_from_sparse(cm1.matrix)
  0  0  0  1
  0  0  0  0
 
+julia> print(cm1.labels)
+["A", "a", "b", "alpha"]
+
 julia> full_from_sparse(cm2.matrix)
 4×4 Matrix{Int64}:
  0  0  0  0
  0  0  0  0
  0  0  0  1
  0  0  0  0
+
+julia> print(cm2.labels)
+["A", "c", "b", "alpha"]
 ```
 """
 function example_MW_fig04()
