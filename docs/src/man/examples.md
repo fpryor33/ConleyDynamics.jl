@@ -15,9 +15,153 @@ fields on a variety of Lefschetz complexes. Each example has its own
 associated function, so that users can quickly create examples
 on their own by taking the respective source files as templates.
 
+## A One-Dimensional Forman Field
+
+Our first example is taken from [batko:etal:20a; Figure 1](@cite),
+and it is a Forman vector field on a one-dimensional simplicial
+complex as shown in the figure.
+
+![A one-dimensional simplicial complex flow](img/examplebkmw1a.png)
+
+The simplicial complex and Forman vector field can be created using
+the function [`example_BKMW20_fig1`](@ref):
+
+```@docs; canonical=false
+example_BKMW20_fig1()
+```
+
+The commands from the docstring show that the connection matrix has
+five rows and columns. The last three of these correspond to the
+critical cells ``\mathrm{F}``, ``\mathrm{BF}``, and ``\mathrm{DE}``,
+while the first two correspond to the two generators of the homological
+Conley index of the periodic orbit, given by ``\mathrm{A}`` and
+``\mathrm{AD}``.
+
+![Morse decomposition of the one-dimensional example](img/examplebkmw1b.png)
+
+The full Morse decomposition of this combinatorial dynamical system
+is depicted in the second figure, and all four Morse set are indicated
+in the simplicial complex by different colors. They are also listed,
+together with their Conley indices, in the following Julia output:
+
+```julia
+julia> cm.morse
+4-element Vector{Vector{String}}:
+ ["A", "C", "D", "AC", "AD", "CD"]
+ ["F"]
+ ["BF"]
+ ["DE"]
+
+julia> cm.conley
+4-element Vector{Vector{Int64}}:
+ [1, 1]
+ [1, 0]
+ [0, 1]
+ [0, 1]
+```
+
+Notice that only two heteroclinic orbits are reflected in the
+connection matrix. These are the connections between the unstable
+cell ``\mathrm{DE}`` and both the equilibrium ``\mathrm{F}`` and
+the periodic orbit. In contrast, the two heteroclinics between
+the index one cell ``\mathrm{BF}`` and ``\mathrm{F}`` cancel
+algebraically.
+
+## A Planar Forman Vector Field
+
+Our second example was originally discussed in the context of 
+[batko:etal:20a; Figure 3](@cite), and it consists of a Forman 
+vector field on a topological disk, as shown in the associated
+figure.
+
+![A planar simplicial complex flow](img/examplebkmw3a.png)
+
+The disk is represented as a simplicial complex with 10 vertices,
+19 edges, and 10 triangles. The Forman vector field has 7 critical
+cells, and 16 arrows. Both the simplicial complex and the Forman
+vector field can be defined using the function
+[`example_BKMW20_fig3`](@ref):
+
+```@docs; canonical=false
+example_BKMW20_fig3()
+```
+
+![Morse decomposition of the planar flow](img/examplebkmw3c.png)
+
+The Morse decomposition of this example is shown in the second
+figure. Its eight Morse sets and associated Conley indices are
+given by
+
+```julia
+julia> cm.morse
+8-element Vector{Vector{String}}:
+ ["D"]
+ ["E"]
+ ["F", "G", "I", "J", "FG", "FI", "GJ", "IJ"]
+ ["BF"]
+ ["EF"]
+ ["HI"]
+ ["ADE"]
+ ["FGJ"]
+
+julia> cm.conley
+8-element Vector{Vector{Int64}}:
+ [1, 0, 0]
+ [1, 0, 0]
+ [1, 1, 0]
+ [0, 1, 0]
+ [0, 1, 0]
+ [0, 1, 0]
+ [0, 0, 1]
+ [0, 0, 1]
+```
+
+We would like to point out that the collection of Morse sets
+does not in general encompass all possible isolated invariant
+sets for the combinatorial dynamical system. Consider for 
+example the set ``S`` shown in light blue in the next figure.
+
+![A nontrivial isolated invariant set](img/examplebkmw3b.png)
+
+Its mouth is depicted in dark blue, and it is clearly closed.
+In addition, the set ``S`` decomposes into arrows and critical
+cells, and one can show that it is invariant. Thus, it is in 
+fact an isolated invariant set for this Forman vector field.
+Note also that this cell does not correspond to an interval
+in the Conley-Morse graph either, and this is indicated via gray
+shading in the above image of the graph. The set ``S``, together
+with its closure and its mouth, can be generated using the 
+following commands:
+
+```julia
+S = ["ADE","DEH","EFI","EHI",
+     "DE","EF","EH","EI","FG","FI","GJ","HI","IJ",
+     "F","G","I","J"]
+clS, moS = lefschetz_clomo_pair(lc,S)
+```
+
+Then the Conley index of ``S`` is given by
+
+```julia
+julia> conley_index(lc,S)
+3-element Vector{Int64}:
+ 0
+ 1
+ 0
+
+julia> relative_homology(lc,clS,moS)
+3-element Vector{Int64}:
+ 0
+ 1
+ 0
+```
+
+Notice that this is the same as the relative homology of the
+pair ``(\mathrm{cl}\, S, \mathrm{mo}\, S)``, as expected.
+
 ## The Multivector Field from the Logo
 
-Our first example is taken from [mrozek:wanner:p21a; Figure 1](@cite),
+This example is taken from [mrozek:wanner:p21a; Figure 1](@cite),
 and it is visualized in the accompanying figure.
 
 ![The logo multivector field](img/multivectorex.png)
@@ -534,51 +678,106 @@ contracting ``\{ A, a \}``.
 
 ## Subdividing a Multivector
 
-[mrozek:wanner:p21a; Figure 11](@cite)
-
+Our last example taken from [mrozek:wanner:p21a](@cite) is concerned
+with turning a given multivector field into a Forman vector field
+by further subdividing the multivectors. For this, consider the
+three complexes and combinatorial vector fields shown in the
+associated figure, see also [mrozek:wanner:p21a; Figure 11](@cite).
 
 ![Subdividing a multivector](img/examplesubdivide.png)
 
-
+The depicted combinatorial dynamical systems all use the same
+Lefschetz complex, which is obtained from a simplicial complex
+by removing two vertices. In addition to the multivector field
+shown in the leftmost panel, we also consider two Forman vector
+fields. Notice that the multivector field has one multivector
+of size four, which is given by ``\{ \mathrm{C}, \mathrm{AC}, 
+\mathrm{BC}, \mathrm{ABC} \}``. This vector can be split into
+two Forman arrows, and in view of the required local closedness
+this can be achieved in precisely two ways. The splitting into
+the arrows ``\{ \mathrm{C}, \mathrm{AC} \}`` and ``\{ \mathrm{BC},
+\mathrm{ABC} \}`` gives the Forman vector field shown in the middle
+panel, while the one depicted in the rightmost panel uses the
+arrows ``\{ \mathrm{C}, \mathrm{BC} \}`` and ``\{ \mathrm{AC},
+\mathrm{ABC} \}``. These fields can be created using the
+function [`example_MW_fig11`](@ref):
 
 ```@docs; canonical=false
 example_MW_fig11()
 ```
 
-## Forman Vector Field Examples
+The different combinatorial vector fields can be selected via
+the function argument, which is an integer between `0` and `2`,
+from left to right in the figure. Thus, all fields and connection
+matrices can be computed using the commands
 
-The following examples are taken from [batko:etal:20a](@cite).
-
-
-[batko:etal:20a; Figure 1](@cite)
-
-
-![A one-dimensional simplicial complex flow](img/examplebkmw1a.png)
-
-
-```@docs; canonical=false
-example_BKMW20_fig1()
+```julia
+lc0, mvf0 = example_MW_fig11(0)
+lc1, mvf1 = example_MW_fig11(1)
+lc2, mvf2 = example_MW_fig11(2)
+cm0 = connection_matrix(lc0,mvf0)
+cm1 = connection_matrix(lc1,mvf1)
+cm2 = connection_matrix(lc2,mvf2)
 ```
 
-![Morse decomposition of the one-dimensional example](img/examplebkmw1b.png)
+All three vector fields give rise to the same Morse decomposition,
+since in each case the vectors of length at least two are regular.
+This can be seen for the multivector field below, and is analogous
+for the two Forman vector fields.
 
+```julia
+julia> cm0.morse
+5-element Vector{Vector{String}}:
+ ["A"]
+ ["B"]
+ ["AB"]
+ ["CD"]
+ ["CE"]
 
-
-
-[batko:etal:20a; Figure 3](@cite)
-
-
-![A planar simplicial complex flow](img/examplebkmw3a.png)
-
-```@docs; canonical=false
-example_BKMW20_fig3()
+julia> cm0.conley
+5-element Vector{Vector{Int64}}:
+ [1, 0, 0]
+ [1, 0, 0]
+ [0, 1, 0]
+ [0, 1, 0]
+ [0, 1, 0]
 ```
 
+The three connection matrices are as follows:
 
-![A nontrivial isolated invariant set](img/examplebkmw3b.png)
+```julia
+julia> full_from_sparse(cm0.matrix)
+5×5 Matrix{Rational{Int64}}:
+ 0  0  -1   0   0
+ 0  0   1  -1  -1
+ 0  0   0   0   0
+ 0  0   0   0   0
+ 0  0   0   0   0
 
-![Morse decomposition of the planar flow](img/examplebkmw3c.png)
+julia> full_from_sparse(cm1.matrix)
+5×5 Matrix{Rational{Int64}}:
+ 0  0  -1  -1  -1
+ 0  0   1   0   0
+ 0  0   0   0   0
+ 0  0   0   0   0
+ 0  0   0   0   0
 
+julia> full_from_sparse(cm2.matrix)
+5×5 Matrix{Rational{Int64}}:
+ 0  0  -1   0   0
+ 0  0   1  -1  -1
+ 0  0   0   0   0
+ 0  0   0   0   0
+ 0  0   0   0   0
+```
+
+Notice that the connection matrices for the two Forman vector
+fields are uniquely determined, since both are gradient vector
+fields. The matrices are, however, different. At first glance,
+the connection matrix for `mvf0` is equal to the one for
+`mvf2`. Yet, this is another example of nonuniqueness, and one
+could produce also the connection matrix for `mvf1` through a
+reordering of the cells in the Lefschetz complex.
 
 ## [References](@id refexamples)
 

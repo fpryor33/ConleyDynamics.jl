@@ -20,11 +20,11 @@ julia> cm = connection_matrix(lc, mvf);
 
 julia> full_from_sparse(cm.matrix)
 5×5 Matrix{Rational{Int64}}:
- 0  0  1  -1  -1
- 0  0  1   0   0
- 0  0  0   0   0
- 0  0  0   0   0
- 0  0  0   0   0
+ 0  0  -1  -1  -1
+ 0  0   1   0   0
+ 0  0   0   0   0
+ 0  0   0   0   0
+ 0  0   0   0   0
 ```
 """
 function example_MW_fig11(mvftype=0)
@@ -59,15 +59,15 @@ function example_MW_fig11(mvftype=0)
 
     # Start with the edges
 
-    bndmatrix[[1,2],4] = [1; 1]     # AB
-    bndmatrix[[1,3],5] = [1; 1]     # AC
-    bndmatrix[[2,3],6] = [1; 1]     # BC
-    bndmatrix[3,7] = 1              # CD
-    bndmatrix[3,8] = 1              # CE
+    bndmatrix[[1,2],4] = [-1; 1]     # AB
+    bndmatrix[[1,3],5] = [-1; 1]     # AC
+    bndmatrix[[2,3],6] = [-1; 1]     # BC
+    bndmatrix[3,7] = -1              # CD
+    bndmatrix[3,8] = -1              # CE
 
     # Move on to the triangle
 
-    bndmatrix[[4,5,6],9] = [1; 1; 1]     # ABC 
+    bndmatrix[[4,5,6],9] = [1; -1; 1]     # ABC 
 
     # Construct the Lefschetz complex struct
     

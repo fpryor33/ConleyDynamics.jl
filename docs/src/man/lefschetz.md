@@ -315,7 +315,7 @@ to the other, one just has to exchange two vertices, and we write
 ```
 
 For more complicated reorderings, one has to represent the
-corrresponding vertex permutation as a sequence of such exchanges.
+corresponding vertex permutation as a sequence of such exchanges.
 Using these oriented simplices we can define the boundary operator
 
 ```math

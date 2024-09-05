@@ -27,7 +27,7 @@ complexes are important for this introduction:
 
 - A *face* of a simplex is any of its subsets. Notice that every simplex is
   a face of itself, and it is the only face that has the same dimension
-  as the simplex. Faces whose dimension is strictly smaller are referrred
+  as the simplex. Faces whose dimension is strictly smaller are referred
   to as *proper faces*.
 - The *boundary* of a simplex ``\sigma`` is the collection of all proper
   faces of ``\sigma``. For a triangle, this amounts to all three edges and
