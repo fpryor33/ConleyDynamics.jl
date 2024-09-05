@@ -1,7 +1,7 @@
-export example_MW_fig11
+export example_subdivision
 
 """
-    lc, mvf = example_MW_fig11(mvftype)
+    lc, mvf = example_subdivision(mvftype)
 
 Create the Lefschetz complex and multivector field for the example
 from Figure 11 in the connection matrix paper by *Mrozek & Wanner*.
@@ -14,7 +14,7 @@ and the multivector field `mvf`.
 
 # Examples
 ```jldoctest
-julia> lc, mvf = example_MW_fig11(1);
+julia> lc, mvf = example_subdivision(1);
 
 julia> cm = connection_matrix(lc, mvf);
 
@@ -27,7 +27,7 @@ julia> full_from_sparse(cm.matrix)
  0  0   0   0   0
 ```
 """
-function example_MW_fig11(mvftype=0)
+function example_subdivision(mvftype=0)
     #
     # Create the combinatorial vector field information for the example in
     # Figure 11 of the connection matrix paper by Mrozek & Wanner. The function

@@ -24,10 +24,10 @@ complex as shown in the figure.
 ![A one-dimensional simplicial complex flow](img/examplebkmw1a.png)
 
 The simplicial complex and Forman vector field can be created using
-the function [`example_BKMW20_fig1`](@ref):
+the function [`example_forman1d`](@ref):
 
 ```@docs; canonical=false
-example_BKMW20_fig1()
+example_forman1d()
 ```
 
 The commands from the docstring show that the connection matrix has
@@ -80,10 +80,10 @@ The disk is represented as a simplicial complex with 10 vertices,
 19 edges, and 10 triangles. The Forman vector field has 7 critical
 cells, and 16 arrows. Both the simplicial complex and the Forman
 vector field can be defined using the function
-[`example_BKMW20_fig3`](@ref):
+[`example_forman2d`](@ref):
 
 ```@docs; canonical=false
-example_BKMW20_fig3()
+example_forman2d()
 ```
 
 ![Morse decomposition of the planar flow](img/examplebkmw3c.png)
@@ -169,10 +169,10 @@ and it is visualized in the accompanying figure.
 Clearly, this is the multivector field from the `ConleyDynamics.jl`
 logo. Since it was already discussed in detail in the [Tutorial](@ref),
 we only show how the underlying simplicial complex and the multivector
-field can be created quickly using the function [`example_MW_fig01`](@ref):
+field can be created quickly using the function [`example_julia_logo`](@ref):
 
 ```@docs; canonical=false
-example_MW_fig01()
+example_julia_logo()
 ```
 
 The Morse sets and associated Conley indices can be accessed using
@@ -451,13 +451,13 @@ is shown in the lower part of the figure. While the Morse sets are
 indicated by different colors, the Conley-Morse graph is shown on
 the lower right.
 
-As the following docstring for [`example_MW_fig02`](@ref) demonstrates,
+As the following docstring for [`example_three_cm`](@ref) demonstrates,
 the connection matrix, which this time is computed over the rationals
 ``\mathbb{Q}``, only identifies three of the five connecting orbits
 between index 2 invariant sets and index 1 sets.
 
 ```@docs; canonical=false
-example_MW_fig02()
+example_three_cm()
 ```
 
 It turns out that this combinatorial dynamical system has multiple
@@ -472,12 +472,12 @@ are indicated in the next figure.
 
 The resulting Forman vector fields are all of gradient type, and
 therefore have a unique connection matrix. These three vector
-fields can be obtained via the function [`example_MW_fig02`](@ref)
+fields can be obtained via the function [`example_three_cm`](@ref)
 by specifying the integer argument as `1`, `2`, or `3`. For the
 first vector field one obtains the following connection matrix:
 
 ```julia
-julia> lc1, mvf1 = example_MW_fig02(1);
+julia> lc1, mvf1 = example_three_cm(1);
 
 julia> cm1 = connection_matrix(lc1, mvf1);
 
@@ -499,7 +499,7 @@ julia> full_from_sparse(cm1.matrix)
 In contrast, the second vector field leads to:
 
 ```julia
-julia> lc2, mvf2 = example_MW_fig02(2);
+julia> lc2, mvf2 = example_three_cm(2);
 
 julia> cm2 = connection_matrix(lc2, mvf2);
 
@@ -521,7 +521,7 @@ julia> full_from_sparse(cm2.matrix)
 Finally, the third gradient vector field gives:
 
 ```julia
-julia> lc3, mvf3 = example_MW_fig02(3);
+julia> lc3, mvf3 = example_three_cm(3);
 
 julia> cm3 = connection_matrix(lc3, mvf3);
 
@@ -579,10 +579,10 @@ as the subset of the depicted simplicial complex, where the vertices
 ``\mathrm{A}``, ``\mathrm{B}``, ``\mathrm{D}``, ``\mathrm{E}``, and
 ``\mathrm{F}`` have been removed. This Lefschetz complex `lc` and 
 the depicted multivector field `mvf` can be created using the
-function [`example_MW_fig03`](@ref):
+function [`example_multiflow`](@ref):
 
 ```@docs; canonical=false
-example_MW_fig03()
+example_multiflow()
 ```
 
 As the docstring shows, this example has a trivial connection
@@ -645,10 +645,10 @@ cells ``\alpha`` and ``b``, as well as the two regular multivectors
 ``\{ A, a \}`` and ``\{ B, c \}``. For this small example, one can
 easily determine the Morse decomposition, and it is shown in the
 rightmost panel. The example can be generated in `ConleyDynamics.jl`
-using the function [`example_MW_fig04`](@ref):
+using the function [`example_small_periodicity`](@ref):
 
 ```@docs; canonical=false
-example_MW_fig04()
+example_small_periodicity()
 ```
 
 The function provides two different representations of the same
@@ -700,10 +700,10 @@ the arrows ``\{ \mathrm{C}, \mathrm{AC} \}`` and ``\{ \mathrm{BC},
 panel, while the one depicted in the rightmost panel uses the
 arrows ``\{ \mathrm{C}, \mathrm{BC} \}`` and ``\{ \mathrm{AC},
 \mathrm{ABC} \}``. These fields can be created using the
-function [`example_MW_fig11`](@ref):
+function [`example_subdivision`](@ref):
 
 ```@docs; canonical=false
-example_MW_fig11()
+example_subdivision()
 ```
 
 The different combinatorial vector fields can be selected via
@@ -712,9 +712,9 @@ from left to right in the figure. Thus, all fields and connection
 matrices can be computed using the commands
 
 ```julia
-lc0, mvf0 = example_MW_fig11(0)
-lc1, mvf1 = example_MW_fig11(1)
-lc2, mvf2 = example_MW_fig11(2)
+lc0, mvf0 = example_subdivision(0)
+lc1, mvf1 = example_subdivision(1)
+lc2, mvf2 = example_subdivision(2)
 cm0 = connection_matrix(lc0,mvf0)
 cm1 = connection_matrix(lc1,mvf1)
 cm2 = connection_matrix(lc2,mvf2)

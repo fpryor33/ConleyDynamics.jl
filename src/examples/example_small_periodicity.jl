@@ -1,7 +1,7 @@
-export example_MW_fig04
+export example_small_periodicity
 
 """
-    lc1, lc2, mvf = example_MW_fig04()
+    lc1, lc2, mvf = example_small_periodicity()
 
 Create two representations of the Lefschetz complex and
 the multivector field for the example from Figure 4 in
@@ -17,7 +17,7 @@ as well as the multivector field `mvf`.
 
 # Examples
 ```jldoctest
-julia> lc1, lc2, mvf = example_MW_fig04();
+julia> lc1, lc2, mvf = example_small_periodicity();
 
 julia> cm1 = connection_matrix(lc1, mvf);
 
@@ -44,7 +44,7 @@ julia> print(cm2.labels)
 ["A", "c", "b", "alpha"]
 ```
 """
-function example_MW_fig04()
+function example_small_periodicity()
     #
     # Create two representations of the Lefschetz complex
     # and the multivector field for the example from 

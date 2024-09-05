@@ -1,7 +1,7 @@
-export example_MW_fig02
+export example_three_cm
 
 """
-    lc, mvf, coords = example_MW_fig02(mvftype)
+    lc, mvf, coords = example_three_cm(mvftype)
 
 Create the simplicial complex and multivector field for the example
 from Figure 2 in the connection matrix paper by *Mrozek & Wanner*.
@@ -15,7 +15,7 @@ return value `coords` gives a vector of coordinates for the vertices.
 
 # Examples
 ```jldoctest
-julia> lc, mvf = example_MW_fig02(0);
+julia> lc, mvf = example_three_cm(0);
 
 julia> cm = connection_matrix(lc, mvf);
 
@@ -34,7 +34,7 @@ julia> full_from_sparse(cm.matrix)
  0  0  0   0   0  0   0  0
 ```
 """
-function example_MW_fig02(mvftype=0)
+function example_three_cm(mvftype=0)
     #
     # Create the combinatorial vector field information for the example in
     # Figure 2 of the connection matrix paper by Mrozek & Wanner. The function

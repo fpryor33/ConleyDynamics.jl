@@ -1,7 +1,7 @@
-export example_BKMW20_fig3
+export example_forman2d
 
 """
-    lc, mvf, coords = example_BKMW20_fig3()
+    lc, mvf, coords = example_forman2d()
 
 Create the simplicial complex and multivector field
 for the example from Figure 3 in the FoCM 2020 paper
@@ -14,7 +14,7 @@ gives a vector of coordinates for the vertices.
 
 # Examples
 ```jldoctest
-julia> lc, mvf = example_BKMW20_fig3();
+julia> lc, mvf = example_forman2d();
 
 julia> cm = connection_matrix(lc, mvf);
 
@@ -33,7 +33,7 @@ julia> print(cm.labels)
 ["D", "E", "F", "GJ", "BF", "EF", "HI", "ADE", "FGJ"]
 ```
 """
-function example_BKMW20_fig3()
+function example_forman2d()
     # Create the simplicial complex and multivector field for the example
     # from Figure 3 in the FoCM 2020 paper by Batko, Kaczynski, Mrozek,
     # and Wanner.

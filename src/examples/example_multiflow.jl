@@ -1,7 +1,7 @@
-export example_MW_fig03
+export example_multiflow
 
 """
-    lc, mvf = example_MW_fig03()
+    lc, mvf = example_multiflow()
 
 Create the Lefschetz complex and multivector field for the example
 from Figure 3 in the connection matrix paper by *Mrozek & Wanner*.
@@ -11,7 +11,7 @@ the multivector field `mvf`.
 
 # Examples
 ```jldoctest
-julia> lc, mvf = example_MW_fig03();
+julia> lc, mvf = example_multiflow();
 
 julia> cm = connection_matrix(lc, mvf);
 
@@ -25,7 +25,7 @@ julia> print(cm.labels)
 ["BD", "DF", "AC", "CE"]
 ```
 """
-function example_MW_fig03()
+function example_multiflow()
     #
     # Create the multivector field information for the example in
     # Figure 3 of the connection matrix paper by Mrozek & Wanner.

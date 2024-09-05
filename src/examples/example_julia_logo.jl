@@ -1,7 +1,7 @@
-export example_MW_fig01
+export example_julia_logo
 
 """
-    lc, mvf = example_MW_fig01()
+    lc, mvf = example_julia_logo()
 
 Create the simplicial complex and multivector field
 for the example from Figure 1 in the connection matrix
@@ -12,7 +12,7 @@ and the multivector field `mvf`.
 
 # Examples
 ```jldoctest
-julia> lc, mvf = example_MW_fig01();
+julia> lc, mvf = example_julia_logo();
 
 julia> cm = connection_matrix(lc, mvf);
 
@@ -25,7 +25,7 @@ julia> print(cm.labels)
 ["D", "AC", "ABC"]
 ```
 """
-function example_MW_fig01()
+function example_julia_logo()
     # Create the simplicial complex and multivector field for the example
     # from Figure 1 in the connection matrix paper by Mrozek & Wanner.
     
