@@ -14,3 +14,12 @@ The detailed documentation can be found
 
 ![](docs/src/man/img/multivectorex.png)
 
+## Contributing
+
+Currently, this repository does not allow any outside contributors. But
+if you are interested in getting involved, let me know!
+
+## License
+
+ConleyDynamics.jl is released under the MIT license.
+
