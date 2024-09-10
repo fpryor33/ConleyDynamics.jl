@@ -50,10 +50,10 @@ julia> using ConleyDynamics
 
 The [Tutorial](@ref) briefly explains how to get started with
 `ConleyDynamics.jl`. More details, including on the underlying mathematics,
-are provided in the following four sections, which cover Lefschetz complexes,
-homology, Conley theory including connection matrices, and sparse matrices,
-respectively. Finally, a discussion of all included examples can be found in the
-[Examples](@ref) section.
+are provided in the following three sections, which cover Lefschetz complexes,
+homology, and Conley theory including connection matrices. After a discussion
+of all included examples in the [Examples](@ref) section, the manual concludes
+with a description of the sparse matrix format underlying the package.
 
 ```@contents
 Pages = [
@@ -61,8 +61,8 @@ Pages = [
     "man/lefschetz.md",
     "man/homology.md",
     "man/conley.md",
-    "man/sparse.md",
     "man/examples.md",
+    "man/sparse.md",
 ]
 Depth = 2
 ```
