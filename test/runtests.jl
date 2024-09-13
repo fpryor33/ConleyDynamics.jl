@@ -1,6 +1,6 @@
-using ConnectionMatrices
+using ConleyDynamics
 using Test
 
-@testset "ConnectionMatrices.jl" begin
+@testset "ConleyDynamics.jl" begin
     # Write your tests here.
 end
