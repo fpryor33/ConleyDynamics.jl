@@ -146,13 +146,12 @@ just mention the following result:
     ``\kappa : X \times X \to F`` denote its incidence coefficient
     map. Then a subset ``S \subset X`` is again a Lefschetz complex,
     with respect to the restriction of ``\kappa`` to ``S \times S``,
-    if and only if the subset ``S`` is locally closed.
+    if the subset ``S`` is locally closed.
 
-This result goes back to [mrozek:batko:09a; Theorem 3.1](@cite), where
-it was shown that local closedness is sufficient. In other words, in the
-category of Lefschetz complexes local closedness arises naturally. Due
-to its importance, we also mention the following two equivalent
-formulations:
+This result goes back to [mrozek:batko:09a; Theorem 3.1](@cite). In
+other words, in the category of Lefschetz complexes local closedness
+arises naturally. Due to its importance, we also mention the following
+two equivalent formulations:
 
 - A subset ``S \subset X`` is locally closed, if and only if it is the
   difference of two closed subsets of ``X``.

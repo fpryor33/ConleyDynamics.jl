@@ -221,7 +221,7 @@ The first image shows the five Morse sets surrounding the stationary
 states at the origin and at ``(\pm 1/2, \pm 1/2)``. In addition, it
 highlights the support of the isolated invariant set associated with
 this Morse decomposition interval. One can clearly see rough outer
-approxomations for the four heteroclinics which start at the origin
+approximations for the four heteroclinics which start at the origin
 and end at the index 1 equilibria. These approximations are necessarily
 coarse, since we are not working with a very fine triangulation.
 
