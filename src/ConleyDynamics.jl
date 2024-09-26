@@ -84,6 +84,7 @@ include("./examples/example_forman2d.jl")
 include("./examples/example_nonunique.jl")
 include("./examples/example_critical_simplex.jl")
 include("./examples/example_moebius.jl")
+include("./examples/example_clorenz.jl")
 
 include("./plots/plot_planar_simplicial.jl")
 include("./plots/plot_planar_simplicial_morse.jl")

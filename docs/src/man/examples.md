@@ -678,7 +678,7 @@ contracting ``\{ A, a \}``.
 
 ## Subdividing a Multivector
 
-Our last example taken from [mrozek:wanner:p21a](@cite) is concerned
+Our next example taken from [mrozek:wanner:p21a](@cite) is concerned
 with turning a given multivector field into a Forman vector field
 by further subdividing the multivectors. For this, consider the
 three complexes and combinatorial vector fields shown in the
@@ -778,6 +778,21 @@ the connection matrix for `mvf0` is equal to the one for
 `mvf2`. Yet, this is another example of nonuniqueness, and one
 could produce also the connection matrix for `mvf1` through a
 reordering of the cells in the Lefschetz complex.
+
+## A Combinatorial Lorenz System
+
+Our last example is taken from [kaczynski:etal:16a; Figure 3](@cite).
+
+![A combinatorial Lorenz system](img/clorenz.png)
+
+```@docs; canonical=false
+example_clorenz()
+```
+
+See also [mrozek:etal:22a](@cite).
+
+
+
 
 ## [References](@id refexamples)
 

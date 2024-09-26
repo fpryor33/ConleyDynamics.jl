@@ -23,5 +23,6 @@ example_subdivision
 example_critical_simplex
 example_moebius
 example_nonunique
+example_clorenz
 ```
 
