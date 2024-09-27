@@ -26,17 +26,21 @@ julia> sparse_show(cm.matrix)
 julia> print(cm.labels)
 ["i", "ip", "g", "gm", "bc"]
 
-julia> bndcells = convert_cells(lc,manifold_boundary(lc));
+julia> ms, ps = morse_sets(lc, mvf, poset=true);
 
-julia> allcells = deepcopy(lc.labels);
+julia> [conley_index(lc, mset) for mset in ms]
+4-element Vector{Vector{Int64}}:
+ [1, 1, 0]
+ [1, 1, 0]
+ [0, 1, 0]
+ [0, 0, 0]
 
-julia> intcells = setdiff(allcells, bndcells);
-
-julia> conley_index(lc,intcells)
-3-element Vector{Int64}:
- 0
- 0
- 0
+julia> ps
+4×4 Matrix{Bool}:
+ 0  0  1  0
+ 0  0  1  0
+ 0  0  0  1
+ 0  0  0  0
 ```
 """
 function example_clorenz()

@@ -3,6 +3,7 @@
 ## Multivector Fields
 
 ```@docs
+mvf_information
 create_mvf_hull
 create_planar_mvf
 create_spatial_mvf
@@ -13,6 +14,7 @@ planar_nontransverse_edges
 ## Conley Index Computations
 
 ```@docs
+isoinvset_information
 conley_index
 morse_sets
 morse_interval

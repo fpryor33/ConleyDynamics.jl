@@ -25,7 +25,21 @@ function morse_sets(lc::LefschetzComplex, mvf::CellSubsets; poset::Bool=false)
         mvfI = convert_cellsubsets(lc, mvf)
         return_as_labels = true
     end
-    
+
+    # Create the cell-to-mv map
+
+    cell2mv = fill(Int(0), lc.ncells)
+
+    for k = 1:length(mvfI)
+        for m in mvfI[k]
+            if cell2mv[m] == 0
+                cell2mv[m] = k
+            else
+                error(" The multivector field is not a partition!")
+            end
+        end
+    end
+
     # Create the digraph based on the boundary matrix
 
     nr, nc, tchar, tzero, tone, r, c, vals = lists_from_sparse(lc.boundary)
@@ -57,13 +71,27 @@ function morse_sets(lc::LefschetzComplex, mvf::CellSubsets; poset::Bool=false)
         sort!(scc[k])
     end
 
-    # Find all Morse sets with nontrivial homology
+    # Find all nontrivial Morse sets:
+    # This means either nontrivial homology or a
+    # Morse set containing at least two multivectors
 
     isnontrivial = fill(Int(0), length(scc))
+
+    # First check on nontrivial homology in parallel
 
     Threads.@threads for k = 1:length(scc)
         isnontrivial[k] = sum(conley_index(lc, scc[k]))
     end
+
+    # Then check on number of multivectors
+
+    for k = 1:length(scc)
+        if length(unique(cell2mv[scc[k]])) > 1
+            isnontrivial[k] = isnontrivial[k] + 1
+        end
+    end
+
+    # Finally extract the Morse sets
 
     ntindices = findall(x -> x>0, isnontrivial)
     morsesets = scc[ntindices]
