@@ -782,17 +782,60 @@ reordering of the cells in the Lefschetz complex.
 ## A Combinatorial Lorenz System
 
 Our last example is taken from [kaczynski:etal:16a; Figure 3](@cite).
+It is a Forman vector field on a two-dimensional simplicial complex,
+as shown in the accompanying figure.
 
 ![A combinatorial Lorenz system](img/clorenz.png)
+
+Notice that the underlying simplicial complex does not represent
+a manifold in this case, but rather a *branched manifold*. As
+indicated in the figure, the two triangles ``\mathbf{hin}`` and
+``\mathbf{hio}`` only intersect in the edge ``\mathbf{hi}``, and
+this edge is also contained in the third triangle ``\mathbf{chi}``.
+This system is a combinatorial version of the famous *Lorenz
+butterfly*, which is well-known for its chaotic behavior. The
+simplicial complex and the Forman vector field can be created
+using the function [`example_clorenz`](@ref):
 
 ```@docs; canonical=false
 example_clorenz()
 ```
 
-See also [mrozek:etal:22a](@cite).
+The first of the above commands creates the simplicial complex `lc`
+and the Forman vector field `mvf`. These are then analyzed using
+the following commands:
 
+* Using `cm = connection_matrix(lc, mvf)` one can compute the 
+  connection matrix of the example. This connection matrix has
+  two nonzero entries, which indicate connecting orbits from
+  the index 1 critical cell ``\mathbf{bc}`` to each of the
+  stable periodic orbits spanned by the vertices
+  ``\mathbf{h}``, ``\mathbf{g}``, ``\mathbf{m}`` and
+  ``\mathbf{i}``, ``\mathbf{j}``, ``\mathbf{p}``, respectively.
+* The command `ms, ps = morse_sets(lc, mvf, poset=true)` shows,
+  however, that there is more to this example. While the above
+  connection matrix indicates only three isolated invariant
+  sets, there is actually a fourth one. In view of the 
+  Conley index computation for these sets, the additional
+  Morse set has trivial index, and therefore does not show
+  up in the connection matrix. Notice that the partial order
+  given by the flow, which is indicated by the matrix `ps`,
+  implies that the Morse set with trivial index has a connection
+  to the index 1 critical cell.
 
-
+Upon closer inspection one can see that the last Morse set
+is comprised of all triangles, as well as all edges which are
+contained in at least two triangles. This set contains infinitely
+many periodic orbits. For any bi-infinite sequence of symbols ``L``
+and ``R`` there is a periodic orbit which loops around the left
+hole for ``L`` and around the right hole for ``R``, as one traverses
+the symbol sequence from left to right. Such behavior is one potential
+indicator for chaos. In fact, it was shown in [mrozek:wanner:21a](@cite)
+that it is possible to define a classical semiflow on the branched manifold
+defined by `lc` which mimics the behavior of the Forman vector field.
+And according to [mrozek:etal:22a](@cite), any such *admissible semiflow*
+does indeed have infinitely many periodic orbits in the set determined
+by the triangles.
 
 ## [References](@id refexamples)
 
