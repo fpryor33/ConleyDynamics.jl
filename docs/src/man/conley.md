@@ -1,15 +1,83 @@
 # Conley Theory
 
-Here we need a more detailed description of Conley theory, and in particular
-connection matrices.  In particular, this should discuss the various field types
-that can be used, as well as all the entries in the [`ConleyMorseCM`](@ref) data
-structure.
+The main motivation for `ConleyDynamics.jl` is the development of an
+accessible tool for studying the global dynamics of multivector fields
+on Lefschetz complexes. Having already discussed the latter, we now turn
+our attention to multivector fields and their global dynamics. This
+involves a detailed discussion of isolated invariant sets, their Conley
+index, as well as Morse decompositions and connection matrices. Finally,
+we also describe how a variety of isolated invariant sets can be
+constructed using Morse decomposition intervals, and apply these
+tools to the analysis of simple planar and three-dimensional
+ordinary differential equations.
 
-[kaczynski:etal:16a](@cite)
-[mrozek:wanner:21a](@cite)
+## Multivector Fields
+
+
+!!! tip "Definition: Multivector field"
+    A *multivector field* ``\mathcal{V}`` on a Lefschetz complex
+    ``X`` is a partition of ``X`` into locally closed sets.
+
+
+
+
+
+
+
+
+
+
+## Isolated Invariant Sets
+
+
+
+[lipinski:etal:23a](@cite)
+
+
+
+```math
+   \Pi_{\mathcal V}(x) := \mathrm{cl}\, x \cup [x]_{\mathcal V}
+```
+
+where ``[x]_{\mathcal V}`` denotes the unique multivector in
+``{\mathcal V}`` containing ``x``.
+
+
+
+
+
+## Conley Index
+
+
+
+
+## Morse Decompositions
+
+
+
+
+
+
+## Connection Matrices
+
+
+
+
+
+
 [dey:etal:24a](@cite)
-[stephens:wanner:14a](@cite)
-[isoblockval:website](@cite)
+
+
+[`ConleyMorseCM`](@ref)
+
+```@docs; canonical=false
+ConleyMorseCM
+```
+
+
+
+
+
 
 ## Morse Decomposition Intervals
 
@@ -234,7 +302,7 @@ Morse decomposition interval. In this case, it covers eight different
 heteroclinic orbits, which are in fact better approximated than the
 four in the previous image.
 
-## Cubical Analysis of a Planar System
+## Analysis of a Planar System
 
 Our next example illustrates how `ConleyDynamics.jl` can be used to analyze
 the global dynamics of a planar ordinary differential equations. For this,
@@ -372,9 +440,9 @@ plot_planar_simplicial_morse(lc2, coords2N, fname3, large_mv, pv=true)
 
 Note that in this example, there are only 20 large multivectors.
 
-## Cubical Analysis of a Spatial System
+## Analysis of a Spatial System
 
-It is also possible to analyze certain three-dimensional ordinary
+It is also possible to analyze simple three-dimensional ordinary
 differential equations in `ConleyDynamics.jl`. To provide one such
 example, consider the system
 
@@ -541,6 +609,15 @@ performed with the finer resolution `N = 51`.
 ![Allen-Cahn Morse interval, View 1](img/acinterval3d_3_51a.png)
 
 ![Allen-Cahn Morse interval, View 2](img/acinterval3d_3_51b.png)
+
+We would like to emphasize that there are many techniques in the
+literature that can be used to identify isolated invariant sets
+and their Conley indices. Rather than giving a detailed list,
+we refer to [stephens:wanner:14a](@cite) and the references 
+therein. For example, in [stephens:wanner:14a](@cite) ideas
+from computational topology were used to rigorously establish
+candidate sets in three dimensions as an isolating block. The
+associated Matlab code can be found at [isoblockval:website](@cite).
 
 ## [References](@id refconley)
 
