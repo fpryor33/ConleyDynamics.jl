@@ -13,19 +13,109 @@ ordinary differential equations.
 
 ## Multivector Fields
 
+Suppose that ``X`` is a Lefschetz complex as described in
+[Lefschetz Complexes](@ref), see in particular the definition
+in [Basic Lefschetz Terminology](@ref). Assume further that the
+Lefschetz complex is defined over a field ``F``, which is either
+the rational numbers ``\mathbb{Q}`` or a finite field of prime
+order. Then a *multivector field* on ``X`` is defined as follows.
 
 !!! tip "Definition: Multivector field"
     A *multivector field* ``\mathcal{V}`` on a Lefschetz complex
     ``X`` is a partition of ``X`` into locally closed sets.
 
+Recall from our detailed discussion in [Basic Lefschetz Terminology](@ref)
+that a set ``V \subset X`` is called locally closed if its mouth
+``\mathrm{mo}\, V = \mathrm{cl}\, V \setminus V`` is closed, where
+closedness in turn is defined via the face relation in a Lefschetz
+complex. This implies that for each multivector ``V \in \mathcal{V}``
+the relative homology ``H_*(\mathrm{cl}\, V, \mathrm{mo}\, V)``
+is well-defined, and it allows for the following classification
+of multivectors:
 
+* A *critical multivector* is a multivector for which
+  ``H_*(\mathrm{cl}\, V, \mathrm{mo}\, V) \neq 0``.
+* A *regular multivector* is a multivector for which
+  ``H_*(\mathrm{cl}\, V, \mathrm{mo}\, V) = 0``.
 
+Since a multivector is locally closed, it is a Lefschetz subcomplex
+of ``X`` as well, and we have already seen that its Lefschetz homology
+satisfies ``H_*(V) \cong H_*(\mathrm{cl}\, V, \mathrm{mo}\, V)``.
+For more details, see [Relative Homology](@ref).
 
+The above classification of multivectors is motivated by the
+case of classical Forman vector fields. These are a special 
+case of multivector fields, in that they also form a partition
+of the underlying Lefschetz complex. This time, however, there 
+are only two types of multivectors:
 
+* A *critical cell* is a multivector consisting of exactly
+  one cell of the Lefschetz complex. One can easily see that
+  in this case the ``k``-th homology group is isomorphic
+  to ``F``, as long has the cell has dimension ``k``. All
+  other homology groups vanish. Thus, every critical cell 
+  is a critical multivector.
+* A *Forman arrow* is a multivector consisting of two
+  cells ``\sigma^-`` and ``\sigma^+``, where ``\sigma^-``
+  is a facet of ``\sigma^+``. In other words, one has to
+  have ``\kappa(\sigma^+, \sigma^-) \neq 0``, which also
+  implies that ``1 + \dim\sigma^- = \dim\sigma^+``. One
+  can show that all homology groups of a Forman arrow are
+  zero, and therefore it is a regular multivector.
 
+A multivector field induces dynamics on the underlying Lefschetz
+complex through the iteration of a multivalued map. This
+*flow map* is given by
 
+```math
+   \Pi_{\mathcal V}(x) := \mathrm{cl}\, x \cup [x]_{\mathcal V}
+   \quad\text{ for all }\quad
+   x \in X
+```
 
+where ``[x]_{\mathcal V}`` denotes the unique multivector in
+``{\mathcal V}`` which contains ``x``. The definition of the
+flow map shows that the induced dynamics combines two types
+of behavior:
 
+* From a cell ``x``, it is always possible to flow towards
+  the boundary of the cell, i.e., to any one of its faces.
+* In addition, it is always possible to move freely within
+  a multivector.
+
+A *solution* of the combinatorial dynamical system induced by
+the multivector field is then a map ``\rho : \mathbb{Z} \to X``
+which satisfies ``\rho(k+1) \in \Pi_{\mathcal V}(\rho(k))``
+for all ``k \in \mathbb{Z}``. We say that this solution
+*passes through the cell* ``x \in X`` if in addition one
+has ``\rho(0) = x``. It is clear from the definition of the
+flow map that every constant map is a solution, since we have
+the inclusion ``x \in \Pi_{\mathcal V}(x)``. Thus, rather than
+considering solutions in the above (classical) sense, we focus
+on a more restrictive notion.
+
+!!! tip "Definition: Essential solution"
+    Let ``\rho : \mathbb{Z} \to X`` be a solution for the
+    multivector field ``\mathcal{V}``. Then ``\rho`` is
+    an *essential solution*, if the following holds:
+    - If for ``k \in \mathbb{Z}`` the cell ``\rho(k)`` lies
+      in a regular multivector ``V \in \mathcal{V}``, then there
+      exist integers ``\ell_1 < k < \ell_2`` for which we have
+      ``\rho(\ell_i) \not\in V`` for ``i = 1,2``.
+    In other words, an essential solution has to leave a
+    regular multivector both in forward and in backward time.
+    It can, however, stay in a critical multivector for as long
+    as it wants.
+
+The notion of essential solution has its origin in the distinction
+between critical and regular multivectors. In Forman's theory, 
+which is based on classical Morse theory, critical cells correspond
+to stationary solutions or equilibria of the underlying flow. Thus,
+it has to be possible to stay in a critical multivector for all times,
+whether in forward or backward time, or even for all times. On the other
+hand, a Forman arrow indicates prescribed motion, and therefore a
+regular multivector corresponds to motion which goes from the
+multivector to its mouth.
 
 ## Isolated Invariant Sets
 
@@ -33,14 +123,6 @@ ordinary differential equations.
 
 [lipinski:etal:23a](@cite)
 
-
-
-```math
-   \Pi_{\mathcal V}(x) := \mathrm{cl}\, x \cup [x]_{\mathcal V}
-```
-
-where ``[x]_{\mathcal V}`` denotes the unique multivector in
-``{\mathcal V}`` containing ``x``.
 
 
 
