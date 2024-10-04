@@ -165,8 +165,8 @@ complex through the iteration of a multivalued map. This
 *flow map* is given by
 
 ```math
-   \Pi_{\mathcal V}(x) := \mathrm{cl}\, x \cup [x]_{\mathcal V}
-   \quad\text{ for all }\quad
+   \Pi_{\mathcal V}(x) = \mathrm{cl}\, x \cup [x]_{\mathcal V}
+   \qquad\text{ for all }\qquad
    x \in X
 ```
 
@@ -180,12 +180,18 @@ of behavior:
 * In addition, it is always possible to move freely within
   a multivector.
 
-A *solution* of the combinatorial dynamical system induced by
-the multivector field is then a map ``\rho : \mathbb{Z} \to X``
-which satisfies ``\rho(k+1) \in \Pi_{\mathcal V}(\rho(k))``
-for all ``k \in \mathbb{Z}``. We say that this solution
-*passes through the cell* ``x \in X`` if in addition one
-has ``\rho(0) = x``. It is clear from the definition of the
+The multivalued map ``\Pi_{\mathcal V} : X \multimap X``
+naturally leads to a solution concept for multivector fields.
+A *path* is a sequence ``x_0, x_1, \ldots, x_n \in X`` such
+that ``x_k \in \Pi_{\mathcal{V}}(x_{k-1})`` for all indices
+``k = 1,\ldots,n``. Paths of infinite length are called
+solutions. More precisely, a *solution* of the combinatorial
+dynamical system induced by the multivector field is then a
+map ``\rho : \mathbb{Z} \to X`` which satisfies
+``\rho(k+1) \in \Pi_{\mathcal V}(\rho(k))`` for all
+``k \in \mathbb{Z}``. We say that this solution *passes
+through the cell* ``x \in X`` if in addition one has
+``\rho(0) = x``. It is clear from the definition of the
 flow map that every constant map is a solution, since we have
 the inclusion ``x \in \Pi_{\mathcal V}(x)``. Thus, rather than
 considering solutions in the above (classical) sense, we focus
@@ -214,32 +220,129 @@ hand, a Forman arrow indicates prescribed motion, and therefore a
 regular multivector corresponds to motion which goes from the
 multivector to its mouth.
 
+Using the concept of essential solutions we can now introduce the
+notion of *invariance*. Informally, we say that a subset of a Lefschetz
+complex is invariant if through every cell in the set there exists an
+essential solution which stays in the set. In other words, we have the
+choice of staying in the set, even though there might be other solutions
+that do leave. More generally, for every subset ``A \subset X`` one can
+ask whether there are elements ``x \in A`` for which there exists an
+essential solution which passes through ``x`` and stays in ``A``
+for all times. This leads to the definition of the *invariant part
+of ``A``* as
 
-[lipinski:etal:23a](@cite)
+```math
+   \mathrm{Inv}_{\mathcal{V}}(A) =
+   \left\{ x \in A \, : \,
+      \text{there exists an essential solution }
+      \rho : \mathbb{Z} \to A \text{ through } x
+      \right\}
+```
 
+It is certainly possible that the invariant part of a set is 
+empty. If, however, the invariant part of ``A`` is all of ``A``,
+i.e., if we have ``\mathrm{Inv}_{\mathcal{V}}(A) = A``, then
+the set ``A`` is called *invariant*.
 
+Invariant sets are the fundamental building blocks for the global
+dynamics of a dynamical system. Yet, in general they are difficult
+to study. Conley realized in [conley:78a](@cite) that if one 
+restricts the attention to a more specialized notion of invariance,
+then topological methods can be used to formulate a coherent 
+general theory. For this, we need to introduce the notion of 
+*isolated invariant set*:
 
+!!! tip "Definition: Isolated invariant set"
+    A closed set ``N \subset X`` *isolates* an invariant set
+    ``S \subset N``, if the following two conditions are satisfied:
+    * Every path in ``N`` with endpoints in ``S`` is a path in
+      ``S``.
+    * We have ``\Pi_{\mathcal{V}}(S) \subset N``.
+    An invariant set ``S`` is an *isolated invariant set*,
+    if there exists a closed set ``N`` which isolates ``S``.
 
-[`isoinvset_information`](@ref)
-[`conley_index`](@ref)
+It is clear that the whole Lefschetz complex ``X`` isolates its
+invariant part. Therefore, the set ``\mathrm{Inv}_{\mathcal{V}}(X)``
+is an isolated invariant set. Moreover, one can readily show that
+if ``N`` is an isolating set for an isolated invariant set ``S``,
+then any closed set ``S \subset M \subset N`` also isolates ``S``.
+Thus, the closure ``\mathrm{cl}\, S`` is the smallest isolating
+set for ``S``. With these observations in mind, one obtains
+the following result from [lipinski:etal:23a](@cite):
 
+!!! danger "Theorem: Characterization of isolated invariant sets"
+    An invariant set ``S \subset X`` is an isolated invariant set,
+    if and only if the following two conditions hold:
+    * ``S`` is *``\mathcal{V}``-compatible*, i.e., it is the union
+      of multivectors.
+    * ``S`` is locally closed.
+    In this case, the isolated invariant set ``S`` is isolated
+    by its closure ``\mathrm{cl}\, S``.
 
+With this characterization at hand, identifying isolated invariant
+sets becomes straightforward. In addition, since isolated invariant
+sets are locally closed, we can now also define their *Conley index*:
 
+!!! tip "Definition: Conley index"
+    Let ``S \subset X`` be an isolated invariant set the
+    multivalued flow map ``\Pi_{\mathcal{V}}``. Then the
+    *Conley index of ``S``* is the relative (or Lefschetz)
+    homology
+    ```math
+       CH_*(S) = H_*( \mathrm{cl}\, S, \mathrm{mo}\, S)
+               \cong H_*(S)
+    ```
+    In addition, the *Poincare polynomial of ``S``*
+    is defined as
+    ```math
+       p_{S}(t) = \sum_{k=0}^\infty \beta_k(S) t^k \, ,
+       \quad\text{where}\quad
+       \beta_k(S) = \dim CH_k(S) \; .
+    ```
+    The Poincare polynomial is a concise way to encode the
+    homology information.
+
+Since the Conley index is nothing more than the relative
+homology of the closure-mouth-pair associated with a locally
+closed set, one could easily use the homology functions described
+in [Homology](@ref) for its computation. However, we have
+included a wrapper function to keep the notation uniform. In
+addition, `ConleyDynamics.jl` contains a function which provides
+basic information about an isolated invariant set. These two
+functions can be described as follows:
+
+* The function [`conley_index`](@ref) determines the Conley
+  index of an isolated invariant set. It expects a Lefschetz
+  complex as its first argument, while the second one has to
+  be a list of cells which specifies the isolated invariant 
+  set, and which is either of type `Vector{Vector{Int}}`
+  or `Vector{Vector{String}}`. An error is raised if the second
+  argument does not specify a locally closed set.
+* The function [`isoinvset_information`](@ref) expects a
+  Lefschetz complex `lc::LefschetzComplex`, a multivector
+  field `mvf::CellSubsets`, as well as an isolated invariant
+  set `iis::Cells` as its three arguments. Itreturns a
+  `Dict{String,Any}` with the information. The `keys` of
+  this dictionary are as follows:
+  - `"Conley index"` contains the Conley index of the 
+    isolated invariant set.
+  - `"N multivectors"` contains the number of multivectors
+    in the isolated invariant set.
 
 ## Morse Decompositions
 
 
-[`morse_sets`](@ref)
-[`morse_interval`](@ref)
-[`restrict_dynamics`](@ref)
-[`remove_exit_set`](@ref)
+* [`morse_sets`](@ref)
+* [`morse_interval`](@ref)
+* [`restrict_dynamics`](@ref)
+* [`remove_exit_set`](@ref)
 
 
 
 ## Connection Matrices
 
 
-[`connection_matrix`](@ref)
+* [`connection_matrix`](@ref)
 
 
 
