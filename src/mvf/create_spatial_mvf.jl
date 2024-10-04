@@ -21,7 +21,7 @@ two types:
   complex, and the vector `coords` contains the vertex coordinates.
 * `lc` is a three-dimensional cubical complex, i.e., it is the
   closure of a collection of three-dimensional cubes in space.
-  The vertex coordinates can be slight;y perturbed from the original
+  The vertex coordinates can be slightly perturbed from the original
   position in the cubical lattice, as long as the overall structure 
   of the complex stays intact. In that case, the faces are interpreted
   as Bezier surfaces with straight edges.

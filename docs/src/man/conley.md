@@ -4,10 +4,10 @@ The main motivation for `ConleyDynamics.jl` is the development of an
 accessible tool for studying the global dynamics of multivector fields
 on Lefschetz complexes. Having already discussed the latter, we now turn
 our attention to multivector fields and their global dynamics. This
-involves a detailed discussion of isolated invariant sets, their Conley
-index, as well as Morse decompositions and connection matrices. Finally,
-we also describe how a variety of isolated invariant sets can be
-constructed using Morse decomposition intervals, and apply these
+involves a detailed discussion of multivector fields, isolated invariant
+sets, their Conley index, as well as Morse decompositions and connection
+matrices. We also describe how a variety of isolated invariant sets can
+be constructed using Morse decomposition intervals, and apply these
 tools to the analysis of simple planar and three-dimensional
 ordinary differential equations.
 
@@ -63,6 +63,103 @@ are only two types of multivectors:
   can show that all homology groups of a Forman arrow are
   zero, and therefore it is a regular multivector.
 
+In `ConleyDynamics.jl`, multivector fields can be created in a number
+of different ways. The most direct method is to specify all multivectors
+of length larger than one in an array of type `Vector{Vector{Int}}` or
+`Vector{Vector{String}}`, depending on whether the involved cells are
+referenced via their indices or labels. Recall that it is easy to
+convert between these two forms using the command
+[`convert_cellsubsets`](@ref). The subsets specified by the vector
+entries have to be disjoint. They do not, however, have to exhaust 
+the underlying Lefschetz complex ``X``. Any cells that are not part
+of a specified multivector will be considered as one-element critical
+cells. This reduces the size of the representation in many situations.
+
+For large Lefschetz complexes, the above method becomes quickly 
+impractical. In such a case it is easier to determine a multivector
+field indirectly, through a mechanism involving *dynamical 
+transitions*. This is based on the following result.
+
+!!! danger "Theorem: Multivector fields via dynamical transitions"
+    Let ``X`` be a Lefschetz complex and let ``\mathcal{D}`` denote
+    an arbitrary collection of subsets of ``X``. Then there exists
+    a uniquely determined minimal multivector field ``\mathcal{V}``
+    which satisfies the following:
+    * For every ``D \in \mathcal{D}`` there exists a
+      ``V \in \mathcal{V}`` such that ``D \subset V``.
+    Note that the sets in ``\mathcal{D}`` do not have to be disjoint,
+    and their union does not have to exhaust ``X``. One can think of
+    the sets in ``\mathcal{D}`` as all allowable dynamical transitions.
+
+The above result shows that as long as one has an idea about the 
+transitions that a system has to be allowed to do, one can always
+find a smallest multivector field which realizes them. Needless to
+say, if too many transitions are specified, then it is possible that
+the result leads to the trivial multivector field ``\mathcal{V} =
+\{ X \}``. In most cases, however, the resulting multivector field
+is more useful. See also the examples later in this section of the
+manual.
+
+The package `ConleyDynamics.jl` provides a number of functions
+for creating and manipulating multivector fields on Lefschetz
+complexes:
+
+* The function [`create_mvf_hull`](@ref) implements the above
+  theorem on dynamical transitions. It expects two input arguments:
+  A Lefschetz complex `lc`, as well as a vector `mvfbase` that defines
+  the dynamical transitions in ``\mathcal{D}``. The latter has to have
+  type `Vector{Vector{Int}}` or `Vector{Vector{String}}`.
+* The function [`mvf_information`](@ref) displays basic information
+  about a given multivector field. It expects both a Lefschetz complex
+  and a multivector field as arguments, and returns a `Dict{String,Any}`
+  with the information. The `keys` of this dictionary are as follows:
+  - `"N mv"`: Number of multivectors
+  - `"N critical"`: Number of critcal multivectors
+  - `"N regular"`: Number of regular multivectors
+  - `"Lengths critical"`: Length distribution of critical multivectors
+  - `"Lengths regular"`: Length distribution of regular multivectors
+  In the last two cases, the dictionary entries are vectors of pairs
+  `(length,frequency)`, where each pair indicates that there are
+  `frequency` multivectors of length `length`.
+* The function [`extract_multivectors`](@ref) expects as input arguments
+  a Lefschetz complex and a multivector field, as well as a list of
+  cells specified as a `Vector{Int}` or a `Vector{String}`. It returns
+  a list of all multivectors that contain the specified cells.
+* The function [`create_planar_mvf`](@ref) creates a multivector field
+  which approximates the dynamics of a given planar vector field. It
+  expects as arguments a two-dimensional Lefschetz complex, a vector
+  of planar coordinates for the vertices of the complex, as well as a
+  function which implements the vector field. It returns a multivector
+  field based on the dynamical transitions induced by the vector field
+  directions on the vertices and edges of the Lefschetz complex.
+  While the complex does not have to be a triangulation, it is 
+  expected that the one-dimensional cells are straight line segments
+  between the two boundary vertices.
+* The utility function [`planar_nontransverse_edges`](@ref) expects
+  the same arguments as the previous one, and returns a list of
+  nontransverse edges as `Vector{Int}`, which contains the corresponding
+  edge indices. The optional parameter `npts` determines how many points
+  along an edge are evaluated for the transversality check.
+* The function [`create_spatial_mvf`](@ref) creates a multivector field
+  which approximates the dynamics of a given spatial vector field.
+  While it expects the same arguments as its planar counterpart, the
+  Lefschetz complex has to be of one of the following two types:
+  - The Lefschetz complex is a *tetrahedral mesh* of a region in
+    three dimensions, i.e., it is a simplicial complex.
+  - The Lefschetz complex is a three-dimensional *cubical complex*,
+    i.e., it is the closure of a collection of three-dimensional
+    cubes in space.
+  In the second case, the vertex coordinates can be slightly perturbed
+  from the original position in the cubical lattice, as long as the
+  overall structure of the complex stays intact. In that case, the
+  faces are interpreted as Bezier surfaces with straight edges.
+
+All of these functions will be illustrated in more detail in the
+examples which are presented later in this section. See also the
+[Tutorial](@ref) for another planar vector field analysis.
+
+## Invariance and Conley Index
+
 A multivector field induces dynamics on the underlying Lefschetz
 complex through the iteration of a multivalued map. This
 *flow map* is given by
@@ -117,18 +214,14 @@ hand, a Forman arrow indicates prescribed motion, and therefore a
 regular multivector corresponds to motion which goes from the
 multivector to its mouth.
 
-## Isolated Invariant Sets
-
-
 
 [lipinski:etal:23a](@cite)
 
 
 
 
-
-
-## Conley Index
+[`isoinvset_information`](@ref)
+[`conley_index`](@ref)
 
 
 
@@ -136,14 +229,17 @@ multivector to its mouth.
 ## Morse Decompositions
 
 
-
+[`morse_sets`](@ref)
+[`morse_interval`](@ref)
+[`restrict_dynamics`](@ref)
+[`remove_exit_set`](@ref)
 
 
 
 ## Connection Matrices
 
 
-
+[`connection_matrix`](@ref)
 
 
 
@@ -161,7 +257,7 @@ ConleyMorseCM
 
 
 
-## Morse Decomposition Intervals
+## Extracting Subsystems
 
 We briefly return to one of the examples in the tutorial. More precisely, we
 consider the planar ordinary differential equation given by
