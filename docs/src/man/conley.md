@@ -331,6 +331,90 @@ functions can be described as follows:
 
 ## Morse Decompositions
 
+We now turn our attention to the global dynamics of a combinatorial
+dynamical system. This is accomplished through the notion of
+*Morse decomposition*, and it requires some auxilliary definitions:
+
+* Suppose we are given a solution ``\phi : \mathbb{Z} \to X`` for
+  the multivector field ``\mathcal{V}``. Then the long-term limiting
+  behavior of ``\phi`` can be described using the *ultimate backward
+  and forward images*
+  ```math
+     \mathrm{uim}^- \phi =
+     \bigcap_{t \in \mathbb{Z}^-} \phi\left( (-\infty,t] \right)
+     \qquad\text{and}\qquad
+     \mathrm{uim}^+ \phi =
+     \bigcap_{t \in \mathbb{Z}^+} \phi\left( [t,+\infty) \right) .
+  ```
+  Notice that since ``X`` is finite, there has to exist a
+  ``k \in \mathbb{N}`` such that
+  ```math
+     \mathrm{uim}^- \phi =
+     \phi\left( (-\infty,-k] \right) \neq \emptyset
+     \qquad\text{and}\qquad
+     \mathrm{uim}^+ \phi =
+     \phi\left( [k,+\infty) \right) \neq \emptyset .
+  ```
+* The *``\mathcal{V}``-hull* of a set ``A \subset X`` is the
+  intersection of all ``\mathcal{V}``-compatible and locally
+  closed sets containing ``A``. It is denoted by
+  ``\langle A \rangle_{\mathcal{V}}``, and is the smallest 
+  candidate for an isolated invariant set which contains ``A``.
+* The ``\alpha``- and ``\omega``-limit sets of ``\phi``
+  are then defined as
+  ```math
+     \alpha(\phi) =
+     \left\langle \mathrm{uim}^- \phi \right\rangle_{\mathcal{V}}
+     \qquad\text{and}\qquad
+     \omega(\phi) =
+     \left\langle \mathrm{uim}^+ \phi \right\rangle_{\mathcal{V}}.
+  ```
+
+While in general the ``\mathcal{V}``-hull of a set does not have
+to be invariant, the following result shows that for every 
+essential solution both of its limit sets are in fact isolated
+invariant sets.
+
+!!! danger "Theorem: Limit sets are nontrivial"
+    Let ``\phi`` be an essential solution in ``X``. Then both
+    limit sets ``\alpha(\phi)`` and ``\omega(\phi)`` are
+    nonempty isolated invariant sets.
+
+The above notions allow us to decompose the global dynamics of
+a multivector field. Loosely speaking, this is accomplished by
+separating the dynamics into a recurrent part given by an indexed
+collection of isolated invariant sets, and the gradient dynamics
+between them. This can be abstracted with the concept of a *Morse
+decomposition*.
+
+!!! tip "Definition: Morse decomposition"
+    Assume that ``X`` is an invariant set for the multivector
+    field ``\mathcal{V}`` and that ``(\mathbb{P},\leq)`` is a
+    finite poset. Then an indexed collection ``\mathcal{M} =
+    \left\{ M_p \, : \, p \in \mathbb{P} \right\}`` is called a
+    *Morse decomposition* of ``X`` if the following conditions are
+    satisfied:
+    * The indexed family ``\mathcal{M}`` is a family of mutually
+      disjoint, isolated invariant subsets of ``X``.
+    * For every essential solution ``\phi`` in ``X`` either one has
+      ``\mathrm{im} \, \phi \subset M_r`` for an ``r \in \mathbb{P}``
+      or there exist two poset elements ``p,q \in \mathbb{P}`` such
+      that ``q > p`` and
+      ```math
+         \alpha(\phi) \subset M_q
+         \qquad\text{and}\qquad
+         \omega(\phi) \subset M_p .
+      ```
+      The elements of ``\mathcal{M}`` are called *Morse sets*. We
+      would like to point out that some of the Morse sets could
+      be empty.
+
+
+
+
+
+
+
 
 * [`morse_sets`](@ref)
 * [`morse_interval`](@ref)
@@ -342,11 +426,17 @@ functions can be described as follows:
 ## Connection Matrices
 
 
+[franzosa:89a](@cite)
+[harker:etal:21a](@cite)
+[mrozek:wanner:p21a](@cite)
+
+[dey:etal:24a](@cite)
+
+
+
 * [`connection_matrix`](@ref)
 
 
-
-[dey:etal:24a](@cite)
 
 
 [`ConleyMorseCM`](@ref)
