@@ -453,14 +453,56 @@ in the index poset. Then
 is always an isolated invariant set. Nevertheless, not every
 isolated invariant set is of this form.
 
+Morse decompositions and intervals can be easily computed 
+and manipulated in `ConleyDynamics.jl` using the following
+commands:
 
+* The function [`morse_sets`](@ref) expects a Lefschetz
+  complex and a multivector field as arguments, and
+  returns the Morse sets of the finest Morse decomposition
+  as a `Vector{Vector{Int}}` or `Vector{Vector{String}}`,
+  matching the format used for the multivector field.
+  If the optional argument `poset=true` is added, then
+  the function also returns a matrix which encodes the
+  Hasse diagram of the poset ``\mathbb{P}``. Note that
+  this is the transitive reduction of the full poset, 
+  i.e., it only contains necessary relations.
+* The function [`morse_interval`](@ref) computes the
+  isolated invariant set for a Morse set interval.
+  The three input arguments are the underlying Lefschetz
+  complex, a multivector field, and a collection of Morse
+  sets. The latter should be determined using the
+  function [`morse_sets`](@ref). The function returns the
+  smallest isolated invariant set which contains the Morse
+  sets and their connections as a `Vector{Int}`. The result
+  can be converted to label form using [`convert_cells`](@ref).
+* The function [`restrict_dynamics`](@ref) restricts a multivector
+  field to a Lefschetz subcomplex. The function expects three
+  arguments: A Lefschetz complex `lc`, a multivector field
+  `mvf`, and a subcomplex of the Lefschetz complex which is
+  given by the locally closed set represented by `lcsub`.
+  It returns the associated Lefschetz subcomplex `lcreduced`
+  and the induced multivector field `mvfreduced` on the subcomplex.
+  The multivectors of the new multivector field are the
+  intersections of the original multivectors and the subcomplex.
+* Finally, the function [`remove_exit_set`](@ref) removes the
+  exit set for a multivector field on a Lefschetz subcomplex.
+  It is assumed that the Lefschetz complex `lc` is a topological
+  manifold and that `mvf` contains a multivector field that is
+  created via either [`create_planar_mvf`](@ref) or
+  [`create_spatial_mvf`](@ref). The function identifies cells
+  on the boundary at which the flows exits the region covered
+  by the Lefschetz complex. If this exit set is closed, one has
+  found an isolated invariant set and the function returns a
+  Lefschetz complex `lcr` restricted to it, as well as the
+  restricted multivector field `mvfr`. If the exit set is not
+  closed, a warning is displayed and the function returns the
+  restricted Lefschetz complex and multivector field obtained
+  by removing the closure of the exit set. *In the latter case,
+  unexpected results might be obtained.*
 
-* [`morse_sets`](@ref)
-* [`morse_interval`](@ref)
-* [`restrict_dynamics`](@ref)
-* [`remove_exit_set`](@ref)
-
-
+The first two of these functions rely heavily on the Julia package
+[Graphs.jl](http://juliagraphs.org/Graphs.jl/stable/).
 
 ## Connection Matrices
 
@@ -505,7 +547,7 @@ further defines the restricted connection matrix
      \bigoplus_{p \in I} CH_*(M_p) .
 ```
 
-A connection matrix ``\Delta`` has the following
+Any connection matrix ``\Delta`` has the following
 fundamental properties:
 
 * The matrix ``\Delta`` is *strictly upper triangular*, i.e.,
@@ -524,7 +566,22 @@ fundamental properties:
   ``\Delta(p,q) \neq 0``, then the *connection set
   ``\mathcal{C}(M_q,M_p)`` is not empty*.
 
-However, these properties do not characterize connection matrices!
+We would like to point out that these properties do not
+characterize connection matrices. In practice, a given
+multivector field can have several different connection
+matrices. These in some sense encode different types of
+dynamical behavior that can occur in the system.
+Nonuniqueness, however, cannot be observed if the underlying
+system is a *gradient combinatorial Forman vector field* on
+a Lefschetz complex. These are multivector fields in which
+every multivector is either a singleton, and therefore
+a critical cell, or a two-element Forman arrow. In
+addition, a gradient combinatorial Forman vector field
+cannot have any nontrivial periodic solutions, i.e., 
+periodic solutions which are not constant and therefore
+critical cells. For such combinatorial vector fields,
+the following result was shown in
+[mrozek:wanner:p21a](@cite).
 
 !!! danger "Theorem: Uniqueness of connection matrices"
     If ``\mathcal{V}`` is a gradient combinatorial Forman
@@ -532,11 +589,9 @@ However, these properties do not characterize connection matrices!
     decomposition, then the connection matrix is
     uniquely determined.
 
-
-
-[dey:etal:24a](@cite)
-
-
+In `ConleyDynamics.jl` connection matrices can be computed
+over arbitrary finite fields or the rationals, using the
+persistence-like algorithm introduced in [dey:etal:24a](@cite):
 
 * [`connection_matrix`](@ref)
 
