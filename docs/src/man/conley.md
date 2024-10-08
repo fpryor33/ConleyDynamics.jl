@@ -184,7 +184,7 @@ The multivalued map ``\Pi_{\mathcal V} : X \multimap X``
 naturally leads to a solution concept for multivector fields.
 A *path* is a sequence ``x_0, x_1, \ldots, x_n \in X`` such
 that ``x_k \in \Pi_{\mathcal{V}}(x_{k-1})`` for all indices
-``k = 1,\ldots,n``. Paths of infinite length are called
+``k = 1,\ldots,n``. Paths of bi-infinite length are called
 solutions. More precisely, a *solution* of the combinatorial
 dynamical system induced by the multivector field is then a
 map ``\rho : \mathbb{Z} \to X`` which satisfies
@@ -216,9 +216,9 @@ which is based on classical Morse theory, critical cells correspond
 to stationary solutions or equilibria of the underlying flow. Thus,
 it has to be possible to stay in a critical multivector for all times,
 whether in forward or backward time, or even for all times. On the other
-hand, a Forman arrow indicates prescribed motion, and therefore a
-regular multivector corresponds to motion which goes from the
-multivector to its mouth.
+hand, a Forman arrow indicates prescribed non-negotiable motion, and
+therefore a regular multivector corresponds to motion which goes
+from the multivector to its mouth.
 
 Using the concept of essential solutions we can now introduce the
 notion of *invariance*. Informally, we say that a subset of a Lefschetz
@@ -335,39 +335,39 @@ We now turn our attention to the global dynamics of a combinatorial
 dynamical system. This is accomplished through the notion of
 *Morse decomposition*, and it requires some auxilliary definitions:
 
-* Suppose we are given a solution ``\phi : \mathbb{Z} \to X`` for
+* Suppose we are given a solution ``\varphi : \mathbb{Z} \to X`` for
   the multivector field ``\mathcal{V}``. Then the long-term limiting
-  behavior of ``\phi`` can be described using the *ultimate backward
+  behavior of ``\varphi`` can be described using the *ultimate backward
   and forward images*
   ```math
-     \mathrm{uim}^- \phi =
-     \bigcap_{t \in \mathbb{Z}^-} \phi\left( (-\infty,t] \right)
+     \mathrm{uim}^- \varphi =
+     \bigcap_{t \in \mathbb{Z}^-} \varphi\left( (-\infty,t] \right)
      \qquad\text{and}\qquad
-     \mathrm{uim}^+ \phi =
-     \bigcap_{t \in \mathbb{Z}^+} \phi\left( [t,+\infty) \right) .
+     \mathrm{uim}^+ \varphi =
+     \bigcap_{t \in \mathbb{Z}^+} \varphi\left( [t,+\infty) \right) .
   ```
   Notice that since ``X`` is finite, there has to exist a
   ``k \in \mathbb{N}`` such that
   ```math
-     \mathrm{uim}^- \phi =
-     \phi\left( (-\infty,-k] \right) \neq \emptyset
+     \mathrm{uim}^- \varphi =
+     \varphi\left( (-\infty,-k] \right) \neq \emptyset
      \qquad\text{and}\qquad
-     \mathrm{uim}^+ \phi =
-     \phi\left( [k,+\infty) \right) \neq \emptyset .
+     \mathrm{uim}^+ \varphi =
+     \varphi\left( [k,+\infty) \right) \neq \emptyset .
   ```
 * The *``\mathcal{V}``-hull* of a set ``A \subset X`` is the
   intersection of all ``\mathcal{V}``-compatible and locally
   closed sets containing ``A``. It is denoted by
   ``\langle A \rangle_{\mathcal{V}}``, and is the smallest 
   candidate for an isolated invariant set which contains ``A``.
-* The ``\alpha``- and ``\omega``-limit sets of ``\phi``
+* The ``\alpha``- and ``\omega``-limit sets of ``\varphi``
   are then defined as
   ```math
-     \alpha(\phi) =
-     \left\langle \mathrm{uim}^- \phi \right\rangle_{\mathcal{V}}
+     \alpha(\varphi) =
+     \left\langle \mathrm{uim}^- \varphi \right\rangle_{\mathcal{V}}
      \qquad\text{and}\qquad
-     \omega(\phi) =
-     \left\langle \mathrm{uim}^+ \phi \right\rangle_{\mathcal{V}}.
+     \omega(\varphi) =
+     \left\langle \mathrm{uim}^+ \varphi \right\rangle_{\mathcal{V}}.
   ```
 
 While in general the ``\mathcal{V}``-hull of a set does not have
@@ -376,16 +376,16 @@ essential solution both of its limit sets are in fact isolated
 invariant sets.
 
 !!! danger "Theorem: Limit sets are nontrivial"
-    Let ``\phi`` be an essential solution in ``X``. Then both
-    limit sets ``\alpha(\phi)`` and ``\omega(\phi)`` are
+    Let ``\varphi`` be an essential solution in ``X``. Then both
+    limit sets ``\alpha(\varphi)`` and ``\omega(\varphi)`` are
     nonempty isolated invariant sets.
 
 The above notions allow us to decompose the global dynamics of
 a multivector field. Loosely speaking, this is accomplished by
 separating the dynamics into a recurrent part given by an indexed
 collection of isolated invariant sets, and the gradient dynamics
-between them. This can be abstracted with the concept of a *Morse
-decomposition*.
+between them. This can be abstracted through the concept of a
+*Morse decomposition*.
 
 !!! tip "Definition: Morse decomposition"
     Assume that ``X`` is an invariant set for the multivector
@@ -396,31 +396,30 @@ decomposition*.
     satisfied:
     * The indexed family ``\mathcal{M}`` is a family of mutually
       disjoint, isolated invariant subsets of ``X``.
-    * For every essential solution ``\phi`` in ``X`` either one has
-      ``\mathrm{im} \, \phi \subset M_r`` for an ``r \in \mathbb{P}``
+    * For every essential solution ``\varphi`` in ``X`` either one has
+      ``\mathrm{im} \, \varphi \subset M_r`` for an ``r \in \mathbb{P}``
       or there exist two poset elements ``p,q \in \mathbb{P}`` such
       that ``q > p`` and
       ```math
-         \alpha(\phi) \subset M_q
+         \alpha(\varphi) \subset M_q
          \qquad\text{and}\qquad
-         \omega(\phi) \subset M_p .
+         \omega(\varphi) \subset M_p .
       ```
       The elements of ``\mathcal{M}`` are called *Morse sets*. We
       would like to point out that some of the Morse sets could
       be empty.
 
-Given a combinatorial vector field ``\mathcal{V}`` on a Lefschetz
-complex ``X``, one can easily find the finest Morse decomposition
-``\mathcal{M}`` by determining the strongly connected components
-of the digraph associated with the multivalued flow map
-``\Pi_{\mathcal{V}} : X \multimap X`` which contain essential
-solutions.
-
-The associated *Conley-Morse graph* is the partial order induced
-on ``\mathcal{M}`` by the existence of connections, and represented
-as a directed graph labelled with the Conley indices of the isolated
-invariant sets in ``\mathcal{M}`` in terms of their Poincare
-polynomials.
+Given a combinatorial multivector field ``\mathcal{V}`` on an
+arbitrary Lefschetz complex ``X``, there always exists a finest
+Morse decomposition ``\mathcal{M}``. It can be found by
+determining the strongly connected components of the digraph
+associated with the multivalued flow map ``\Pi_{\mathcal{V}} :
+X \multimap X`` which contain essential solutions. The
+associated *Conley-Morse graph* is the partial order induced
+on ``\mathcal{M}`` by the existence of connections, and
+represented as a directed graph labelled with the Conley indices
+of the isolated invariant sets in ``\mathcal{M}`` in terms of
+their Poincare polynomials.
 
 In order to capture the dynamics between two subsets ``A,B \subset X``
 one can define the *connection set* from ``A`` to ``B`` as the cell
@@ -430,19 +429,21 @@ collection
    \mathcal{C}(A,B) =
    \left\{ x \in X \, : \,
      \exists \, \text{ essential solution }
-     \phi \text{ through } x \text{ with }
-     \alpha(\phi) \subset A \text{ and }
-     \omega(\phi) \subset B \right\} .
+     \varphi \text{ through } x \text{ with }
+     \alpha(\varphi) \subset A \text{ and }
+     \omega(\varphi) \subset B \right\} .
 ```
 
-Then ``\mathcal{C}(A,B)`` is an isolated invariant set.
+Then ``\mathcal{C}(A,B)`` is an isolated invariant set. We would 
+like to point out, however, that the connection can be, and in
+fact will be, empty in many cases.
 
-While the Morse sets are the fundamental building blocks for
-the global dynamics, there usually are many additional isolated
-invariant sets for the multivector field ``\mathcal{V}``. Of
-particular interest are *Morse intervals*. To define them, let
-``I \subset \mathbb{P}`` denote an interval in the index poset.
-Then
+While the Morse sets of a Morse decomposition are the fundamental
+building blocks for the global dynamics, there usually are many
+additional isolated invariant sets for the multivector field
+``\mathcal{V}``. Of particular interest are *Morse intervals*.
+To define them, let ``I \subset \mathbb{P}`` denote an interval
+in the index poset. Then
 
 ```math
    M_I \; = \; \bigcup_{p \in I} M_p \; \cup \;
@@ -450,7 +451,8 @@ Then
 ```
 
 is always an isolated invariant set. Nevertheless, not every
-isolated invariant set is of this form!
+isolated invariant set is of this form.
+
 
 
 * [`morse_sets`](@ref)
@@ -462,27 +464,40 @@ isolated invariant set is of this form!
 
 ## Connection Matrices
 
+While a Morse decomposition represents the basic structure
+of the global dynamics of a combinatorial dynamical system,
+it does not directly provide more detailed information about
+the dynamics between them -- except for the poset order on
+the Morse sets. But which of the associated connecting sets
+actually have to be nonempty? The algebra behind this question
+is captured by the *connection matrix*. The precise notion
+of connection matrix was introduced in [franzosa:89a](@cite),
+see also [harker:etal:21a](@cite), as well as the paper
+[mrozek:wanner:p21a](@cite) which treats connection matrices
+specifically in the setting of multivector fields.
 
-[franzosa:89a](@cite)
-[harker:etal:21a](@cite)
-[mrozek:wanner:p21a](@cite)
-
-
-Assume that we are given a Morse decomposition ``\mathcal{M}``
-of an isolated invariant set ``S``. Then the *connection matrix*
-is a linear map
+Since the precise definition of a connection matrix is 
+beyond the scope of this manual, we only state what it is
+as an object, what its main properties are, and how it can
+be computed in `ConleyDynamics.jl`. Assume therefore that we
+are given a Morse decomposition ``\mathcal{M}`` of an isolated
+invariant set ``S``. Then the *connection matrix* is a linear
+map
 
 ```math
    \Delta \; : \; \bigoplus_{q \in \mathbb{P}} CH_*(M_q)
-   \to \bigoplus_{p \in \mathbb{P}} CH_*(M_p) .
+   \to \bigoplus_{p \in \mathbb{P}} CH_*(M_p) ,
 ```
 
+i.e., it is a linear map which is defined on the direct sum of
+all Conley indices of the Morse sets in the Morse decomposition.
 One usually writes the connection matrix ``\Delta`` as a matrix
 in the form ``\Delta = (\Delta(p,q))_{p,q \in \mathbb{P}}``,
 which is indexed by the poset ``\mathbb{P}``, and where
 the entries ``\Delta(p,q) : CH_*(M_q) \to CH_*(M_p)`` are
-linear maps. If ``I`` denotes an interval in the poset
-``\mathbb{P}``, then one further defines
+linear maps between homological Conley indices. If ``I``
+denotes an interval in the poset ``\mathbb{P}``, then one
+further defines the restricted connection matrix
 
 ```math
    \Delta(I) \; = \; \left( \Delta(p,q) \right)_{p,q \in I}
@@ -497,7 +512,8 @@ fundamental properties:
   if ``\Delta(p,q) \not= 0`` then ``p < q``.
 * The matrix ``\Delta`` is a *boundary operator*, i.e., we
   have ``\Delta \circ \Delta = 0``, and ``\Delta`` maps
-  ``k``-th level homology to ``(k-1)``-st level homology.
+  ``k``-th level homology to ``(k-1)``-st level homology
+  for all ``k \in \mathbb{Z}``.
 * For every interval ``I`` in ``\mathbb{P}`` we have
   ```math
      H_*\Delta(I) \; = \;
