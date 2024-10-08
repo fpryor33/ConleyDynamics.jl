@@ -3,19 +3,20 @@
 Conley's theory for the qualitative study of dynamical systems is based
 on fundamental concepts from algebraic topology. One of these is homology,
 which studies the topological properties of spaces using algebraic means.
-As part of `ConleyDynamics.jl` a number of homology methods are included.
-It should be noted that these algorithms are not meant for truly large-scale
-problems, but mostly for illustrative purposes. They are based on the
-persistence algorithm described in [edelsbrunner:harer:10a](@cite), and
-have been extended to work for arbitrary Lefschetz complexes over either
-the rationals or a finite field of prime order. For more serious applications
-one could use professional implementations such as *Gudhi*, see
-[gudhi:24a](@cite).
+As part of [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+a number of homology methods are included. It should be noted that these
+algorithms are not meant for truly large-scale problems, but mostly for
+illustrative purposes. They are based on the persistence algorithm described
+in [edelsbrunner:harer:10a](@cite), and have been extended to work for
+arbitrary Lefschetz complexes over either the rationals or a finite
+field of prime order. For more serious applications one could use
+professional implementations such as *Gudhi*, see [gudhi:24a](@cite).
 
 ## Lefschetz Complex Homology
 
-The most important notion of homology used in `ConleyDynamics.jl` is 
-*Lefschetz homology*. It generalizes both *simplicial homology* as 
+The most important notion of homology used in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+is *Lefschetz homology*. It generalizes both *simplicial homology* as 
 described in [munkres:84a](@cite), and *cubical homology* in the sense
 of [kaczynski:etal:04a](@cite). In order to fix our notation, we provide
 a brief introduction in the following. For more details, see
@@ -187,8 +188,9 @@ In general, one can show that ``\beta_k(X)`` represents the
 number of independent ``k``-dimensional holes in the
 Lefschetz complex ``X``. For more details, see [munkres:84a](@cite).
 
-The package `ConleyDynamics.jl` provides one function to compute
-standard homology:
+The package
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+provides one function to compute standard homology:
 
 - [`homology`](@ref) expects one input argument, which has to be 
   of the Lefschetz complex type [`LefschetzComplex`](@ref). It
@@ -362,9 +364,9 @@ pair ``(X,Y)``*. Notice that by forming the quotient spaces
 ``C_k(X) / C_k(Y)``, the chains in the subspace are all identified
 and set to zero, as mentioned earlier.
 
-In `ConleyDynamics.jl`, relative homology can be computed using
-[`relative_homology`](@ref). There are two possible ways to
-invoke this function:
+In [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
+relative homology can be computed using [`relative_homology`](@ref).
+There are two possible ways to invoke this function:
 
 - The method
   [`relative_homology(lc::LefschetzComplex, subc::Cells)`](@ref)
@@ -477,9 +479,10 @@ two, since this subcomplex has dimension one.
 
 Even though the notion of persistence is not strictly necessary
 for the study of combinatorial topological dynamics, the package
-`ConleyDynamics.jl` provides rudimentary support for the computation
-of persistence intervals for filtrations of Lefschetz complexes.
-A detailed introduction to persistence can be found in the book
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+provides rudimentary support for the computation of persistence
+intervals for filtrations of Lefschetz complexes. A detailed
+introduction to persistence can be found in the book
 [edelsbrunner:harer:10a](@cite), and we briefly provide an
 intuitive definition and some examples below.
 
@@ -581,8 +584,8 @@ dimension can be determined easily:
   and therefore there are no persistence intervals in 
   dimension two.
 
-In `ConleyDynamics.jl`, there are two functions that provide
-basic persistence functionality:
+In [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
+there are two functions that provide basic persistence functionality:
 
 - The function [`persistent_homology`](@ref) computes the persistence
   intervals, and it is usually invoked using the command

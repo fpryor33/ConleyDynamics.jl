@@ -1,6 +1,7 @@
 # Lefschetz Complexes
 
-The fundamental structure underlying the functionality of `ConleyDynamics.jl` is
+The fundamental structure underlying the functionality of
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl) is
 a *Lefschetz complex*. It provides us with the basic model of phase space for
 combinatorial topological dynamics. In view of the combinatorial, and therefore
 discrete, character of the dynamical behavior, a Lefschetz complex is not a
@@ -177,9 +178,9 @@ the definition in [massey:91a](@cite) and the discussion in
 
 ## Lefschetz Complex Data Structure
 
-For the efficient and easy manipulation of Lefschetz complexes
-in `ConleyDynamics.jl` we make use of a specific composite
-data type:
+For the efficient and easy manipulation of Lefschetz complexes in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+we make use of a specific composite data type:
 
 ```@docs; canonical=false
 LefschetzComplex
@@ -274,7 +275,8 @@ bndsparseR = sparse_from_full(bndmatrixR, p=2)
 lcR = LefschetzComplex(ncR, 2, bndsparseR, labelsR, indicesR, cdimsR)
 ```
 
-While Lefschetz complexes can always be created in `ConleyDynamics.jl`
+While Lefschetz complexes can always be created in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
 in this direct way, it is often more convenient to make use of special
 types, such as simplicial and cubical complexes, and then restrict the
 complex to a locally closed set using the function
@@ -352,8 +354,8 @@ vertex permutation. In either case, one can show that the so-defined map
 ``\kappa`` does indeed satisfy the definition of a Lefschetz complex.
 For more details, see [munkres:84a; Lemma 5.3](@cite).
 
-In `ConleyDynamics.jl` there are three basic commands for defining
-a simplicial complex:
+In [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+there are three basic commands for defining a simplicial complex:
 
 - [`create_simplicial_complex`](@ref) is the most general method, and it
   expects two input arguments. The first is usually called `labels`, and 
@@ -535,12 +537,13 @@ the definition of a Lefschetz complex, i.e., we have ``\partial(\partial Q)
 = 0`` for every ``Q \in X``. This in turn implies that every cubical complex
 is indeed a Lefschetz complex.
 
-Cubical complexes in `ConleyDynamics.jl` are a little more restricted.
-Since a cubical complex in the above sense is always finite, one can
-assume without loss of generality that the left endpoints of all
-involved elementary intervals are nonnegative. In other words, we
-always assume that the cubical complex only contains elementary cubes
-from the set ``(\mathbb{R}_0^+)^d``. This allows for a simple encoding
+Cubical complexes in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+are a little more restricted. Since a cubical complex in the above sense
+is always finite, one can assume without loss of generality that the left
+endpoints of all involved elementary intervals are nonnegative. In other
+words, we always assume that the cubical complex only contains elementary
+cubes from the set ``(\mathbb{R}_0^+)^d``. This allows for a simple encoding
 of elementary cubes via labels of a fixed length, and without having
 to worry about the sign of an integer.
 
@@ -594,8 +597,9 @@ types of cube labels:
   specifies the coordinates of the starting points and the interval
   lengths as in the previous item.
 
-In `ConleyDynamics.jl` there are four basic commands for defining
-a cubical complex and working with it:
+In [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+there are four basic commands for defining a cubical complex and working
+with it:
 
 - [`create_cubical_complex`](@ref) creates a cubical complex in the
   Lefschetz complex data format. The complex is specified via a list
@@ -672,8 +676,9 @@ of this section.
 
 Once a Lefschetz complex has been created, there are a number
 of manipulations and queries that one has to be able to perform
-on the complex. At the moment, `ConleyDynamics.jl` supplies
-a number of functions for this. The following three functions 
+on the complex. At the moment,
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+supplies a number of functions for this. The following three functions 
 provide *basic information*:
 
 - [`lefschetz_field`](@ref) returns the field ``F`` over which the
@@ -749,10 +754,11 @@ be useful:
   a filtration of closed subcomplexes, and which can be used
   to compute persistent homology.
 
-In addition, `ConleyDynamics.jl` provides the following helper
-functions for the fundamental objects of *cells and cell subsets*,
-which can be represented either by integer cell indices or by
-cell labels:
+In addition,
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+provides the following helper functions for the fundamental objects
+of *cells and cell subsets*, which can be represented either by
+integer cell indices or by cell labels:
 
 - [`convert_cells`](@ref) converts a vector of cells from
   integer to label format, or vice versa.

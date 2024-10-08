@@ -7,7 +7,8 @@ DocTestSetup = quote
 end
 ```
 
-In order to illustrate the basic functionality of `ConleyDynamics.jl`, 
+In order to illustrate the basic functionality of
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl), 
 this section collects a number of examples. Many of these are taken 
 from the papers [batko:etal:20a](@cite) and [mrozek:wanner:p21a](@cite),
 and they consider both Forman vector fields and general multivector
@@ -166,7 +167,8 @@ and it is visualized in the accompanying figure.
 
 ![The logo multivector field](img/multivectorex.png)
 
-Clearly, this is the multivector field from the `ConleyDynamics.jl`
+Clearly, this is the multivector field from the
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
 logo. Since it was already discussed in detail in the [Tutorial](@ref),
 we only show how the underlying simplicial complex and the multivector
 field can be created quickly using the function [`example_julia_logo`](@ref):
@@ -644,7 +646,8 @@ in the middle of the figure, which consists of the critical
 cells ``\alpha`` and ``b``, as well as the two regular multivectors
 ``\{ A, a \}`` and ``\{ B, c \}``. For this small example, one can
 easily determine the Morse decomposition, and it is shown in the
-rightmost panel. The example can be generated in `ConleyDynamics.jl`
+rightmost panel. The example can be generated in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
 using the function [`example_small_periodicity`](@ref):
 
 ```@docs; canonical=false

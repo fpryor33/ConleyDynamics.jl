@@ -8,9 +8,11 @@ one elements from the data type alone. However, a finite field data type
 generally also depends on additional parameters, such as the characteristic
 of the field.
 
-Since the algorithms underlying `ConleyDynamics.jl` only require basic row
-and column operations, a specialized sparse matrix implementation is provided
-in the package. It is briefly described in the following.
+Since the algorithms underlying
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+only require basic row and column operations, a specialized sparse
+matrix implementation is provided in the package. It is briefly
+described in the following.
 
 ## Sparse Matrix Format
 
@@ -57,7 +59,8 @@ following fields:
 This data structure is clearly redundant, in the sense that the
 field `rows` is not needed to uniquely determine the matrix. However,
 the type [`SparseMatrix`](@ref) is fundamental for almost every aspect
-of `ConleyDynamics.jl`, as it is used to encode the incidence coefficient
+of [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
+as it is used to encode the incidence coefficient
 map ``\kappa``, and therefore also the matrix representation of the
 boundary operator ``\partial``. And for many operations on or queries
 of Lefschetz complexes, one needs fast access to both the cells in
@@ -75,8 +78,9 @@ methods, it can be added at a later point in time.
 
 The package provides a number of methods for creating sparse 
 matrices with the data type [`SparseMatrix`](@ref). These are
-geared towards their usage within `ConleyDynamics.jl` and are 
-therefore by no means exhaustive:
+geared towards their usage within
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+and are therefore by no means exhaustive:
 
 - [`sparse_from_full`](@ref) is usually invoked in the form
   `A = sparse_from_full(AF, p=PP)`. The first input argument `AF`
@@ -202,7 +206,9 @@ implemented if they become necessary.
 
 ## Sparse Matrix Information
 
-Finally, `ConleyDynamics.jl` provides the following functions 
+Finally,
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+provides the following functions 
 for quickly extracting certain information from sparse matrices:
 
 - [`sparse_size`](@ref) is invoked as `size = sparse_size(A,dim)`,

@@ -1,13 +1,15 @@
 # Conley Theory
 
-The main motivation for `ConleyDynamics.jl` is the development of an
-accessible tool for studying the global dynamics of multivector fields
-on Lefschetz complexes. Having already discussed the latter, we now turn
-our attention to multivector fields and their global dynamics. This
-involves a detailed discussion of multivector fields, isolated invariant
-sets, their Conley index, as well as Morse decompositions and connection
-matrices. We also describe how a variety of isolated invariant sets can
-be constructed using Morse decomposition intervals, and apply these
+The main motivation for
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+is the development of an accessible tool for studying the global
+dynamics of multivector fields on Lefschetz complexes. Having already
+discussed the latter, we now turn our attention to multivector fields
+and their global dynamics. This involves a detailed discussion of
+multivector fields, isolated invariant sets, their Conley index,
+as well as Morse decompositions and connection matrices. We also
+describe how a variety of isolated invariant sets can be
+constructed using Morse decomposition intervals, and apply these
 tools to the analysis of simple planar and three-dimensional
 ordinary differential equations.
 
@@ -44,7 +46,7 @@ satisfies ``H_*(V) \cong H_*(\mathrm{cl}\, V, \mathrm{mo}\, V)``.
 For more details, see [Relative Homology](@ref).
 
 The above classification of multivectors is motivated by the
-case of classical Forman vector fields. These are a special 
+case of classical *Forman vector fields*. These are a special 
 case of multivector fields, in that they also form a partition
 of the underlying Lefschetz complex. This time, however, there 
 are only two types of multivectors:
@@ -52,7 +54,7 @@ are only two types of multivectors:
 * A *critical cell* is a multivector consisting of exactly
   one cell of the Lefschetz complex. One can easily see that
   in this case the ``k``-th homology group is isomorphic
-  to ``F``, as long has the cell has dimension ``k``. All
+  to ``F``, as long as the cell has dimension ``k``. All
   other homology groups vanish. Thus, every critical cell 
   is a critical multivector.
 * A *Forman arrow* is a multivector consisting of two
@@ -63,12 +65,13 @@ are only two types of multivectors:
   can show that all homology groups of a Forman arrow are
   zero, and therefore it is a regular multivector.
 
-In `ConleyDynamics.jl`, multivector fields can be created in a number
-of different ways. The most direct method is to specify all multivectors
-of length larger than one in an array of type `Vector{Vector{Int}}` or
-`Vector{Vector{String}}`, depending on whether the involved cells are
-referenced via their indices or labels. Recall that it is easy to
-convert between these two forms using the command
+In [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
+multivector fields can be created in a number of different ways. The
+most direct method is to specify all multivectors of length larger
+than one in an array of type `Vector{Vector{Int}}` or
+`Vector{Vector{String}}`, depending on whether the involved cells
+are referenced via their indices or labels. Recall that it is
+easy to convert between these two forms using the command
 [`convert_cellsubsets`](@ref). The subsets specified by the vector
 entries have to be disjoint. They do not, however, have to exhaust 
 the underlying Lefschetz complex ``X``. Any cells that are not part
@@ -100,9 +103,10 @@ the result leads to the trivial multivector field ``\mathcal{V} =
 is more useful. See also the examples later in this section of the
 manual.
 
-The package `ConleyDynamics.jl` provides a number of functions
-for creating and manipulating multivector fields on Lefschetz
-complexes:
+The package
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+provides a number of functions for creating and manipulating multivector
+fields on Lefschetz complexes:
 
 * The function [`create_mvf_hull`](@ref) implements the above
   theorem on dynamical transitions. It expects two input arguments:
@@ -220,6 +224,26 @@ hand, a Forman arrow indicates prescribed non-negotiable motion, and
 therefore a regular multivector corresponds to motion which goes
 from the multivector to its mouth.
 
+The multivector field from the package logo, which is shown in the
+accompanying image, consists of three critical cells, two Forman
+arrows, as well as one multivector which consists of four cells.
+Beyond the constant essenetial solutions in each of the three
+critical cells, another essential solution is the *periodic
+orbit*
+
+```math
+   \rho_P \;\text{ given by }\;
+   \ldots \to \mathbf{A} \to \mathbf{AB} \to \mathbf{B}
+     \to \mathbf{BCD} \to \mathbf{C} \to \mathbf{AC}
+     \to \mathbf{A} \to \ldots
+```
+
+Notice that this is just one of many realizations of this particular
+periodic motion, since an essential solution can take many different
+paths through a multivector.
+
+![The logo multivector field](img/multivectorex.png)
+
 Using the concept of essential solutions we can now introduce the
 notion of *invariance*. Informally, we say that a subset of a Lefschetz
 complex is invariant if through every cell in the set there exists an
@@ -242,7 +266,9 @@ of ``A``* as
 It is certainly possible that the invariant part of a set is 
 empty. If, however, the invariant part of ``A`` is all of ``A``,
 i.e., if we have ``\mathrm{Inv}_{\mathcal{V}}(A) = A``, then
-the set ``A`` is called *invariant*.
+the set ``A`` is called *invariant*. In the context of our
+above logo example, the image of the essential solution
+``\rho_P`` is clearly an invariant set.
 
 Invariant sets are the fundamental building blocks for the global
 dynamics of a dynamical system. Yet, in general they are difficult
@@ -279,6 +305,14 @@ the following result from [lipinski:etal:23a](@cite):
     In this case, the isolated invariant set ``S`` is isolated
     by its closure ``\mathrm{cl}\, S``.
 
+Returning to our earlier logo example, notice that the cells
+visited by the periodic essential solution ``\rho_P`` do not
+form an isolated invariant set, but rather just an invariant
+set. However, if we consider the larger set ``S_P`` which
+consists of all cells except for the cells ``\mathbf{ABC}``
+and ``\mathbf{D}``, then we do obtain an isolated invariant
+set which contains the periodic orbit ``\rho_P``.
+
 With this characterization at hand, identifying isolated invariant
 sets becomes straightforward. In addition, since isolated invariant
 sets are locally closed, we can now also define their *Conley index*:
@@ -305,11 +339,12 @@ sets are locally closed, we can now also define their *Conley index*:
 Since the Conley index is nothing more than the relative
 homology of the closure-mouth-pair associated with a locally
 closed set, one could easily use the homology functions described
-in [Homology](@ref) for its computation. However, we have
-included a wrapper function to keep the notation uniform. In
-addition, `ConleyDynamics.jl` contains a function which provides
-basic information about an isolated invariant set. These two
-functions can be described as follows:
+in [Homology](@ref) for its computation. However, we have included
+a wrapper function to keep the notation uniform. In addition,
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+contains a function which provides basic information about an
+isolated invariant set. These two functions can be described
+as follows:
 
 * The function [`conley_index`](@ref) determines the Conley
   index of an isolated invariant set. It expects a Lefschetz
@@ -380,6 +415,15 @@ invariant sets.
     limit sets ``\alpha(\varphi)`` and ``\omega(\varphi)`` are
     nonempty isolated invariant sets.
 
+We briefly pause to illustrate these concepts in the context
+of the above logo example. For the periodic essential solution
+``\rho_P``, both its ultimate backward and forward images 
+are precisely the cells visited by the solution. The
+``\mathcal{V}``-hull of ``\mathrm{im}\, \rho_P`` is the set ``S_P``
+which consists of all cells except the index 0 and 2 critical
+cells. It was already mentioned earlier that this indeed
+defines an isolated invariant set.
+
 The above notions allow us to decompose the global dynamics of
 a multivector field. Loosely speaking, this is accomplished by
 separating the dynamics into a recurrent part given by an indexed
@@ -412,7 +456,7 @@ between them. This can be abstracted through the concept of a
 Given a combinatorial multivector field ``\mathcal{V}`` on an
 arbitrary Lefschetz complex ``X``, there always exists a finest
 Morse decomposition ``\mathcal{M}``. It can be found by
-determining the strongly connected components of the digraph
+determining those strongly connected components of the digraph
 associated with the multivalued flow map ``\Pi_{\mathcal{V}} :
 X \multimap X`` which contain essential solutions. The
 associated *Conley-Morse graph* is the partial order induced
@@ -435,8 +479,8 @@ collection
 ```
 
 Then ``\mathcal{C}(A,B)`` is an isolated invariant set. We would 
-like to point out, however, that the connection can be, and in
-fact will be, empty in many cases.
+like to point out, however, that the connection set can be, and
+in fact will be, empty in many cases.
 
 While the Morse sets of a Morse decomposition are the fundamental
 building blocks for the global dynamics, there usually are many
@@ -451,11 +495,22 @@ in the index poset. Then
 ```
 
 is always an isolated invariant set. Nevertheless, not every
-isolated invariant set is of this form.
+isolated invariant set is of this form. For example, the figure
+contains the multivector field which was discussed in
+[batko:etal:20a; Figure 3](@cite). While the underlying simplicial
+complex and the Forman vector field are depicted in the left panel,
+the associated Conley-Morse graph is shown on the right. For this
+combinatorial dynamical system, there exists an isolated invariant
+set which contains only the four Morse sets within the gray region
+under the graph. More details can be found in
+[A Planar Forman Vector Field](@ref).
+
+![Morse decomposition of the planar flow](img/examplebkmw3c.png)
 
 Morse decompositions and intervals can be easily computed 
-and manipulated in `ConleyDynamics.jl` using the following
-commands:
+and manipulated in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+using the following commands:
 
 * The function [`morse_sets`](@ref) expects a Lefschetz
   complex and a multivector field as arguments, and
@@ -521,10 +576,11 @@ specifically in the setting of multivector fields.
 Since the precise definition of a connection matrix is 
 beyond the scope of this manual, we only state what it is
 as an object, what its main properties are, and how it can
-be computed in `ConleyDynamics.jl`. Assume therefore that we
-are given a Morse decomposition ``\mathcal{M}`` of an isolated
-invariant set ``S``. Then the *connection matrix* is a linear
-map
+be computed in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl).
+Assume therefore that we are given a Morse decomposition
+``\mathcal{M}`` of an isolated invariant set ``S``. Then
+the *connection matrix* is a linear map
 
 ```math
    \Delta \; : \; \bigoplus_{q \in \mathbb{P}} CH_*(M_q)
@@ -589,9 +645,10 @@ the following result was shown in
     decomposition, then the connection matrix is
     uniquely determined.
 
-In `ConleyDynamics.jl` connection matrices can be computed
-over arbitrary finite fields or the rationals, using the
-persistence-like algorithm introduced in [dey:etal:24a](@cite):
+In [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+connection matrices can be computed over arbitrary finite fields or the
+rationals, using the persistence-like algorithm introduced
+in [dey:etal:24a](@cite):
 
 * [`connection_matrix`](@ref)
 
@@ -633,11 +690,12 @@ nine different Morse sets:
   asymptotically stable stationary states.
 
 We saw in the tutorial that the Morse decomposition of this system
-can easily be found using `ConleyDynamics.jl`, as well as the
-associated connection matrix. Yet, in certain situations one might
-only be interested in part of the dynamics on the attractor. Moreover,
-while the Morse sets describe the recurrent part of the dynamics, they
-do not provide information on the geometry of the connecting sets between
+can easily be found using
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
+as well as the associated connection matrix. Yet, in certain situations
+one might only be interested in part of the dynamics on the attractor.
+Moreover, while the Morse sets describe the recurrent part of the dynamics,
+they do not provide information on the geometry of the connecting sets between
 the Morse sets. In the following, we illustrate how this can be analyzed
 further.
 
@@ -681,9 +739,10 @@ morsedecomp = morse_sets(lc, mvf);
 length(morsedecomp)
 ```
 
-As expected, `ConleyDynamics.jl` finds exactly nine Morse sets. Their 
-Conley indices can be computed and stored in a `Vector{Vector{Int}}`
-using the command
+As expected,
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+finds exactly nine Morse sets. Their Conley indices can be computed
+and stored in a `Vector{Vector{Int}}` using the command
 
 ```@example Cmorseinterval
 conleyindices = [conley_index(lc, mset) for mset in morsedecomp]
@@ -721,8 +780,9 @@ characterized as follows:
   needs to combine the interval Morse sets with all *connecting
   orbits* between them.
 
-The two above steps can be performed in `ConleyDynamics.jl` using
-the function [`morse_interval`](@ref).
+The two above steps can be performed in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+using the function [`morse_interval`](@ref).
 
 In our example, we consider two intervals. The first interval
 consists of the five Morse sets corresponding to all unstable
@@ -751,7 +811,8 @@ Note that since they are both isolated invariant sets, they are
 locally closed in ``X``, and therefore the restrictions provide
 us with two new Lefschetz complexes `lcr1` and `lcr2`, along with
 induced multivector fields `mvfr1` and `mvfr2`, respectively. In
-`ConleyDynamics.jl`, this is achieved using the commands
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
+this is achieved using the commands
 
 ```@example Cmorseinterval
 lcr1, mvfr1 = restrict_dynamics(lc, mvf, lcsub1);
@@ -791,10 +852,10 @@ heteroclinics that are detected by the connection matrix.
 
 The Lefschetz complexes associated with the two Morse
 decomposition intervals can also be visualized in
-`ConleyDynamics.jl`. For this, recall that the function
-[`plot_planar_simplicial_morse`](@ref) can plot an underlying
-simplicial complex together with any collection of cell 
-subsets. For our purposes, we use the following commands:
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl).
+For this, recall that the function [`plot_planar_simplicial_morse`](@ref)
+can plot an underlying simplicial complex together with any collection
+of cell subsets. For our purposes, we use the following commands:
 
 ```julia
 show1 = [[lcr1.labels]; cmr1.morse];
@@ -834,9 +895,10 @@ four in the previous image.
 
 ## Analysis of a Planar System
 
-Our next example illustrates how `ConleyDynamics.jl` can be used to analyze
-the global dynamics of a planar ordinary differential equations. For this,
-consider the planar system
+Our next example illustrates how
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+can be used to analyze the global dynamics of a planar ordinary
+differential equations. For this, consider the planar system
 
 ```math
    \begin{array}{rcl}
@@ -973,8 +1035,9 @@ Note that in this example, there are only 20 large multivectors.
 ## Analysis of a Spatial System
 
 It is also possible to analyze simple three-dimensional ordinary
-differential equations in `ConleyDynamics.jl`. To provide one such
-example, consider the system
+differential equations in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl).
+To provide one such example, consider the system
 
 ```math
    \begin{array}{rcl}
