@@ -409,11 +409,48 @@ decomposition*.
       would like to point out that some of the Morse sets could
       be empty.
 
+Given a combinatorial vector field ``\mathcal{V}`` on a Lefschetz
+complex ``X``, one can easily find the finest Morse decomposition
+``\mathcal{M}`` by determining the strongly connected components
+of the digraph associated with the multivalued flow map
+``\Pi_{\mathcal{V}} : X \multimap X`` which contain essential
+solutions.
 
+The associated *Conley-Morse graph* is the partial order induced
+on ``\mathcal{M}`` by the existence of connections, and represented
+as a directed graph labelled with the Conley indices of the isolated
+invariant sets in ``\mathcal{M}`` in terms of their Poincare
+polynomials.
 
+In order to capture the dynamics between two subsets ``A,B \subset X``
+one can define the *connection set* from ``A`` to ``B`` as the cell
+collection
 
+```math
+   \mathcal{C}(A,B) =
+   \left\{ x \in X \, : \,
+     \exists \, \text{ essential solution }
+     \phi \text{ through } x \text{ with }
+     \alpha(\phi) \subset A \text{ and }
+     \omega(\phi) \subset B \right\} .
+```
 
+Then ``\mathcal{C}(A,B)`` is an isolated invariant set.
 
+While the Morse sets are the fundamental building blocks for
+the global dynamics, there usually are many additional isolated
+invariant sets for the multivector field ``\mathcal{V}``. Of
+particular interest are *Morse intervals*. To define them, let
+``I \subset \mathbb{P}`` denote an interval in the index poset.
+Then
+
+```math
+   M_I \; = \; \bigcup_{p \in I} M_p \; \cup \;
+               \bigcup_{p,q \in I} \mathcal{C}( M_q, M_p )
+```
+
+is always an isolated invariant set. Nevertheless, not every
+isolated invariant set is of this form!
 
 
 * [`morse_sets`](@ref)
@@ -429,6 +466,57 @@ decomposition*.
 [franzosa:89a](@cite)
 [harker:etal:21a](@cite)
 [mrozek:wanner:p21a](@cite)
+
+
+Assume that we are given a Morse decomposition ``\mathcal{M}``
+of an isolated invariant set ``S``. Then the *connection matrix*
+is a linear map
+
+```math
+   \Delta \; : \; \bigoplus_{q \in \mathbb{P}} CH_*(M_q)
+   \to \bigoplus_{p \in \mathbb{P}} CH_*(M_p) .
+```
+
+One usually writes the connection matrix ``\Delta`` as a matrix
+in the form ``\Delta = (\Delta(p,q))_{p,q \in \mathbb{P}}``,
+which is indexed by the poset ``\mathbb{P}``, and where
+the entries ``\Delta(p,q) : CH_*(M_q) \to CH_*(M_p)`` are
+linear maps. If ``I`` denotes an interval in the poset
+``\mathbb{P}``, then one further defines
+
+```math
+   \Delta(I) \; = \; \left( \Delta(p,q) \right)_{p,q \in I}
+     \; : \; \bigoplus_{p \in I} CH_*(M_p) \to
+     \bigoplus_{p \in I} CH_*(M_p) .
+```
+
+A connection matrix ``\Delta`` has the following
+fundamental properties:
+
+* The matrix ``\Delta`` is *strictly upper triangular*, i.e.,
+  if ``\Delta(p,q) \not= 0`` then ``p < q``.
+* The matrix ``\Delta`` is a *boundary operator*, i.e., we
+  have ``\Delta \circ \Delta = 0``, and ``\Delta`` maps
+  ``k``-th level homology to ``(k-1)``-st level homology.
+* For every interval ``I`` in ``\mathbb{P}`` we have
+  ```math
+     H_*\Delta(I) \; = \;
+     \mathrm{ker}\, \Delta(I) / \mathrm{im}\, \Delta(I)
+     \; \cong \; CH_*(M_I) .
+  ```
+* If ``\{ p, q \}`` is an interval in ``\mathbb{P}`` and
+  ``\Delta(p,q) \neq 0``, then the *connection set
+  ``\mathcal{C}(M_q,M_p)`` is not empty*.
+
+However, these properties do not characterize connection matrices!
+
+!!! danger "Theorem: Uniqueness of connection matrices"
+    If ``\mathcal{V}`` is a gradient combinatorial Forman
+    vector field and ``\mathcal{M}`` its finest Morse
+    decomposition, then the connection matrix is
+    uniquely determined.
+
+
 
 [dey:etal:24a](@cite)
 
