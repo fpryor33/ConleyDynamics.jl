@@ -66,8 +66,8 @@ are only two types of multivectors:
   zero, and therefore it is a regular multivector.
 
 In [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
-multivector fields can be created in a number of different ways. The
-most direct method is to specify all multivectors of length larger
+multivector fields can be created in two different ways. The
+direct method is to specify all multivectors of length larger
 than one in an array of type `Vector{Vector{Int}}` or
 `Vector{Vector{String}}`, depending on whether the involved cells
 are referenced via their indices or labels. Recall that it is
@@ -571,7 +571,9 @@ is captured by the *connection matrix*. The precise notion
 of connection matrix was introduced in [franzosa:89a](@cite),
 see also [harker:etal:21a](@cite), as well as the paper
 [mrozek:wanner:p21a](@cite) which treats connection matrices
-specifically in the setting of multivector fields.
+specifically in the setting of multivector fields and provides
+a precise definition of connection matrix equivalence, even 
+across varying posets.
 
 Since the precise definition of a connection matrix is 
 beyond the scope of this manual, we only state what it is
@@ -618,6 +620,9 @@ fundamental properties:
      \mathrm{ker}\, \Delta(I) / \mathrm{im}\, \Delta(I)
      \; \cong \; CH_*(M_I) .
   ```
+  In other words, the *Conley index of a Morse interval*
+  can be determined via the *homology* of the associated
+  *connection matrix minor* ``\Delta(I)``.
 * If ``\{ p, q \}`` is an interval in ``\mathbb{P}`` and
   ``\Delta(p,q) \neq 0``, then the *connection set
   ``\mathcal{C}(M_q,M_p)`` is not empty*.
@@ -650,21 +655,104 @@ connection matrices can be computed over arbitrary finite fields or the
 rationals, using the persistence-like algorithm introduced
 in [dey:etal:24a](@cite):
 
-* [`connection_matrix`](@ref)
+* The function [`connection_matrix`](@ref) computes a connection matrix
+  for the multivector field `mvf` on the Lefschetz complex `lc` over the
+  field associated with the Lefschetz complex boundary matrix. The function
+  returns an object of type [`ConleyMorseCM`](@ref), which is further
+  described below. If the optional argument `returnbasis=true` is given,
+  then the function also returns a dictionary which gives the basis
+  for the connection matrix columns in terms of the original cell labels.
 
-
-
-
-[`ConleyMorseCM`](@ref)
+The connection matrix is returned in an object with the composite
+data type [`ConleyMorseCM`](@ref). Its docstring is as follows:
 
 ```@docs; canonical=false
 ConleyMorseCM
 ```
 
+To illustrate these fields further, we briefly illustrate them
+for the example associated with the last figure, see again
+[A Planar Forman Vector Field](@ref). For reference, the 
+underlying simplicial complex and Forman vector field are
+shown in the next figure.
 
+![A planar simplicial complex flow](img/examplebkmw3a.png)
 
+The underlying Lefschetz complex, multivector field, and
+connection matrix can be computed over the field ``GF(2)``
+as follows:
 
+```@example Cconnmatrix
+using ..ConleyDynamics # hide
+lc, mvf, coords = example_forman2d()
+cm = connection_matrix(lc, mvf)
+sparse_show(cm.matrix)
+```
 
+The field `cm.poset` indicates which Morse set each column
+belongs to, while the field `cm.labels` shows which cell
+label the column corresponds to. For the example one obtains:
+
+```@example Cconnmatrix
+print(cm.poset)
+```
+
+```@example Cconnmatrix
+print(cm.labels)
+```
+
+Note that except for the third and fourth column, all columns
+belong to unique Morse sets whose Conley index is a one-dimensional
+vector space. The third and fourth column correspond to the 
+periodic orbit, whose Conley index is a two-dimensional vector 
+space. The Conley indices for all eight Morse sets can be seen
+in the field `cm.conley`:
+
+```@example Cconnmatrix
+cm.conley
+```
+
+The full associated Morse sets are list in `cm.morse`:
+
+```@example Cconnmatrix
+cm.morse
+```
+
+As the final struct field, the entry `cm.complex` returns the
+connection matrix as a Lefschetz complex in its own right.
+This is useful for determining the Conley indices of Morse
+intervals. In our example, the cells of the new Lefschetz
+complex are given by
+
+```@example Cconnmatrix
+cm.complex.labels
+```
+
+The Morse interval consisting of the two index 2 critical
+cells ``\mathbf{ADE}`` and ``\mathbf{FGJ}`` should have
+as Conley index the sum of the two individual indices,
+and the following computation demonstrates this:
+
+```@example Cconnmatrix
+conley_index(cm.complex, ["ADE", "FGJ"])
+```
+
+In contrast, since there is exactly one connecting orbit
+between ``\mathbf{ADE}`` and ``\mathbf{BF}``, the Conley
+index of this interval should be trivial:
+
+```@example Cconnmatrix
+conley_index(cm.complex, ["ADE", "BF"])
+```
+
+Finally, there are exactly two connecting orbits
+between the Morse sets ``\mathbf{ADE}`` and ``\mathbf{EF}``,
+and therefore the Conley index of this last interval is
+again the sum of the separate indices:
+
+```@example Cconnmatrix
+conley_index(cm.complex, ["ADE", "EF"])
+```
 
 ## Extracting Subsystems
 

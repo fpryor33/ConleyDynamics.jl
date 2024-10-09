@@ -375,7 +375,7 @@ There are two possible ways to invoke this function:
   determines the closed subcomplex ``Y``.
 - The method
   [`relative_homology(lc::LefschetzComplex, subc::Cells, subc0::Cells)`](@ref)
-  expects some ambient Lefschetz complex specified by the argument `lc`.
+  expects an ambient Lefschetz complex specified by the argument `lc`.
   The Lefschetz complex ``X`` is then the closure of the cell list
   `subc`, while the subcomplex ``Y`` is given by the clourse of the
   cell list `subc0`. These closures are automatically computed by the
@@ -610,7 +610,7 @@ there are two functions that provide basic persistence functionality:
   integers. An error is raised if this is not the case, or if the
   resulting subcomplexes ``X^{(k)}`` are not closed.
 - The function [`lefschetz_filtration`](@ref) is meant to simplify
-  the construction of the input argument `filtration`, especially
+  the construction of the argument `filtration`, especially
   in the situation that ``X^{(n)}`` is a proper subcomplex of some
   ambient Lefschetz complex ``X``. The function is invoked using
   the form `lcsub, filtration = lefschetz_filtration(lc, partialfil)`.

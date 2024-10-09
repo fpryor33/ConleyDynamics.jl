@@ -20,8 +20,9 @@ methods:
 * `create_simplicial_rectangle`
 * `create_simplicial_delaunay`
 
-In each case, the provided coordinate vector can be transformed to the
-correct bounding box using `convert_planar_coordinates`.
+In each case, the provided coordinate vector can be transformed
+to the correct bounding box values using the conversion function
+`convert_planar_coordinates`.
 
 # Example 1
 
