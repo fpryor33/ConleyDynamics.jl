@@ -377,7 +377,7 @@ There are two possible ways to invoke this function:
   [`relative_homology(lc::LefschetzComplex, subc::Cells, subc0::Cells)`](@ref)
   expects an ambient Lefschetz complex specified by the argument `lc`.
   The Lefschetz complex ``X`` is then the closure of the cell list
-  `subc`, while the subcomplex ``Y`` is given by the clourse of the
+  `subc`, while the subcomplex ``Y`` is given by the closure of the
   cell list `subc0`. These closures are automatically computed by the
   function.
 
