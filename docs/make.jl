@@ -61,17 +61,35 @@ elseif "--latex-pdf" in ARGS
     makedocs(sitename="ConleyDynamics.jl",
         modules=[ConleyDynamics],
         format = Documenter.LaTeX(platform = "docker"),
+        build = "latex_build",
         pages = pageslist,
         authors = "Thomas Wanner",
         plugins=[bib]
+        )
+    cp(joinpath(@__DIR__, "latex_build", "ConleyDynamics.jl.pdf"),
+        joinpath(@__DIR__, "build", "ConleyDynamics.pdf");
+        force = true,
         )
 else
     makedocs(sitename="ConleyDynamics.jl",
         modules=[ConleyDynamics],
         format = Documenter.HTML(assets=String["assets/citations.css"]),
+        build = "build",
         pages = pageslist,
         authors = "Thomas Wanner",
         plugins=[bib]
+        )
+    makedocs(sitename="ConleyDynamics.jl",
+        modules=[ConleyDynamics],
+        format = Documenter.LaTeX(platform = "docker"),
+        build = "latex_build",
+        pages = pageslist,
+        authors = "Thomas Wanner",
+        plugins=[bib]
+        )
+    cp(joinpath(@__DIR__, "latex_build", "ConleyDynamics.jl.pdf"),
+        joinpath(@__DIR__, "build", "ConleyDynamics.pdf");
+        force = true,
         )
     deploydocs(
         repo = "github.com/almost6heads/ConleyDynamics.jl.git",

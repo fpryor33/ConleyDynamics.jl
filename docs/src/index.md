@@ -13,8 +13,7 @@ generalizes Forman vector fields, which were originally introduced to study
 Morse theory in a discrete combinatorial setting.
 
 !!! note
-
-     This package and the documentation is still very much work in progress!
+    This documentation is also available in PDF format: [ConleyDynamics.pdf](ConleyDynamics.pdf).
 
 ## Features
 
