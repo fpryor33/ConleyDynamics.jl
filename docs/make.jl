@@ -16,11 +16,11 @@ using ConleyDynamics
 using DocumenterCitations
 using Bibliography
 
-bib = CitationBibliography(
-    joinpath(@__DIR__, "src", "refs.bib");
-    style=:alpha) # The default is     style=:numeric
-                  # One can also use   style=:authoryear
-
+#bib = CitationBibliography(
+#    joinpath(@__DIR__, "src", "refs.bib");
+#    style=:alpha) # The default is     style=:numeric
+#                  # One can also use   style=:authoryear
+#
 # sort_bibliography!(bib.entries, :nyt)  # name-year-title
 
 pageslist = ["Overview" => "index.md",
@@ -55,7 +55,11 @@ if "--local-html" in ARGS
                                  assets=String["assets/citations.css"]),
         pages = pageslist,
         authors = "Thomas Wanner",
-        plugins=[bib]
+        plugins = [CitationBibliography(
+                     joinpath(@__DIR__, "src", "refs.bib");
+                     style=:alpha) # The default is     style=:numeric
+                                   # One can also use   style=:authoryear
+                  ]
         )
 elseif "--latex-pdf" in ARGS
     makedocs(sitename="ConleyDynamics.jl",
@@ -64,7 +68,11 @@ elseif "--latex-pdf" in ARGS
         build = "latex_build",
         pages = pageslist,
         authors = "Thomas Wanner",
-        plugins=[bib]
+        plugins = [CitationBibliography(
+                     joinpath(@__DIR__, "src", "refs.bib");
+                     style=:alpha) # The default is     style=:numeric
+                                   # One can also use   style=:authoryear
+                  ]
         )
     cp(joinpath(@__DIR__, "latex_build", "ConleyDynamics.jl.pdf"),
         joinpath(@__DIR__, "build", "ConleyDynamics.pdf");
@@ -77,7 +85,11 @@ else
         build = "build",
         pages = pageslist,
         authors = "Thomas Wanner",
-        plugins=[bib]
+        plugins = [CitationBibliography(
+                     joinpath(@__DIR__, "src", "refs.bib");
+                     style=:alpha) # The default is     style=:numeric
+                                   # One can also use   style=:authoryear
+                  ]
         )
     makedocs(sitename="ConleyDynamics.jl",
         modules=[ConleyDynamics],
@@ -85,7 +97,11 @@ else
         build = "latex_build",
         pages = pageslist,
         authors = "Thomas Wanner",
-        plugins=[bib]
+        plugins = [CitationBibliography(
+                     joinpath(@__DIR__, "src", "refs.bib");
+                     style=:alpha) # The default is     style=:numeric
+                                   # One can also use   style=:authoryear
+                  ]
         )
     cp(joinpath(@__DIR__, "latex_build", "ConleyDynamics.jl.pdf"),
         joinpath(@__DIR__, "build", "ConleyDynamics.pdf");
