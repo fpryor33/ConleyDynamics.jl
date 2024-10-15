@@ -42,10 +42,6 @@ function example_multiflow()
     push!(labelvec,"CE","CF","DF")        # 6, 7, 8
     push!(labelvec,"BCF","BDF")           # 9, 10
 
-    # Create the label to index dictionary
-
-    indexdict = Dict{String,Int}([(labelvec[k],k) for k in 1:length(labelvec)])
-
     # Create the vector of simplex dimensions
     
     sdvec = [0, 1, 1, 1, 1, 1, 1, 1, 2, 2]
@@ -68,9 +64,7 @@ function example_multiflow()
 
     # Construct the Lefschetz complex struct
     
-    lc = LefschetzComplex(nc, Int(2),
-                          sparse_from_full(bndmatrix, p=2),
-                          labelvec, indexdict, sdvec)
+    lc = LefschetzComplex(labelvec, sdvec, sparse_from_full(bndmatrix, p=2))
 
     # Create the common part of the combinatorial vector fields
     

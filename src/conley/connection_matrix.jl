@@ -99,14 +99,17 @@ function connection_matrix(lc::LefschetzComplex, mvfarg::CellSubsets;
     cc_labels  = cmLabels
     cc_dims    = Vector{Int}([lc.dimensions[lc.indices[cmLabels[k]]]
                               for k in 1:cc_ncells])
-    cc_dim     = maximum(cc_dims)
-    cc_indices = Dict{String,Int}(cc_labels[j] => j
-                                   for j=1:length(cc_labels))
+
+    # Make sure the cells are ordered by dimension
+
+    cdorder    = sortperm(cc_dims)
+    cc_labelsO = cc_labels[cdorder]
+    cc_dimsO   = cc_dims[cdorder]
+    cc_bndO    = sparse_permute(cc_bnd, cdorder, cdorder)
 
     # Create the new Lefschetz complex and return it
 
-    cmCC = LefschetzComplex(cc_ncells, cc_dim, cc_bnd,
-                            cc_labels, cc_indices, cc_dims)
+    cmCC = LefschetzComplex(cc_labelsO, cc_dimsO, cc_bndO)
  
     # Return the connection matrix information
     

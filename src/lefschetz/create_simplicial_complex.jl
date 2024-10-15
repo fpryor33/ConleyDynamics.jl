@@ -120,7 +120,7 @@ function create_simplicial_complex(labels::Vector{String},
     
     # Create the Lefschetz complex
 
-    lc = LefschetzComplex(nsimp,scdim,B,labelsvec,labelindexdict,sdimvec)
+    lc = LefschetzComplex(labelsvec, sdimvec, B)
 
     # Return the Lefschetz complex
 

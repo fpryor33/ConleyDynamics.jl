@@ -41,8 +41,7 @@ function lefschetz_gfp_conversion(lc::LefschetzComplex, p::Int)
 
     # Create the new Lefschetz complex and return it
 
-    lcgfp = LefschetzComplex(lc.ncells, lc.dim, boundarygfp,
-                             lc.labels, lc.indices, lc.dimensions)
+    lcgfp = LefschetzComplex(lc.labels, lc.dimensions, boundarygfp)
     return lcgfp
 end
 

@@ -59,10 +59,6 @@ function example_three_cm(mvftype=0)
 
     coords = [[0,0],[50,100],[100,0],[150,100],[200,0],[250,100],[300,0]]
 
-    # Create the label to index dictionary
-
-    indexdict = Dict{String,Int}([(labelvec[k],k) for k in 1:length(labelvec)])
-
     # Create the vector of simplex dimensions
     
     sdvec = [Int(length(labelvec[k])-1) for k=1:length(labelvec)]
@@ -94,9 +90,8 @@ function example_three_cm(mvftype=0)
 
     # Construct the Lefschetz complex struct
     
-    lc = LefschetzComplex(nc, maximum(sdvec),
-                          sparse_from_full(bndmatrix, p=0),
-                          labelvec, indexdict, sdvec)
+    lc = LefschetzComplex(labelvec, sdvec,
+                          sparse_from_full(bndmatrix, p=0))
 
     # Create the common part of the combinatorial vector fields
     

@@ -9,7 +9,10 @@ Permute the indices of a Lefschetz complex.
 The vector `permutation` contains a permutation of the indices for the
 given Lefschetz complex `lc`. If no permutation is specified, or if the
 length of the vector is not correct, then a randomly generated one will
-be used.
+be used. Note that the permutation has to respect the ordering of the
+cells by dimension, otherwise an error is raised. In other words, 
+the permutation has to decompose into permutations within each dimension.
+This is automatically done if no permutation is explicitly specified.
 """
 function permute_lefschetz_complex(lc::LefschetzComplex,
                                    perm::Vector{Int}=Vector{Int}([]))
@@ -20,7 +23,16 @@ function permute_lefschetz_complex(lc::LefschetzComplex,
     # Create a random permutation if none is set
 
     if !(length(perm) == lc.ncells)
-        perm = randperm(lc.ncells)
+        perm = Vector{Int}([])
+        for k = 0:lc.dim
+            crange = findall(x -> x==k, lc.dimensions)
+            if length(crange) > 0
+                crmin = minimum(crange)
+                crmax = maximum(crange)
+                crperm = randperm(1 + crmax - crmin) .+ (crmin - 1)
+                append!(perm, crperm)
+            end
+        end
     end
 
     # Copy the data from the original complex
@@ -33,20 +45,13 @@ function permute_lefschetz_complex(lc::LefschetzComplex,
 
     # Create the permuted data
 
-    ncells2     = ncells1
-    lcdim2      = lcdim1
     labels2     = labels1[perm]
     dimensions2 = dimensions1[perm]
     boundary2   = sparse_permute(boundary1, perm, perm)
 
-    # Create the permuted dictionary
-    
-    indices2 = Dict{String,Int}([(labels2[k],k) for k in 1:length(labels2)])
-
     # Create the permuted Lefschetz complex
 
-    lc2 = LefschetzComplex(ncells2, lcdim2, boundary2,
-                           labels2, indices2, dimensions2)
+    lc2 = LefschetzComplex(labels2, dimensions2, boundary2)
     
     # Return the permuted Lefschetz complex
 

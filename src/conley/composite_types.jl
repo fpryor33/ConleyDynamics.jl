@@ -5,22 +5,78 @@ export LefschetzComplex, ConleyMorseCM, Cells, CellSubsets
 
 Collect the Lefschetz complex information in a struct.
 
-The struct has the following fields:
+The struct is created via the following fields:
+* `labels::Vector{String}`: Vector of labels associated with cell indices
+* `dimensions::Vector{Int}`: Vector cell dimensions
+* `boundary::SparseMatrix`: Boundary matrix, columns give the cell boundaries
+It is expected that the dimensions are given in increasing order, and that
+the square of the boundary matrix is zero. Otherwise, exceptions are raised.
+In addition, the following fields are created during initialization:
 * `ncells::Int`: Number of cells
 * `dim::Int`: Dimension of the complex
-* `boundary::SparseMatrix`: Boundary matrix, columns give the cell boundaries
-* `labels::Vector{String}`: Vector of labels associated with cell indices
 * `indices::Dict{String,Int}`: Dictionary for finding cell index from label
-* `dimensions::Vector{Int}`: Vector cell dimensions
 The coefficient field is specified by the boundary matrix.
 """
 struct LefschetzComplex
+    #
+    # Fields that have to be declared
+    #
+    labels::Vector{String}
+    dimensions::Vector{Int}
+    boundary::SparseMatrix
+    #
+    # Fields that will be created
+    #
     ncells::Int
     dim::Int
-    boundary::SparseMatrix
-    labels::Vector{String}
     indices::Dict{String,Int}
-    dimensions::Vector{Int}
+    #
+    # Inner constructor
+    #
+    function LefschetzComplex(labels::Vector{String},
+                              dimensions::Vector{Int},
+                              boundary::SparseMatrix)
+        #
+        # Create a Lefschetz complex instance
+        #
+        
+        # Perform basic length checks
+
+        ncells = length(labels)
+        if !(ncells == length(dimensions))
+            error("Input vectors need to have the same length!")
+        end
+        if !(sparse_size(boundary,1) == sparse_size(boundary,2))
+            error("The boundary matrix has to be square!")
+        end
+        if !(sparse_size(boundary,1) == ncells)
+            error("The boundary matrix size has to be the number of cells!")
+        end
+
+        # Make sure the cell dimensions increase
+
+        for k in 1:ncells-1
+            if dimensions[k] > dimensions[k+1]
+                error("The cells dimensions cannot decrease!")
+            end
+        end
+        dim = dimensions[ncells]
+
+        # Make sure the boundary matrix squares to zero
+
+        boundary2 = boundary * boundary
+        if sparse_fullness(boundary2) > 0.0
+            error("The squared boundary matrix has to be zero!")
+        end
+
+        # Create the label to indices dictionary
+
+        indices = Dict{String,Int}([(labels[k],k) for k in 1:ncells])
+
+        # Create the composite type
+        
+        new(labels, dimensions, boundary, ncells, dim, indices)
+    end
 end
 
 """

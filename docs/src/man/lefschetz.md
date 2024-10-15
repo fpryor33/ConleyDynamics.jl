@@ -189,14 +189,19 @@ LefschetzComplex
 The fields of this struct relate to the mathematical definition
 of a Lefschetz complex ``X`` in the following way:
 
-- The integer `ncells` gives the total number of cells in ``X``.
-  Internally, these cells are numbered by integers ranging from `1`
-  to `ncells`.
+- Internally, every cell of the Lefschetz complex is represented
+  by an integer between 1 and the total number of cells. However,
+  in order to make it easier to interpret the results of
+  computations, each cell in a Lefschetz complex has to also
+  be given a label. These labels are contained in the field
+  `labels::Vector{String}`, where `labels[k]` gives
+  the label of cell `k`.
 - The vector `dimensions` is a `Vector{Int}` and collects the 
-  dimensions of the cells. In other words, the cell which is indexed
-  by the integer `k` has dimension `dimensions[k]`.
-- The integer `dim` describes the overall dimension of the Lefschetz
-  complex, which is the largest dimension of a cell.
+  dimensions of the cells. In other words, the cell which is
+  indexed by the integer `k` has dimension `dimensions[k]`.
+  It is expected that the dimension vector is increasing, and
+  the constructor method will verify this. Otherwise, an
+  error is triggered.
 - The incidence coefficient map ``\kappa`` is encoded in the sparse
   matrix `boundary`. This matrix is a square matrix with `ncells` 
   rows and columns. The ``k``-th column contains the incidence
@@ -205,21 +210,35 @@ of a Lefschetz complex ``X`` in the following way:
   Since for most Lefschetz complexes the majority of the incidence
   coefficients is zero, the matrix is represented using the sparse
   format [`SparseMatrix`](@ref), which is described in more detail
-  in [Sparse Matrices](@ref).
-- While the internal representation of cells as integers is 
-  computationally convenient, it does make interpreting the
-  results more difficult. Each Lefschetz complex therefore has
-  to have string labels assigned to each cell as well. These are
-  contained in `labels::Vector{String}`, where `labels[k]` gives
-  the label of cell `k`.
+  in [Sparse Matrices](@ref). An exception is raised if the
+  square of the boundary matrix is not zero.
+
+When creating a Lefschetz complex, only the above three items have
+to be specified, as they define a unique Lefschetz complex ``X``.
+In other words, a Lefschetz complex is generally created via the
+command
+
+```julia
+   lc = LefschetzComplex(labels, dimensions, boundary)
+```
+
+During the construction of the Julia object, additional fields
+are initialized which simplify working with a Lefschetz complex:
+
+- The integer `ncells` gives the total number of cells in ``X``.
+  Internally, these cells are numbered by integers ranging from `1`
+  to `ncells`.
+- The integer `dim` describes the overall dimension of the Lefschetz
+  complex, which is the largest dimension of a cell.
 - In order to easily determine the integer index for a cell with
   a specific label, the field `indices` contains a dictionary
   of type `Dict{String,Int}` which maps labels to indices. For 
   example, if a cell has the label `"124.010"`, then the associated
   integer index is given by `indices["124.010"]`.
 
-An object of type `LefschetzComplex` is created by passing the
-field items in the order given in [`LefschetzComplex`](@ref).
+As mentioned above, note however that an object of type
+`LefschetzComplex` is created by passing only the first three
+the field items in the order given in [`LefschetzComplex`](@ref).
 Consider for example the Lefschetz complex from Figure 4
 in [mrozek:wanner:p21a](@cite), see also the left complex in the
 next image. This complex consists of six cells with labels `A`, 
@@ -229,9 +248,8 @@ the commands
 
 ```julia
 ncL = 6
-labelsL  = Vector{String}(["A","B","a","b","c","alpha"])
-indicesL = Dict{String,Int}([(labelsL[k],k) for k in 1:length(labelsL)])
-cdimsL   = [0, 0, 1, 1, 1, 2]
+labelsL = Vector{String}(["A","B","a","b","c","alpha"])
+cdimsL  = [0, 0, 1, 1, 1, 2]
 ```
 
 The boundary matrix can then be defined using
@@ -254,7 +272,7 @@ use the function [`sparse_from_lists`](@ref). Finally, the
 Lefschetz complex is created using
 
 ```julia
-lcL = LefschetzComplex(ncL, 2, bndsparseL, labelsL, indicesL, cdimsL)
+lcL = LefschetzComplex(labelsL, cdimsL, bndsparseL)
 ```
 
 ![Two sample Lefschetz complexes](img/lefschetzex1.png)
@@ -267,12 +285,11 @@ using the commands
 ```julia
 ncR = 4
 labelsR  = Vector{String}(["a","b","c","alpha"])
-indicesR = Dict{String,Int}([(labelsR[k],k) for k in 1:length(labelsR)])
 cdimsR   = [1, 1, 1, 2]
 bndmatrixR = zeros(Int, ncR, ncR)
 bndmatrixR[[1,2,3],4] = [1; 1; 1]     # alpha
 bndsparseR = sparse_from_full(bndmatrixR, p=2)
-lcR = LefschetzComplex(ncR, 2, bndsparseR, labelsR, indicesR, cdimsR)
+lcR = LefschetzComplex(labelsR, cdimsR, bndsparseR)
 ```
 
 While Lefschetz complexes can always be created in
@@ -736,7 +753,11 @@ complex:
   closure of the specified collection of cells.
 - [`permute_lefschetz_complex`](@ref) determines a new Lefschetz
   complex which is obtained from the original one by a permutation
-  of the cells.
+  of the cells. Note that the permutation has to respect the ordering
+  of the cells by dimension, otherwise an error is raised. In other
+  words, the permutation has to decompose into permutations within
+  each dimension. This is automatically done if no permutation is
+  explicitly specified and the function creates a random one.
 
 There are also two *helper functions* which can sometimes 
 be useful:

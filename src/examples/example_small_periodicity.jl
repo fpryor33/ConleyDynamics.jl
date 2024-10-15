@@ -58,10 +58,6 @@ function example_small_periodicity()
     labelvec = Vector{String}()
     push!(labelvec,"A","B","a","b","c","alpha")
 
-    # Create the label to index dictionary
-
-    indexdict = Dict{String,Int}([(labelvec[k],k) for k in 1:length(labelvec)])
-
     # Create the vector of simplex dimensions
     
     sdvec = [0, 0, 1, 1, 1, 2]
@@ -82,9 +78,8 @@ function example_small_periodicity()
 
     # Construct the Lefschetz complex struct
     
-    lc = LefschetzComplex(nc, Int(2),
-                          sparse_from_full(bndmatrix, p=2),
-                          labelvec, indexdict, sdvec)
+    lc = LefschetzComplex(labelvec, sdvec,
+                          sparse_from_full(bndmatrix, p=2))
 
     # Create a second version of the Lefschetz complex via permutation
 
@@ -92,11 +87,9 @@ function example_small_periodicity()
     labelvec2  = labelvec[perm]
     sdvec2     = sdvec[perm]
     bndmatrix2 = bndmatrix[perm,perm]
-    indexdict2 = Dict{String,Int}([(labelvec2[k],k) for k in 1:length(labelvec2)])
 
-    lc2 = LefschetzComplex(nc, Int(2),
-                           sparse_from_full(bndmatrix2, p=2),
-                           labelvec2, indexdict2, sdvec2)
+    lc2 = LefschetzComplex(labelvec2, sdvec2,
+                           sparse_from_full(bndmatrix2, p=2))
 
     # Create the common part of the combinatorial vector fields
     

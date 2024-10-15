@@ -17,12 +17,8 @@ function lefschetz_closed_subcomplex(lc::LefschetzComplex, subcomp::Vector{Int})
 
     # Determine the new struct fields
 
-    sub_ncells     = length(clsubcomp)
     sub_labels     = lc.labels[clsubcomp]
     sub_dimensions = lc.dimensions[clsubcomp]
-    sub_dim        = maximum(sub_dimensions)
-    sub_indices = Dict{String,Int}(sub_labels[j] => j
-                                   for j=1:length(sub_labels))
 
     # Construct the new boundary matrix
 
@@ -31,8 +27,7 @@ function lefschetz_closed_subcomplex(lc::LefschetzComplex, subcomp::Vector{Int})
 
     # Create the new Lefschetz complex and return it
 
-    sub_lc = LefschetzComplex(sub_ncells, sub_dim, sub_boundary,
-                              sub_labels, sub_indices, sub_dimensions)
+    sub_lc = LefschetzComplex(sub_labels, sub_dimensions, sub_boundary)
     return sub_lc
 end
 

@@ -45,10 +45,6 @@ function example_subdivision(mvftype=0)
     push!(labelvec,"AB","AC","BC","CD","CE")   # 4, 5, 6, 7, 8
     push!(labelvec,"ABC")                      # 9
 
-    # Create the label to index dictionary
-
-    indexdict = Dict{String,Int}([(labelvec[k],k) for k in 1:length(labelvec)])
-
     # Create the vector of simplex dimensions
     
     sdvec = [0, 0, 0, 1, 1, 1, 1, 1, 2]
@@ -71,9 +67,8 @@ function example_subdivision(mvftype=0)
 
     # Construct the Lefschetz complex struct
     
-    lc = LefschetzComplex(nc, Int(2),
-                          sparse_from_full(bndmatrix, p=0),
-                          labelvec, indexdict, sdvec)
+    lc = LefschetzComplex(labelvec, sdvec,
+                          sparse_from_full(bndmatrix, p=0))
 
     # Create the common part of the combinatorial vector fields
     
