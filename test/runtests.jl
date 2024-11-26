@@ -62,7 +62,58 @@ using Test
     @test full_from_sparse(cmlogo.matrix) == [0 0 0;0 0 1;0 0 0]
 end
 
+@testset "Lefschetz complexes" begin
+    #
+    # This test set covers the tutorial examples
+    #
+    ncL = 6
+    labelsL = Vector{String}(["A","B","a","b","c","alpha"])
+    cdimsL  = [0, 0, 1, 1, 1, 2]
+    bndmatrixL = zeros(Int, ncL, ncL)
+    bndmatrixL[[1,2],3] = [1; 1]     # a
+    bndmatrixL[[1,2],4] = [1; 1]     # b
+    bndmatrixL[[1,2],5] = [1; 1]     # c
+    bndmatrixL[[3,4],6] = [1; 1]     # alpha
+    bndsparseL = sparse_from_full(bndmatrixL, p=2)
+    lcL = LefschetzComplex(labelsL, cdimsL, bndsparseL)
 
+    @test lcL.ncells == 6
+    @test homology(lcL) == [1,1,0]
+
+    ncR = 4
+    labelsR  = Vector{String}(["a","b","c","alpha"])
+    cdimsR   = [1, 1, 1, 2]
+    bndmatrixR = zeros(Int, ncR, ncR)
+    bndmatrixR[[1,2,3],4] = [1; 1; 1]     # alpha
+    bndsparseR = sparse_from_full(bndmatrixR, p=2)
+    lcR = LefschetzComplex(labelsR, cdimsR, bndsparseR)
+
+    @test lcR.ncells == 4
+    @test homology(lcR) == [0,2,0]
+
+    labels = ["A","B","C","D","E","F","G","H"]
+    simplices = [["A","B"],["A","F"],["B","F"],["B","C","G"],["D","E","H"],["C","D"],["G","H"]]
+    sc = create_simplicial_complex(labels,simplices)
+
+    @test sc.ncells == 21
+    @test homology(sc) == [1,2,0]
+
+    sc2, coords2 = create_simplicial_rectangle(5,2)
+
+    @test sc2.ncells == 135
+    @test homology(sc2) == [1,0,0]
+
+    cubes = ["00.11", "01.01", "02.10", "11.10", "11.01", "22.00", "20.11", "31.01"]
+    cc = create_cubical_complex(cubes)
+
+    @test cc.ncells == 27
+    @test homology(cc) == [2,1,0]
+
+    cc3, coords3 = create_cubical_rectangle(5,2,randomize=0.2)
+
+    @test cc3.ncells == 55
+    @test homology(cc3) == [1,0,0]
+end
 
 
 
