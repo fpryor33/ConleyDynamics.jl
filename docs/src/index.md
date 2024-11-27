@@ -36,7 +36,7 @@ for instructions on how to obtain Julia for your system.
 At the Julia prompt simply type
 
 ```
-julia> using Pkg; Pkg.add("https://github.com/almost6heads/ConleyDynamics.jl")
+julia> using Pkg; Pkg.add("ConleyDynamics")
 ```
 
 After Julia has finished downloading and precompiling the package and
