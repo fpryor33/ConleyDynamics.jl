@@ -29,16 +29,18 @@ If you use ConleyDynamics.jl in your publication, research, teaching, or other
 activities, please use the BibTeX citation
 
 ```latex
-@software{conleydynamics,
+@software{ConleyDynamics.jl,
   author = {Thomas Wanner},
-  title  = {{C}onley{D}ynamics.jl: {A} {J}ulia package for multivector dynamics on {L}efschetz complexes},
+  title  = {{C}onley{D}ynamics.jl: {A} {J}ulia package for multivector
+            dynamics on {L}efschetz complexes},
   url    = {https://github.com/almost6heads/ConleyDynamics.jl},
   year   = {2024},
   doi    = {10.5281/zenodo.14248929}
   }
 ```
 
-See also
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14248930.svg)](https://doi.org/10.5281/zenodo.14248930)
-for an archived version.
+You can also just download the BibTeX template
+[CITATION.bib](https://github.com/almost6heads/ConleyDynamics.jl/blob/main/CITATION.bib).
+For an archived version of the package see
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14248930.svg)](https://doi.org/10.5281/zenodo.14248930).
 
