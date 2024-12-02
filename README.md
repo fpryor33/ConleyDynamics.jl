@@ -16,8 +16,9 @@ The detailed documentation can be found
 
 ## Contributing
 
-Currently, this repository does not allow any outside contributors. But
-if you are interested in getting involved, let me know!
+If you would like to raise an issue or contribute, please see the
+[CONTRIBUTING.md](https://github.com/almost6heads/ConleyDynamics.jl/blob/main/CONTRIBUTING.md)
+file. For feature requests, please see the discussions tab.
 
 ## License
 
