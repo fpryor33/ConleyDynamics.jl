@@ -3,7 +3,7 @@
 This tutorial explains the basic usage of the main components of
 [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl).
 It is not meant to be exhaustive, and more details will be
-provided in the more indiviualized sections. Also, precise mathematical
+provided in the more individualized sections. Also, precise mathematical
 definitions will be delayed until then. The presented examples are taken from
 the papers [batko:etal:20a](@cite) and [mrozek:wanner:p21a](@cite), with minor
 modifications.
