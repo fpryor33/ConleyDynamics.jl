@@ -64,10 +64,10 @@ struct LefschetzComplex
 
         # Make sure the boundary matrix squares to zero
 
-        boundary2 = boundary * boundary
-        if sparse_fullness(boundary2) > 0.0
-            error("The squared boundary matrix has to be zero!")
-        end
+        # boundary2 = boundary * boundary
+        # if sparse_fullness(boundary2) > 0.0
+        #     error("The squared boundary matrix has to be zero!")
+        # end
 
         # Create the label to indices dictionary
 

@@ -15,8 +15,10 @@ Release notes:
 
 
 
+## v0.1.1 (December 7, 2024)
 
-
+- Removed unnecessary test from Lefschetz complex creation for speedup reasons.
+- Minor changes to the documentation.
 
 ## v0.1.0 (November 29, 2024)
 
