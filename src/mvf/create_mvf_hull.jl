@@ -22,18 +22,16 @@ function create_mvf_hull(lc::LefschetzComplex, mvfbase::Vector{Vector{Int}})
     # Create the locally closed hulls of each set
 
     lchulls = Vector{Vector{Int}}()
-    keepgoing = false
 
     for mvfset in mvfbase
         mvfset_length = length(mvfset)
         if mvfset_length > 1
             mvfset_lchull = lefschetz_lchull(lc, mvfset)
             push!(lchulls, mvfset_lchull)
-            if length(mvfset_lchull) > mvfset_length
-                keepgoing = true   # The set was not locally closed
-            end
         end
     end
+
+    keepgoing = true   # We need to force an initial merge
 
     # If one of the sets was not locally closed, start merging
     # and then recompute the locally closed hulls
@@ -54,7 +52,7 @@ function create_mvf_hull(lc::LefschetzComplex, mvfbase::Vector{Vector{Int}})
 
         conncomp = connected_components(sgraph)
 
-        # Create again the locally closd hulls
+        # Create again the locally closed hulls
 
         lchulls = Vector{Vector{Int}}()
         keepgoing = false

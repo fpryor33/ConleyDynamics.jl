@@ -14,6 +14,9 @@ Release notes:
 - blah
 
 
+## v0.1.2 (February 12, 2025)
+
+- Fixed a rare exception in the multivector field creation
 
 ## v0.1.1 (December 7, 2024)
 
