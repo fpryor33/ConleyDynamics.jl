@@ -43,5 +43,5 @@ activities, please use the BibTeX citation
 You can also just download the BibTeX template
 [CITATION.bib](https://github.com/almost6heads/ConleyDynamics.jl/blob/main/CITATION.bib).
 For an archived version of the package see
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14248930.svg)](https://doi.org/10.5281/zenodo.14248930).
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14248930.svg)](https://doi.org/10.5281/zenodo.14248929).
 
