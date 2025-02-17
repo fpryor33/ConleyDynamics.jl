@@ -5,7 +5,7 @@ This tutorial explains the basic usage of the main components of
 It is not meant to be exhaustive, and more details will be
 provided in the more individualized sections. Also, precise mathematical
 definitions will be delayed until then. The presented examples are taken from
-the papers [batko:etal:20a](@cite) and [mrozek:wanner:p21a](@cite), with minor
+the papers [batko:etal:20a](@cite) and [mrozek:wanner:25a](@cite), with minor
 modifications.
 
 ## Creating Simplicial Complexes
@@ -395,7 +395,7 @@ is its capability to take a given
 combinatorial vector or multivector field on an arbitrary Lefschetz complex and
 determine its global dynamical behavior. This is done by computing the
 connection matrix, which in our setting is discussed in detail in
-[mrozek:wanner:p21a](@cite).  For the sample simplicial complex `sc` and the
+[mrozek:wanner:25a](@cite).  For the sample simplicial complex `sc` and the
 Forman vector field `formanvf` the connection matrix information can be
 determined as follows:
 
@@ -506,7 +506,7 @@ sclogo = create_simplicial_complex(labels,simplices)
 mvflogo = [["A","AB"],["C","AC"],["B","BC","BD","BCD"]]
 ```
 
-This example is taken from [mrozek:wanner:p21a; Figure 1](@cite), and is
+This example is taken from [mrozek:wanner:25a; Figure 1](@cite), and is
 visualized in the accompanying figure.
 
 ![The logo multivector field](img/multivectorex.png)

@@ -27,6 +27,12 @@ cube_label
 get_cubical_coords
 ```
 
+## Lefschetz Complex Creation
+
+```@docs
+create_lefschetz_gf2
+```
+
 ## Lefschetz Complex Queries
 
 ```@docs

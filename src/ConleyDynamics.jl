@@ -36,6 +36,7 @@ include("./homology/relative_homology.jl")
 
 include("./lefschetz/convert_cells.jl")
 include("./lefschetz/convert_coordinates.jl")
+include("./lefschetz/create_lefschetz_gf2.jl")
 include("./lefschetz/create_simplicial_complex.jl")
 include("./lefschetz/create_simplicial_rectangle.jl")
 include("./lefschetz/create_simplicial_delaunay.jl")

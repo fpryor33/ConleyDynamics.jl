@@ -570,7 +570,7 @@ actually have to be nonempty? The algebra behind this question
 is captured by the *connection matrix*. The precise notion
 of connection matrix was introduced in [franzosa:89a](@cite),
 see also [harker:etal:21a](@cite), as well as the paper
-[mrozek:wanner:p21a](@cite) which treats connection matrices
+[mrozek:wanner:25a](@cite) which treats connection matrices
 specifically in the setting of multivector fields and provides
 a precise definition of connection matrix equivalence, even 
 across varying posets.
@@ -642,7 +642,7 @@ cannot have any nontrivial periodic solutions, i.e.,
 periodic solutions which are not constant and therefore
 critical cells. For such combinatorial vector fields,
 the following result was shown in
-[mrozek:wanner:p21a](@cite).
+[mrozek:wanner:25a](@cite).
 
 !!! danger "Theorem: Uniqueness of connection matrices"
     If ``\mathcal{V}`` is a gradient combinatorial Forman

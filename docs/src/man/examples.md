@@ -10,7 +10,7 @@ end
 In order to illustrate the basic functionality of
 [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl), 
 this section collects a number of examples. Many of these are taken 
-from the papers [batko:etal:20a](@cite) and [mrozek:wanner:p21a](@cite),
+from the papers [batko:etal:20a](@cite) and [mrozek:wanner:25a](@cite),
 and they consider both Forman vector fields and general multivector
 fields on a variety of Lefschetz complexes. Each example has its own
 associated function, so that users can quickly create examples
@@ -162,7 +162,7 @@ pair ``(\mathrm{cl}\, S, \mathrm{mo}\, S)``, as expected.
 
 ## The Multivector Field from the Logo
 
-This example is taken from [mrozek:wanner:p21a; Figure 1](@cite),
+This example is taken from [mrozek:wanner:25a; Figure 1](@cite),
 and it is visualized in the accompanying figure.
 
 ![The logo multivector field](img/multivectorex.png)
@@ -384,7 +384,7 @@ cm2mod = connection_matrix(lc2, mvf2);
 ```
 
 Both of the new Forman vector fields are gradient vector fields, and
-in view of a result in [mrozek:wanner:p21a](@cite), their connection
+in view of a result in [mrozek:wanner:25a](@cite), their connection
 matrices are therefore uniquely determined. The connection matrix for
 the vector field `mvf1` is of the form
 
@@ -437,7 +437,7 @@ in the example.
 
 ## Forcing Three Connection Matrices
 
-The next example is taken from [mrozek:wanner:p21a; Figure 2](@cite),
+The next example is taken from [mrozek:wanner:25a; Figure 2](@cite),
 and it revolves around the combinatorial vector field on a simplicial 
 complex shown in the top left part of the figure.
 
@@ -547,7 +547,7 @@ for the Forman vector field with periodic orbit. One could have
 obtained the remaining two also through cell permutations.
 
 Notice that these three matrices combined do identify all of the
-above connections. It was shown in [mrozek:wanner:p21a](@cite)
+above connections. It was shown in [mrozek:wanner:25a](@cite)
 that these matrices are different connection matrices for the
 original Forman vector field with periodic orbit, as long as the
 newly introduced index 1 and 0 equilibria are identified with the
@@ -568,7 +568,7 @@ case to case.
 
 ## A Lefschetz Multiflow Example
 
-The next example is taken from [mrozek:wanner:p21a; Figure 3](@cite),
+The next example is taken from [mrozek:wanner:25a; Figure 3](@cite),
 and it is a combinatorial multivector field on a true Lefschetz 
 complex, as shown in the left panel of the associated figure.
 
@@ -633,7 +633,7 @@ union of the five removed vertices.
 
 ## Small Complex with Periodicity
 
-In [mrozek:wanner:p21a; Figure 4](@cite) we introduced a small
+In [mrozek:wanner:25a; Figure 4](@cite) we introduced a small
 Lefschetz complex with periodic orbit and nonunique connection
 matrices. This complex consists of one 2-cell, three 1-cells,
 and two 0-cells, and it is shown in the leftmost panel of the
@@ -673,7 +673,7 @@ two different connection matrices `cm1` and `cm2`.
 
 In this small example, one can easily determine the connection
 matrices directly, as illustrated in the second figure. While
-the detailed explanation can be found in [mrozek:wanner:p21a](@cite),
+the detailed explanation can be found in [mrozek:wanner:25a](@cite),
 this is basically accomplished by contracting one of the two
 regular multivectors. If one contracts ``\{ B, c \}``, then the
 connection matrix `cm1` is obtained, while `cm2` is the result of
@@ -681,11 +681,11 @@ contracting ``\{ A, a \}``.
 
 ## Subdividing a Multivector
 
-Our next example taken from [mrozek:wanner:p21a](@cite) is concerned
+Our next example taken from [mrozek:wanner:25a](@cite) is concerned
 with turning a given multivector field into a Forman vector field
 by further subdividing the multivectors. For this, consider the
 three complexes and combinatorial vector fields shown in the
-associated figure, see also [mrozek:wanner:p21a; Figure 11](@cite).
+associated figure, see also [mrozek:wanner:25a; Figure 11](@cite).
 
 ![Subdividing a multivector](img/examplesubdivide.png)
 

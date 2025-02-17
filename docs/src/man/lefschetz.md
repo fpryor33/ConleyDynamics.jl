@@ -162,7 +162,7 @@ two equivalent formulations:
   has to have ``y \in S`` as well.
 
 The proof of these characterizations can be found in
-[mrozek:wanner:p21a; Proposition 3.2](@cite) and
+[mrozek:wanner:25a; Proposition 3.2](@cite) and
 [lipinski:etal:23a; Proposition 3.10](@cite), respectively.
 
 Lefschetz complexes are a very general mathematical concept, and they
@@ -240,7 +240,7 @@ As mentioned above, note however that an object of type
 `LefschetzComplex` is created by passing only the first three
 the field items in the order given in [`LefschetzComplex`](@ref).
 Consider for example the Lefschetz complex from Figure 4
-in [mrozek:wanner:p21a](@cite), see also the left complex in the
+in [mrozek:wanner:25a](@cite), see also the left complex in the
 next image. This complex consists of six cells with labels `A`, 
 `B`, `a`, `b`, `c`, and `alpha`, and we initialize the vector of
 labels, the cell index dictionary, and the cell dimensions via
@@ -297,7 +297,42 @@ While Lefschetz complexes can always be created in
 in this direct way, it is often more convenient to make use of special
 types, such as simplicial and cubical complexes, and then restrict the
 complex to a locally closed set using the function
-[`lefschetz_subcomplex`](@ref).
+[`lefschetz_subcomplex`](@ref). As an alternative, if one is 
+interested in a fairly small Lefschetz complex over the field
+``GF(2)``, then the following special function can be used:
+
+- [`create_lefschetz_gf2`](@ref) creates a Lefschetz complex over
+  the two-element field ``GF(2)`` by specifying its essential cells and
+  boundaries. The input argument `defcellbnd` of the function has to be
+  a vector of vectors. Each entry `defcellbnd[k]` then has to be of one
+  of the following two forms:
+  * `[String, Int, String, String, ...]`: The first `String` contains
+     the label for the cell `k`, followed by its dimension in the second
+     entry. The remaining entries are for the labels of the cells which
+     make up the boundary.
+  * `[String, Int]`: This shorther form is for cells with empty boundary.
+    The first entry denotes the cell label, and the second its dimension.
+  The cells of the resulting Lefschetz complex correspond to the union of
+  all occurring labels. Cell labels that only occur in the boundary
+  specification are assumed to have empty boundary, and they do not have
+  to be specified separately in the second form above. However, if their
+  boundary is not empty, they have to be listed via the above first
+  form as well.
+
+Using this function, our earlier Lefschetz complex `lcL` can be created
+using the commands
+
+```julia
+defcellbndL = [["a",1,"A","B"], ["b",1,"A","B"], ["c",1,"A","B"], ["alpha",2,"a","b"]]
+lcL = create_lefschetz_gf2(defcellbndL)
+```
+
+while the Lefschetz complex `lcR` is defined via
+
+```julia
+defcellbndR = [["alpha",2,"a","b","c"], ["a",1], ["b",1], ["c",1]]
+lcR = create_lefschetz_gf2(defcellbndR)
+```
 
 ## Simplicial Complexes
 
