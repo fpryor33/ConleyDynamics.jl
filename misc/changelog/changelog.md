@@ -13,6 +13,11 @@ Release notes:
 
 - blah
 
+## v0.1.3 (February 17, 2025)
+
+- Added `create_lefschetz_gf2` function for quick Lefschetz complex creation
+  over a field of characteristic 2.
+- Simplified some examples in the documentation based on the new function.
 
 ## v0.1.2 (February 12, 2025)
 
