@@ -162,7 +162,7 @@ two equivalent formulations:
   has to have ``y \in S`` as well.
 
 The proof of these characterizations can be found in
-[mrozek:wanner:25a; Proposition 3.2](@cite) and
+[mrozek:wanner:25a; Proposition 3.2.1](@cite) and
 [lipinski:etal:23a; Proposition 3.10](@cite), respectively.
 
 Lefschetz complexes are a very general mathematical concept, and they
@@ -239,7 +239,7 @@ are initialized which simplify working with a Lefschetz complex:
 As mentioned above, note however that an object of type
 `LefschetzComplex` is created by passing only the first three
 the field items in the order given in [`LefschetzComplex`](@ref).
-Consider for example the Lefschetz complex from Figure 4
+Consider for example the Lefschetz complex from Figure 2.4
 in [mrozek:wanner:25a](@cite), see also the left complex in the
 next image. This complex consists of six cells with labels `A`, 
 `B`, `a`, `b`, `c`, and `alpha`, and we initialize the vector of

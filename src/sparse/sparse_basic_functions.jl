@@ -1,5 +1,6 @@
 export sparse_size, sparse_low, sparse_identity
 export sparse_fullness, sparse_sparsity
+export sparse_is_zero
 export sparse_show
 
 """
@@ -106,6 +107,28 @@ function sparse_sparsity(sm::SparseMatrix)
     #
 
     return 1.0 - sparse_fullness(sm)
+end
+
+"""
+    sparse_is_zero(sm::SparseMatrix)
+
+Test whether the sparse matrix `sm` is the zero matrix.
+"""
+function sparse_is_zero(sm::SparseMatrix)
+    #
+    # Test whether a sparse matrix is zero
+    #
+
+    nz = 0
+    for k=1:sm.ncol
+        nz += length(sm.columns[k])
+    end
+
+    if nz == 0
+        return true
+    else
+        return false
+    end
 end
 
 """

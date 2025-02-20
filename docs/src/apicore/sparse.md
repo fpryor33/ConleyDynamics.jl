@@ -23,6 +23,7 @@ sparse_minor
 ```@docs
 sparse_size
 sparse_low
+sparse_is_zero
 sparse_is_sut
 sparse_identity
 sparse_fullness

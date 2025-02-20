@@ -5,8 +5,8 @@ This tutorial explains the basic usage of the main components of
 It is not meant to be exhaustive, and more details will be
 provided in the more individualized sections. Also, precise mathematical
 definitions will be delayed until then. The presented examples are taken from
-the papers [batko:etal:20a](@cite) and [mrozek:wanner:25a](@cite), with minor
-modifications.
+the paper [batko:etal:20a](@cite) and the book [mrozek:wanner:25a](@cite),
+with minor modifications.
 
 ## Creating Simplicial Complexes
 
@@ -506,7 +506,7 @@ sclogo = create_simplicial_complex(labels,simplices)
 mvflogo = [["A","AB"],["C","AC"],["B","BC","BD","BCD"]]
 ```
 
-This example is taken from [mrozek:wanner:25a; Figure 1](@cite), and is
+This example is taken from [mrozek:wanner:25a; Figure 2.1](@cite), and is
 visualized in the accompanying figure.
 
 ![The logo multivector field](img/multivectorex.png)

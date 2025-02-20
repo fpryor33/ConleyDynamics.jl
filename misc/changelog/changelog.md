@@ -1,17 +1,21 @@
 
 # Tip: Release Notes
 
-Did you know you can add release notes too? Just add markdown formatted text underneath the comment after the text
-"Release notes:" and it will be added to the registry PR, and if TagBot is installed it will also be added to the
-release that TagBot creates. i.e.
+Did you know you can add release notes too? Just add markdown formatted text
+underneath the comment after the text "Release notes:" and it will be added to
+the registry PR, and if TagBot is installed it will also be added to the release
+that TagBot creates. i.e., you could add a "## Breaking Changes" header with a
+description, etc.
+
+*******************************************************************************
 
 @JuliaRegistrator register
 
 Release notes:
 
-## Breaking changes
+## v0.1.4 ()
 
-- blah
+- Added `sparse_is_zero` to check whether a sparse matrix is zero.
 
 ## v0.1.3 (February 17, 2025)
 

@@ -569,7 +569,7 @@ the Morse sets. But which of the associated connecting sets
 actually have to be nonempty? The algebra behind this question
 is captured by the *connection matrix*. The precise notion
 of connection matrix was introduced in [franzosa:89a](@cite),
-see also [harker:etal:21a](@cite), as well as the paper
+see also [harker:etal:21a](@cite), as well as the book
 [mrozek:wanner:25a](@cite) which treats connection matrices
 specifically in the setting of multivector fields and provides
 a precise definition of connection matrix equivalence, even 

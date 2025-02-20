@@ -10,7 +10,7 @@ end
 In order to illustrate the basic functionality of
 [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl), 
 this section collects a number of examples. Many of these are taken 
-from the papers [batko:etal:20a](@cite) and [mrozek:wanner:25a](@cite),
+from the paper [batko:etal:20a](@cite) and the book [mrozek:wanner:25a](@cite),
 and they consider both Forman vector fields and general multivector
 fields on a variety of Lefschetz complexes. Each example has its own
 associated function, so that users can quickly create examples
@@ -162,7 +162,7 @@ pair ``(\mathrm{cl}\, S, \mathrm{mo}\, S)``, as expected.
 
 ## The Multivector Field from the Logo
 
-This example is taken from [mrozek:wanner:25a; Figure 1](@cite),
+This example is taken from [mrozek:wanner:25a; Figure 2.1](@cite),
 and it is visualized in the accompanying figure.
 
 ![The logo multivector field](img/multivectorex.png)
@@ -437,7 +437,7 @@ in the example.
 
 ## Forcing Three Connection Matrices
 
-The next example is taken from [mrozek:wanner:25a; Figure 2](@cite),
+The next example is taken from [mrozek:wanner:25a; Figure 2.2](@cite),
 and it revolves around the combinatorial vector field on a simplicial 
 complex shown in the top left part of the figure.
 
@@ -568,7 +568,7 @@ case to case.
 
 ## A Lefschetz Multiflow Example
 
-The next example is taken from [mrozek:wanner:25a; Figure 3](@cite),
+The next example is taken from [mrozek:wanner:25a; Figure 2.3](@cite),
 and it is a combinatorial multivector field on a true Lefschetz 
 complex, as shown in the left panel of the associated figure.
 
@@ -633,7 +633,7 @@ union of the five removed vertices.
 
 ## Small Complex with Periodicity
 
-In [mrozek:wanner:25a; Figure 4](@cite) we introduced a small
+In [mrozek:wanner:25a; Figure 2.4](@cite) we introduced a small
 Lefschetz complex with periodic orbit and nonunique connection
 matrices. This complex consists of one 2-cell, three 1-cells,
 and two 0-cells, and it is shown in the leftmost panel of the
@@ -685,7 +685,7 @@ Our next example taken from [mrozek:wanner:25a](@cite) is concerned
 with turning a given multivector field into a Forman vector field
 by further subdividing the multivectors. For this, consider the
 three complexes and combinatorial vector fields shown in the
-associated figure, see also [mrozek:wanner:25a; Figure 11](@cite).
+associated figure, see also [mrozek:wanner:25a; Figure 7.1](@cite).
 
 ![Subdividing a multivector](img/examplesubdivide.png)
 

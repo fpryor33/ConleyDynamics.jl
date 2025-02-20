@@ -218,6 +218,8 @@ for quickly extracting certain information from sparse matrices:
   nonzero entry in the `ci`-th column of the matrix `A`, if used
   in the form `ri = sparse_low(A,ci)`. In other words, it returns
   the row index of the lowest nonzero matrix entry in the column.
+- [`sparse_is_zero`](@ref) checks whether a sparse matrix is the
+  zero matrix.
 - [`sparse_is_sut`](@ref) checks whether a given sparse matrix is
   strictly upper triangular, and returns either `true` or `false`.
 - [`sparse_fullness`](@ref) returns the fullness of a sparse

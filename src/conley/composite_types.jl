@@ -16,6 +16,10 @@ In addition, the following fields are created during initialization:
 * `dim::Int`: Dimension of the complex
 * `indices::Dict{String,Int}`: Dictionary for finding cell index from label
 The coefficient field is specified by the boundary matrix.
+
+!!! warning
+    Note that the constructor does not check whether the boundary matrix
+    squares to zero. It is the responsibility of the user to ensure that!
 """
 struct LefschetzComplex
     #
@@ -61,13 +65,6 @@ struct LefschetzComplex
             end
         end
         dim = dimensions[ncells]
-
-        # Make sure the boundary matrix squares to zero
-
-        # boundary2 = boundary * boundary
-        # if sparse_fullness(boundary2) > 0.0
-        #     error("The squared boundary matrix has to be zero!")
-        # end
 
         # Create the label to indices dictionary
 
