@@ -675,9 +675,57 @@ In this small example, one can easily determine the connection
 matrices directly, as illustrated in the second figure. While
 the detailed explanation can be found in [mrozek:wanner:25a](@cite),
 this is basically accomplished by contracting one of the two
-regular multivectors. If one contracts ``\{ B, c \}``, then the
-connection matrix `cm1` is obtained, while `cm2` is the result of
-contracting ``\{ A, a \}``.
+regular multivectors in a process called *elementary reduction*.
+While the details of this approach are described in
+[kaczynski:etal:98a](@cite), it relies on identifying a *reduction
+pair*, which contains a cell and one of its faces of one dimension less.
+These two cells are then removed from the Lefschetz complex and the
+boundary is modified in such a way that the new smaller complex still
+has the same homology as the previous one. If in our above example
+one uses the reduction pair ``\{ B, c \}``, then the boundary matrix
+of the reduced Lefschetz complex is the connection matrix `cm1`,
+while `cm2` is the result of using the reduction pair ``\{ A, a \}``.
+These manipulations can be done in
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+using the function [`lefschetz_reduction`](@ref):
+
+```julia
+julia> rc1 = lefschetz_reduction(lc1, "B", "c");
+
+julia> rc2 = lefschetz_reduction(lc1, "A", "a");
+```
+
+These two commands compute the reduced Lefschetz complexes `rc1`
+and `rc2` for the respective elementary reduction pairs ``\{ B, c \}``
+and ``\{ A, a \}``. As the following commands show, the
+first one leads to our earlier connection matrix `cm1`:
+
+```julia
+julia> full_from_sparse(rc1.boundary)
+4×4 Matrix{Int64}:
+ 0  0  0  0
+ 0  0  0  1
+ 0  0  0  1
+ 0  0  0  0
+
+julia> println(rc1.labels)
+["A", "a", "b", "alpha"]
+```
+
+Similarly, the connection matrix `cm2` is the result of the second
+reduction:
+
+```julia
+julia> full_from_sparse(rc2.boundary)
+4×4 Matrix{Int64}:
+ 0  0  0  0
+ 0  0  0  1
+ 0  0  0  0
+ 0  0  0  0
+
+julia> println(rc2.labels)
+["B", "b", "c", "alpha"]
+```
 
 ## Subdividing a Multivector
 
