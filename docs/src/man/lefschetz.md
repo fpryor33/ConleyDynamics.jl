@@ -786,6 +786,10 @@ complex:
 - [`lefschetz_closed_subcomplex`](@ref) extracts a closed Lefschetz
   subcomplex from the given Lefschetz complex. The subcomplex is the
   closure of the specified collection of cells.
+
+In addition, it is possible to create a new Lefschetz complex from
+an existing one using the following functions:
+
 - [`permute_lefschetz_complex`](@ref) determines a new Lefschetz
   complex which is obtained from the original one by a permutation
   of the cells. Note that the permutation has to respect the ordering
@@ -793,6 +797,16 @@ complex:
   words, the permutation has to decompose into permutations within
   each dimension. This is automatically done if no permutation is
   explicitly specified and the function creates a random one.
+- [`lefschetz_reduction`](@ref) uses *elementary reductions* to
+  transform a Lefschetz complex into a smaller one while preserving
+  homology. In fact, the new complex is chain homotopic to the 
+  original one. For this, one has to specify a sequence of *reduction
+  pairs*, which are disjoint pairs of cells whose dimensions differ
+  by one, and such that one cell is a face of the other, once the
+  earlier reductions have been performed. This function is based on
+  [kaczynski:etal:98a](@cite). It returns a new Lefschetz complex
+  which no longer contains the cells contained in the reduction 
+  pairs.
 
 There are also two *helper functions* which can sometimes 
 be useful:

@@ -154,6 +154,9 @@ following commands:
 - [`sparse_get_nz_column`](@ref) returns the row indices for the
   nonzero entries in the `ci`-th column of the sparse matrix `A`,
   if invoked as `rivec = sparse_get_nz_column(A,ci)`.
+- [`sparse_get_nz_row`](@ref) returns the column indices for the
+  nonzero entries in the `ri`-th row of the sparse matrix `A`,
+  if invoked as `civec = sparse_get_nz_row(A,ri)`.
 - [`sparse_minor`](@ref) creates a minor from a given sparse
   matrix `A`. For this, one needs to specify the row and column
   indices of the minor in the integer vectors `rvec` and `cvec`,

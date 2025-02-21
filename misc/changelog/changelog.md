@@ -13,9 +13,14 @@ description, etc.
 
 Release notes:
 
-## v0.1.4 ()
+## v0.1.4 (February 21, 2025)
 
+- Added `lefschetz_reduction` to construct a smaller Lefschetz complex
+  via elementary reductions.
+- Added `sparse_get_nz_row` to extract all column indices corresponding
+  to nonzero entries in a row.
 - Added `sparse_is_zero` to check whether a sparse matrix is zero.
+- Added consistency check to `create_lefschetz_gf2`.
 
 ## v0.1.3 (February 17, 2025)
 

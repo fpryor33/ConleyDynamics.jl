@@ -31,6 +31,10 @@ get_cubical_coords
 
 ```@docs
 create_lefschetz_gf2
+lefschetz_subcomplex
+lefschetz_closed_subcomplex
+lefschetz_reduction
+permute_lefschetz_complex
 ```
 
 ## Lefschetz Complex Queries
@@ -52,14 +56,6 @@ lefschetz_lchull
 lefschetz_clomo_pair
 lefschetz_skeleton
 manifold_boundary
-```
-
-## Lefschetz Subcomplexes
-
-```@docs
-lefschetz_subcomplex
-lefschetz_closed_subcomplex
-permute_lefschetz_complex
 ```
 
 ## Lefschetz Helper Functions

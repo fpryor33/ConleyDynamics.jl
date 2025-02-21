@@ -15,6 +15,7 @@ sparse_set_entry!
 Base.setindex!(matrix::SparseMatrix, val, ri::Int, ci::Int)
 sparse_get_column
 sparse_get_nz_column
+sparse_get_nz_row
 sparse_minor
 ```
 

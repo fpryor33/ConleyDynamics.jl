@@ -56,6 +56,7 @@ include("./lefschetz/lefschetz_subcomplex.jl")
 include("./lefschetz/lefschetz_closed_subcomplex.jl")
 include("./lefschetz/lefschetz_filtration.jl")
 include("./lefschetz/lefschetz_gfp_conversion.jl")
+include("./lefschetz/lefschetz_reduction.jl")
 include("./lefschetz/lefschetz_field.jl")
 include("./lefschetz/manifold_boundary.jl")
 
