@@ -13,6 +13,13 @@ description, etc.
 
 Release notes:
 
+## v0.1.5 (February 25, 2025)
+
+- Added `create_random_filter` to create a random injective filter.
+- Added `filter_shallow_pairs` to find all shallow pairs of a filter.
+- Added `filter_induced_mvf` to compute the multivector field induced
+  by a filter.
+
 ## v0.1.4 (February 21, 2025)
 
 - Added `lefschetz_reduction` to construct a smaller Lefschetz complex

@@ -58,6 +58,14 @@ lefschetz_skeleton
 manifold_boundary
 ```
 
+## Filters on Lefschetz Complexes
+
+```@docs
+create_random_filter
+filter_shallow_pairs
+filter_induced_mvf
+```
+
 ## Lefschetz Helper Functions
 
 ```@docs

@@ -58,6 +58,7 @@ include("./lefschetz/lefschetz_filtration.jl")
 include("./lefschetz/lefschetz_gfp_conversion.jl")
 include("./lefschetz/lefschetz_reduction.jl")
 include("./lefschetz/lefschetz_field.jl")
+include("./lefschetz/filters.jl")
 include("./lefschetz/manifold_boundary.jl")
 
 include("./mvf/create_mvf_hull.jl")

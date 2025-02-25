@@ -808,6 +808,36 @@ an existing one using the following functions:
   which no longer contains the cells contained in the reduction 
   pairs.
 
+It was shown in [edelsbrunner:mrozek:23a](@cite) that
+suitable reduction pairs for [`lefschetz_reduction`](@ref) can be found
+easily via the concept of filters. A *filter* on a Lefschetz complex is a
+function ``\varphi : X \to {\mathbb R}`` which has the property that
+``\varphi(x) \le \varphi(y)`` if ``x`` is a face of ``y``. Every such
+filter induces *shallow pairs*, which in the case of an injective filter
+generate a gradient Forman vector field on the Lefschetz complex. It turns
+out that these shallow pairs can be used to reduce the complex. In
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+there are three functions for working with filters:
+
+- [`create_random_filter`](@ref) creates a random injective filter on a
+  Lefschetz complex. The filter is created by assigning integers to cell
+  groups, increasing with dimension. Within each dimension the assignment is
+  random, but all filter values of cells of dimension ``k`` are less than
+  all filter values of cells with dimension ``k+1``. The function returns
+  the filter as `Vector{Int}`, with indices corresponding to the cell
+  indices in the Lefschetz complex.
+- [`filter_shallow_pairs`](@ref) finds all shallow pairs for the filter
+  ``\varphi``. These are face-coface pairs ``(x,y)`` whose dimensions differ
+  by one, and such that ``y`` has the smallest filter value on the coboundary
+  of ``x``, and ``x`` has the largest filter value on the boundary of ``y``.
+  For injective filters, these pairs give rise to a Forman vector field on
+  the underlying Lefschetz complex. For noninjective filters this is not
+  true in general.
+- [`filter_induced_mvf`](@ref) returns the smallest multivector field which
+  has the property that every shallow pair is contained in a multivector.
+  For injective filters this is a Forman vector field, but in the
+  noninjective case it can be a general multivector field.
+
 There are also two *helper functions* which can sometimes 
 be useful:
 
