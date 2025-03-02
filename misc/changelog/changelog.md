@@ -13,6 +13,12 @@ description, etc.
 
 Release notes:
 
+## v0.1.6 (March 1, 2025)
+
+- Added triangulations for the torus, the Klein bottle and the
+  projective plane.
+- Updated the documentation.
+
 ## v0.1.5 (February 25, 2025)
 
 - Added `create_random_filter` to create a random injective filter.
