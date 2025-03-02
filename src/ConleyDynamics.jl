@@ -60,6 +60,7 @@ include("./lefschetz/lefschetz_reduction.jl")
 include("./lefschetz/lefschetz_field.jl")
 include("./lefschetz/filters.jl")
 include("./lefschetz/manifold_boundary.jl")
+include("./lefschetz/surfaces.jl")
 
 include("./mvf/create_mvf_hull.jl")
 include("./mvf/create_planar_mvf.jl")

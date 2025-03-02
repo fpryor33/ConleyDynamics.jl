@@ -13,6 +13,9 @@ end
 create_simplicial_complex
 create_simplicial_rectangle
 create_simplicial_delaunay
+simplicial_torus
+simplicial_klein_bottle
+simplicial_projective_plane
 ```
 
 ## Cubical Complexes

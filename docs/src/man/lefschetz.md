@@ -489,6 +489,19 @@ a rectangle in the plane.
 For a demonstration of the Delaunay triangulation approach,
 please see [Analyzing Planar Vector Fields](@ref).
 
+In addition to the above methods,
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+also provides a few special simplicial complexes for illustration purposes:
+
+- [`simplicial_torus`](@ref) constructs a triangulation of the
+  two-dimensional torus.
+- [`simplicial_klein_bottle`](@ref) constructs a triangulation of the
+  two-dimensional Klein bottle.
+- [`simplicial_projective_plane`](@ref) constructs a triangulation of the
+  projective plane.
+
+These examples can be used to illustrate homology over different fields.
+
 ## Cubical Complexes
 
 The second important special case of a Lefschetz complex is called
