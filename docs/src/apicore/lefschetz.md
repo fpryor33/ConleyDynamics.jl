@@ -43,6 +43,7 @@ permute_lefschetz_complex
 ## Lefschetz Complex Queries
 
 ```@docs
+lefschetz_information
 lefschetz_field
 lefschetz_is_closed
 lefschetz_is_locally_closed

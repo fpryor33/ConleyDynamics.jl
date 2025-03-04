@@ -743,9 +743,13 @@ Once a Lefschetz complex has been created, there are a number
 of manipulations and queries that one has to be able to perform
 on the complex. At the moment,
 [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
-supplies a number of functions for this. The following three functions 
+supplies a number of functions for this. The following four functions 
 provide *basic information*:
 
+- [`lefschetz_information`](@ref) provides basic information about the
+  Lefschetz complex, including its Euler characteristic and homology,
+  as well as cell counts by dimension and sparsity percentage of
+  the boundary matrix.
 - [`lefschetz_field`](@ref) returns the field ``F`` over which the
   Lefschetz complex is defined as a `String`.
 - [`lefschetz_is_closed`](@ref) determines whether a given Lefschetz
