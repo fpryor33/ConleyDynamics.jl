@@ -13,6 +13,12 @@ description, etc.
 
 Release notes:
 
+## v0.1.7 (March 4, 2025)
+
+- Added `lefschetz_information` for basic information about a
+  Lefschetz complex.
+- Updated the documentation.
+
 ## v0.1.6 (March 1, 2025)
 
 - Added triangulations for the torus, the Klein bottle and the
