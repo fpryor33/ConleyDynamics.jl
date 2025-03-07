@@ -495,10 +495,20 @@ also provides a few special simplicial complexes for illustration purposes:
 
 - [`simplicial_torus`](@ref) constructs a triangulation of the
   two-dimensional torus.
-- [`simplicial_klein_bottle`](@ref) constructs a triangulation of the
+- [`simplicial_klein_bottle`](@ref) returns a triangulation of the
   two-dimensional Klein bottle.
 - [`simplicial_projective_plane`](@ref) constructs a triangulation of the
   projective plane.
+- [`simplicial_torsion_space`](@ref) returns a simplicial complex ``K``
+  with the integer homology groups ``H_0(K) \cong {\mathbb Z}``, as
+  well as ``H_1(K) \cong {\mathbb Z}_n`` and ``H_2(K) \cong 0``. In
+  other words, this simplicial complex has nontrivial torsion in
+  dimension 1. For ``n = 3`` and ``n = 4`` these triangulations are
+  shown in the following figure. Notice that points with the same label
+  have to be identified. This vertex naming scheme is the same as is
+  used in the function.
+
+![Simplicial torsion space](img/exampletorsion.png)
 
 These examples can be used to illustrate homology over different fields.
 

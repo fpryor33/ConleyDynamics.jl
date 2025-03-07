@@ -16,6 +16,7 @@ create_simplicial_delaunay
 simplicial_torus
 simplicial_klein_bottle
 simplicial_projective_plane
+simplicial_torsion_space
 ```
 
 ## Cubical Complexes
