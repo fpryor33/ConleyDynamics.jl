@@ -13,6 +13,18 @@ description, etc.
 
 Release notes:
 
+## v0.2.0 (March 7, 2025)
+
+This release does not contain any breaking changes. But the 
+following new functionality has been added since release 0.1.0:
+
+- A function to easily create small Lefschetz complexes over `GF(2)`.
+- Reduction of Lefschetz complexes via elementary reductions.
+- Basic functionality to work with filters and shallow pairs.
+- New functions to create triangulations for a number of
+  sample topological spaces. These are mostly for demonstration
+  purposes during teaching.
+
 ## v0.1.7 (March 4, 2025)
 
 - Added `lefschetz_information` for basic information about a
