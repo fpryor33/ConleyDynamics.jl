@@ -56,6 +56,8 @@ lefschetz_is_locally_closed
 lefschetz_boundary
 lefschetz_coboundary
 lefschetz_closure
+lefschetz_interior
+lefschetz_topboundary
 lefschetz_openhull
 lefschetz_lchull
 lefschetz_clomo_pair

@@ -781,9 +781,19 @@ features* from a Lefschetz complex:
 - [`lefschetz_closure`](@ref) determines the closure of a 
   given cell subset, i.e., the union of all faces of cells
   in the cell subset.
+- [`lefschetz_interior`](@ref) determines the interior of a 
+  given cell subset. For this, the Lefschetz complex is interpreted
+  as a finite topological space, where a set ``A`` is open if and
+  only if for every cell ``\sigma \in A`` all of its cofaces are
+  also contained in the set ``A``.
 - [`lefschetz_openhull`](@ref) computes the open hull of a
   cell subset, i.e., the smallest open set which contains
-  the given cell subset.
+  the given cell subset. For this, we again interpret a Lefschetz
+  complex as a finite topological space as above.
+- [`lefschetz_topboundary`](@ref) computes the topological
+  boundary of a cell subset, i.e., the set difference of the
+  closure and the interior of the set. Note that this usually
+  differs from the (algebraic) boundary mentioned above.
 - [`lefschetz_lchull`](@ref) finds the locally closed hull of a
   Lefschetz complex subset. This is the smallest locally closed
   set which contains the given cell subset. One can show that 
