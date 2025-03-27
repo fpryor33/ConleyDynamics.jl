@@ -13,6 +13,14 @@ description, etc.
 
 Release notes:
 
+## v0.2.1 (March 27, 2025)
+
+- Added `lefschetz_interior` to determine the interior of a Lefschetz
+  complex subset, if the Lefschetz complex is interpreted as a finite
+  topological space.
+- Added `lefschetz_topboundary` to determine the topological boundary
+  in the above setting.
+
 ## v0.2.0 (March 7, 2025)
 
 This release does not contain any breaking changes. But the 
