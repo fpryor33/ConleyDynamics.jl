@@ -13,6 +13,13 @@ description, etc.
 
 Release notes:
 
+## v0.2.2 (May 11, 2025)
+
+- Added `example_dunce_chaos`. It constructs a Forman vector field
+  on a minimal representation of the dunce hat which has a chaotic
+  isolated invariant set with trivial Conley index.
+- The documentation for this function still has to be written.
+
 ## v0.2.1 (March 27, 2025)
 
 - Added `lefschetz_interior` to determine the interior of a Lefschetz

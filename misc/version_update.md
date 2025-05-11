@@ -5,7 +5,7 @@ To update the version of the package use the folling steps:
 * Add release notes to `misc/changelog/changelog.md`.
 * Push the changes to the repository with the message "Set version to 0.x.y".
 * Wait until the bots finish creating the manual etc.
-* Then add the comment below to the commit on Githib.
+* Then add the comment below to the commit on Github.
 
 ```md
 @JuliaRegistrator register
