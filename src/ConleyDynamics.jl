@@ -95,6 +95,7 @@ include("./examples/example_critical_simplex.jl")
 include("./examples/example_moebius.jl")
 include("./examples/example_clorenz.jl")
 include("./examples/example_dunce_chaos.jl")
+include("./examples/example_torsion_chaos.jl")
 
 include("./plots/plot_planar_simplicial.jl")
 include("./plots/plot_planar_simplicial_morse.jl")
