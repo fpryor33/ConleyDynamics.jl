@@ -13,6 +13,15 @@ description, etc.
 
 Release notes:
 
+## v0.2.3 (May 12, 2025)
+
+- Added `example_torsion_chaos`. It constructs a Forman vector field
+  on a simplicial complex with torsion which has a chaotic isolated
+  invariant set with trivial Conley index, for certain values of the
+  field characteristic. In addition, an associated gradient vector
+  field has large entries in the connection matrix.
+- The documentation for this function still has to be written.
+
 ## v0.2.2 (May 11, 2025)
 
 - Added `example_dunce_chaos`. It constructs a Forman vector field
