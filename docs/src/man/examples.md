@@ -832,7 +832,7 @@ reordering of the cells in the Lefschetz complex.
 
 ## A Combinatorial Lorenz System
 
-Our last example is taken from [kaczynski:etal:16a; Figure 3](@cite).
+Our next example is taken from [kaczynski:etal:16a; Figure 3](@cite).
 It is a Forman vector field on a two-dimensional simplicial complex,
 as shown in the accompanying figure.
 
@@ -887,6 +887,29 @@ defined by `lc` which mimics the behavior of the Forman vector field.
 And according to [mrozek:etal:22a](@cite), any such *admissible semiflow*
 does indeed have infinitely many periodic orbits in the set determined
 by the triangles.
+
+## Chaos in a Space with Torsion
+
+Our next example describes gradient Forman vector fields on simplicial
+complexes with torsion whose connection matrices can have large entries,
+as long as the underlying field has a large enough characteristic. In
+addition, by merging two critical cells in the Forman gradient vector
+field into an arrow, once obtains a Forman vector field with chaotic
+behavior. The simplicial complexes are based on the function
+[`simplicial_torsion_space`](@ref), and the Forman vector fields
+can be seen in the associated figure for the cases ``n=3`` and
+``n=4``.
+
+![Forman chaos in a space with torsion](img/exampletorsionchaos.png)
+
+After specifying the torsion coefficient ``n`` and the field characteristic
+``p``, the underlying simplicial complex and the two Forman vector fields
+can be created using the function [`example_torsion_chaos`](@ref):
+
+```@docs; canonical=false
+example_torsion_chaos
+```
+
 
 ## [References](@id refexamples)
 
