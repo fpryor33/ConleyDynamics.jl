@@ -910,6 +910,47 @@ can be created using the function [`example_torsion_chaos`](@ref):
 example_torsion_chaos
 ```
 
+The first of the above commands creates the simplicial complex `sc`
+and the two Forman vector fields. The gradient vector field is returned
+in `vfG`, and it corresponds to the Forman vector fields shown in red 
+in the accompanying figure. The return variable `vfC` gives the chaotic
+Forman vector field. Is it obtained from the gradient field by combining
+the two critical cells ``\mathrm{0w0x}`` and ``\mathrm{0w0x1s}`` into
+a Forman arrow, which is indicated in green in the figure. Note that
+this reverses the flow between these two simplices. In the above
+example, we use ``n=3`` and ``p=7``.
+
+The gradient Forman vector field `vfG` is then analyzed using the
+following commands:
+
+* The command `homology(sc)` shows that in the field ``GF(7)``, 
+  the space has the homology of a point.
+* The next command `cmG = connection_matrix(sc, vfG)` determines
+  the connection matrix for the gradient system. As the entry
+  `cmG.labels` shows, the Morse sets are the three simplices
+  ``\mathrm{0w}``, ``\mathrm{0w0x}``, and ``\mathrm{0w0x1s}``,
+  and the nontrivial entry in the connection matrix indicates
+  three connections between the index ``2`` critical cell and
+  the index ``1`` critical cell.
+
+The next commands analyze the chaotic Forman vector field `vfC`:
+
+* As before, the command `cmC = connection_matrix(sc, vfC)` 
+  computes the connection matrix. This time, the matrix is the
+  zero matrix with one row and column, which correspond to the
+  stable critical cell ``\mathrm{0w}``.
+* But there is nontrivial dynamics, as the command
+  `msC, psC = morse_sets(sc, vfC, poset=true)` demonstrates.
+  It produces *two Morse sets*. In addition to the stable
+  critical cell, one also obtains an isolated invariant set
+  with trivial index. This set exhibits chaotic behavior, and
+  is shown in purple in the accompanying figure. In  the case
+  ``n = 3``, it consists of ``26`` simplices. In the general
+  case, it will have ``12n - 10`` simplices.
+* The return variable `psC` gives the flow-induced order
+  between the Morse sets, which shows that there are 
+  heteroclinic orbits between the chaotic Morse set and
+  the stable equilibrium.
 
 ## [References](@id refexamples)
 
