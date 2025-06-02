@@ -13,6 +13,11 @@ description, etc.
 
 Release notes:
 
+## v0.2.4 (June 2, 2025)
+
+- Added documentation for the functions `example_dunce_chaos`
+  and `example_torsion_chaos`.
+
 ## v0.2.3 (May 12, 2025)
 
 - Added `example_torsion_chaos`. It constructs a Forman vector field
