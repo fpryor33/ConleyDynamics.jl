@@ -888,6 +888,72 @@ And according to [mrozek:etal:22a](@cite), any such *admissible semiflow*
 does indeed have infinitely many periodic orbits in the set determined
 by the triangles.
 
+## Chaos in the Dunce Hat
+
+In the above example we observed chaotic behavior in a branched
+manifold. It is also possible to introduce similar behavior in
+the Dunce hat.
+
+![Forman chaos in the Dunce hat](img/exampleduncechaos.png)
+
+The required simplicial complex and Forman vector field can
+be created using the function [`example_dunce_chaos`](@ref):
+
+```@docs; canonical=false
+example_dunce_chaos
+```
+
+The first of the above commands creates the simplicial complex `sc`
+and two Forman vector fields. The simplicial complex contains a
+minimal triangulation of the Dunce hat, which has 8 vertices,
+24 edges, and 17 triangles. The variable `vfG` returns a gradient
+vector field, as shown in the associated figure. This vector field
+has the three critical simplices ``\mathrm{1}``, ``\mathrm{12}``,
+and ``\mathrm{128}``. Finally, the chaotic Forman vector field is
+returned in `vfC`. Is it obtained from the gradient field by combining
+the two critical cells ``\mathrm{12}`` and ``\mathrm{128}`` into
+a Forman arrow, which is indicated in green in the figure. This
+reverses the flow between these two simplices. In more detail,
+the above example provides the following analysis:
+
+* The command `homology(sc)` shows that the Dunce hat has the
+  homology of a point, i.e., it is contractible.
+* The next command `cmG = connection_matrix(sc, vfG)` determines
+  the connection matrix for the gradient system. As the entry
+  `cmG.labels` shows, the Morse sets are the three simplices
+  ``\mathrm{1}``, ``\mathrm{12}``, and ``\mathrm{128}``,
+  and the nontrivial entry in the connection matrix indicates
+  at least one connection between the index ``2`` critical cell
+  and the index ``1`` critical cell. In fact, there are three
+  such connections.
+* The command `cmC = connection_matrix(sc, vfC)` 
+  computes the connection matrix. This time, the matrix is the
+  zero matrix with one row and column, which correspond to the
+  stable critical cell ``\mathrm{1}``.
+* But there is nontrivial dynamics, as the command
+  `msC, psC = morse_sets(sc, vfC, poset=true)` demonstrates.
+  It produces *two Morse sets*. In addition to the stable
+  critical simplex, one also obtains an isolated invariant set
+  with trivial index. This set exhibits chaotic behavior, and
+  is shown in purple in the accompanying figure.
+* The return variable `psC` gives the flow-induced order
+  between the Morse sets, which shows that there are 
+  heteroclinic orbits between the chaotic Morse set and
+  the stable equilibrium.
+* The variable `msC` contains the two Morse sets. While the
+  first is the stable equilibrium, the second one consists of
+  8 edges and 8 triangles.
+
+One can see from the figure that the chaotic isolated invariant
+set for the Forman vector field `vfC` has two periodic orbits.
+Starting with the edge ``\mathrm{12}`` in the upper right, they
+both traverse the edges ``\mathrm{28}``, ``\mathrm{78}``,
+``\mathrm{68}``, ``\mathrm{56}``, and ``\mathrm{25}``. But while
+the first periodic orbit then returns directly to ``\mathrm{12}``
+along the bottom edge, the second one moves first through
+``\mathrm{15}`` and ``\mathrm{14}``, before returning to
+``\mathrm{12}`` along the left edge.
+
 ## Chaos in a Space with Torsion
 
 Our next example describes gradient Forman vector fields on simplicial
