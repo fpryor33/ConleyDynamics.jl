@@ -198,11 +198,26 @@ that are needed for the functionality of the package:
   and removes the sparse matrix entry in the `ri`-th row
   and `ci`-th colum, i.e., it effectively sets the entry
   equal to zero.
+- [`sparse_add`](@ref) computes the matrix sum of 
+  two sparse matrices. Exceptions are raised if the matrix
+  sum is not defined, or if the involved sparse matrices
+  are defined over different fields. One can also use the
+  operator form `A+B` to compute the sum of sparse matrices.
+- [`sparse_subtract`](@ref) computes the matrix difference of 
+  two sparse matrices. Exceptions are raised if the matrix
+  difference is not defined, or if the involved sparse matrices
+  are defined over different fields. One can also use the
+  operator form `A-B` to compute the sum of sparse matrices.
 - [`sparse_multiply`](@ref) computes the matrix product of 
   two sparse matrices. Exceptions are raised if the matrix
   product is not defined, or if the involved sparse matrices
   are defined over different fields. One can also use the
   operator form `A*B` to compute the product of sparse matrices.
+- [`sparse_scale`](@ref) computes the scalar product of a
+  number and a sparse matrix. An exception is raised if the
+  scalar and the matrix entries are not of the same type.
+  One can also use the operator form `sfac*A` to compute the
+  scalar product.
 
 As mentioned earlier, additional operations can easily be
 implemented if they become necessary.
@@ -233,6 +248,8 @@ for quickly extracting certain information from sparse matrices:
   matrix, which is defined as ``1`` minus its fullness, i.e., it
   is the ratio of the number of zero matrix elements and the total
   number of matrix entries.
+- [`sparse_nonzero_count`](@ref) determines the number of nonzero
+  matrix entries.
 - [`sparse_show`](@ref) can be used to display a sparse matrix
   in traditional matrix form at the Julia REPL prompt.
 

@@ -1,5 +1,5 @@
 export sparse_size, sparse_low, sparse_identity
-export sparse_fullness, sparse_sparsity
+export sparse_fullness, sparse_sparsity, sparse_nonzero_count
 export sparse_is_zero
 export sparse_show
 
@@ -80,11 +80,12 @@ end
 """
     sparse_fullness(sm::SparseMatrix)
 
-Display the fullness of the sparse matrix `sm`.
+Return the fullness of the sparse matrix `sm`,
+which equals the percentage of nonzero elements.
 """
 function sparse_fullness(sm::SparseMatrix)
     #
-    # Display the fullness of a sparse matrix
+    # Compute the fullness of a sparse matrix
     #
 
     nz = 0
@@ -99,14 +100,33 @@ end
 """
     sparse_sparsity(sm::SparseMatrix)
 
-Display the sparsity of the sparse matrix `sm`.
+Return the sparsity of the sparse matrix `sm`,
+which equals the percentage of zero entries.
 """
 function sparse_sparsity(sm::SparseMatrix)
     #
-    # Display the sparsity of a sparse matrix
+    # Compute the sparsity of a sparse matrix
     #
 
     return 1.0 - sparse_fullness(sm)
+end
+
+"""
+    sparse_nonzero_count(sm::SparseMatrix)
+
+Return the number of nonzero entries of the sparse matrix `sm`.
+"""
+function sparse_nonzero_count(sm::SparseMatrix)
+    #
+    # Compute the number of nonzero entries
+    #
+
+    nz = 0
+    for k=1:sm.ncol
+        nz += length(sm.columns[k])
+    end
+    
+    return nz
 end
 
 """

@@ -29,6 +29,7 @@ sparse_is_sut
 sparse_identity
 sparse_fullness
 sparse_sparsity
+sparse_nonzero_count
 sparse_show
 ```
 
@@ -39,8 +40,14 @@ sparse_add_column!
 sparse_add_row!
 sparse_permute
 sparse_remove!
+sparse_add
+sparse_subtract
 sparse_multiply
+sparse_scale
+Base.:+(::SparseMatrix,::SparseMatrix)
+Base.:-(::SparseMatrix,::SparseMatrix)
 Base.:*(::SparseMatrix,::SparseMatrix)
+Base.:*(::Any,::SparseMatrix)
 ```
 
 ## Conversion Functions
