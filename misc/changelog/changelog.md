@@ -13,6 +13,36 @@ description, etc.
 
 Release notes:
 
+## v0.3.0 (June 6, 2025)
+
+This release does not contain any breaking changes. But the 
+following new Lefschetz complex functionality and examples
+have been added since release 0.2.0:
+
+- Added `lefschetz_interior` to determine the interior of a Lefschetz
+  complex subset, if the Lefschetz complex is interpreted as a finite
+  topological space.
+- Added `lefschetz_topboundary` to determine the topological boundary
+  in the above setting.
+- Added `example_dunce_chaos`. It constructs a Forman vector field
+  on a minimal representation of the dunce hat which has a chaotic
+  isolated invariant set with trivial Conley index.
+- Added `example_torsion_chaos`. It constructs a Forman vector field
+  on a simplicial complex with torsion which has a chaotic isolated
+  invariant set with trivial Conley index, for certain values of the
+  field characteristic. In addition, an associated gradient vector
+  field has large entries in the connection matrix.
+
+In addition, and in anticipation of future extensions, more sparse
+matrix functions have been added:
+
+- The functions `sparse_add`, `sparse_subtract`, and `sparse_scale`
+  perform sparse matrix addition, subtraction, and scalar multiplication.
+  All of these functions can also be involved using the operators
+  `+`, `-`, and `*`, respectively.
+- A new function `sparse_nonzero_count` determines the number of
+  nonzero entries of a sparse matrix.
+
 ## v0.2.4 (June 2, 2025)
 
 - Added documentation for the functions `example_dunce_chaos`
