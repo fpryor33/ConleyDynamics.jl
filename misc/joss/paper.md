@@ -126,8 +126,10 @@ provides Conley indices and the connection matrix. In addition, one can
 determine additional information on the global dynamics of these system.
 For example, \autoref{flowfig2} visualizes enclosures for the connecting
 orbits between stationary states, for the system in the left panel of
-\autoref{flowfig1}. For more details, see the extensive documentation
-accompanying [@conleydynamics].
+\autoref{flowfig1}. For more details and examples, see the extensive
+documentation accompanying [@conleydynamics], and the two recent papers
+[@thorpe:wanner:p24a] and [@thorpe:wanner:p24b]. In addition, all examples 
+in the book [@mrozek:wanner:25a] were computed using `ConleyDynamics.jl`.
 
 ![Morse decompositions for two planar flows. In both cases, the underlying
 Lefschetz complex is a random Delaunay triangulation. The identified Morse 
