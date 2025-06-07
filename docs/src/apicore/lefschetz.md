@@ -38,6 +38,7 @@ create_lefschetz_gf2
 lefschetz_subcomplex
 lefschetz_closed_subcomplex
 lefschetz_reduction
+lefschetz_reduction_maps
 permute_lefschetz_complex
 ```
 

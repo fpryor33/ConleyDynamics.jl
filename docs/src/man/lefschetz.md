@@ -844,6 +844,24 @@ an existing one using the following functions:
   [kaczynski:etal:98a](@cite). It returns a new Lefschetz complex
   which no longer contains the cells contained in the reduction 
   pairs.
+- [`lefschetz_reduction_maps`](@ref) is an extension of the previous
+  function [`lefschetz_reduction`](@ref). While it performs the same
+  basic Lefschetz complex reduction, it does compute useful additional 
+  information. Besides the reduced Lefschetz complex, it also returns
+  the chain equivalences between the original and the reduced complex,
+  as well as the chain homotopy relating one of their compositions
+  to the identity. The return values of this function are as follows:
+  * `lcred`: The first return variable contains the reduced Lefschetz
+    complex, just as in the previous function.
+  * `pp`: This is a sparse matrix representation of the chain equivalence
+    between the original complex and the reduced one.
+  * `jj`: This sparse matrix gives the chain equivalence between the
+    reduced complex and the original one.
+  * `hh`: The third sparse matrix represents the chain homotopy
+    which shows that the composition `jj * pp` is chain homotopic to
+    the identity.
+  Note that these maps are constructed in such a way that the
+  product `pp * jj` always is the identity.
 
 It was shown in [edelsbrunner:mrozek:23a](@cite) that
 suitable reduction pairs for [`lefschetz_reduction`](@ref) can be found

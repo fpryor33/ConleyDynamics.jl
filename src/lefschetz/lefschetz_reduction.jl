@@ -62,7 +62,7 @@ function lefschetz_reduction(lc::LefschetzComplex, redpairs::Vector{Vector{Int}}
         push!(removed_cells, a)
         push!(removed_cells, b)
 
-        # Extract the coincidence coefficient
+        # Extract the incidence coefficient
 
         lambda = bnd[a,b]
 
@@ -72,7 +72,7 @@ function lefschetz_reduction(lc::LefschetzComplex, redpairs::Vector{Vector{Int}}
 
         # Modify the columns of the coboundary of a, except for the
         # removed cells. Since we have modified the boundary matrix,
-        # we need to get the column of bnd directly.
+        # we need to get the row of bnd directly.
 
         for c in setdiff(sparse_get_nz_row(bnd,a), removed_cells)
             sparse_add_column!(bnd, c, b, -bnd[a,c], lambda)
