@@ -30,7 +30,7 @@ sparse_identity
 sparse_zero
 sparse_fullness
 sparse_sparsity
-sparse_nonzero_count
+sparse_nz_count
 sparse_show
 ```
 

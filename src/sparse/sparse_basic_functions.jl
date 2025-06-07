@@ -1,5 +1,5 @@
 export sparse_size, sparse_low, sparse_identity, sparse_zero
-export sparse_fullness, sparse_sparsity, sparse_nonzero_count
+export sparse_fullness, sparse_sparsity, sparse_nz_count
 export sparse_is_zero
 export scalar_inverse
 export sparse_show
@@ -148,11 +148,11 @@ function sparse_sparsity(sm::SparseMatrix)
 end
 
 """
-    sparse_nonzero_count(sm::SparseMatrix)
+    sparse_nz_count(sm::SparseMatrix)
 
 Return the number of nonzero entries of the sparse matrix `sm`.
 """
-function sparse_nonzero_count(sm::SparseMatrix)
+function sparse_nz_count(sm::SparseMatrix)
     #
     # Compute the number of nonzero entries
     #

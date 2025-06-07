@@ -265,7 +265,7 @@ for quickly extracting certain information from sparse matrices:
   matrix, which is defined as ``1`` minus its fullness, i.e., it
   is the ratio of the number of zero matrix elements and the total
   number of matrix entries.
-- [`sparse_nonzero_count`](@ref) determines the number of nonzero
+- [`sparse_nz_count`](@ref) determines the number of nonzero
   matrix entries.
 - [`sparse_show`](@ref) can be used to display a sparse matrix
   in traditional matrix form at the Julia REPL prompt.
