@@ -13,6 +13,16 @@ description, etc.
 
 Release notes:
 
+## v0.3.1 (June 7, 2025)
+
+- Added `lefschetz_reduction_maps`. It computes the reduction of a Lefschetz
+  complex based on a sequence of elementary reduction pairs, but also provides
+  the involved chain equivalences and chain homotopies.
+- Added the new sparse matrix function `sparse_zero`, and changed the name
+  of `sparse_nonzero_count` to `sparse_nz_count`.
+- Modified `sparse_set_entry` in the finite field case.
+- Added the helper function `scalar_inverse`.
+
 ## v0.3.0 (June 6, 2025)
 
 This release does not contain any breaking changes. But the 
