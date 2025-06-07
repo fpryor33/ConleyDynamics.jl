@@ -1,6 +1,7 @@
-export sparse_size, sparse_low, sparse_identity
+export sparse_size, sparse_low, sparse_identity, sparse_zero
 export sparse_fullness, sparse_sparsity, sparse_nonzero_count
 export sparse_is_zero
+export scalar_inverse
 export sparse_show
 
 """
@@ -74,6 +75,41 @@ function sparse_identity(n::Int; p::Int=0)
     # Create the sparse identity and return it
 
     sm = sparse_from_lists(n, n, p, tzero, tone, r, r, vals)
+    return sm
+end
+
+"""
+    sparse_zero(nr::Int, nc::Int; p::Int=0)
+
+Create a sparse zero matrix with `nr` rows and `nc` columns.
+
+The optional argument `p` specifies the field characteristic.
+If `p=0` then the sparse matrix is over the rationals, while
+if `p>0` is a prime, then the matrix is an integer matrix 
+whose entries are interpreted in `GF(p)`.
+"""
+function sparse_zero(nr::Int, nc::Int; p::Int=0)
+    #
+    # Create a sparse zero matrix with nr rows and nc columns
+    #
+
+    # Initialize the variables and lists
+
+    if p == 0
+        tzero = Rational{Int}(0)
+        tone  = Rational{Int}(1)
+    elseif p > 0
+        tzero = Int(0)
+        tone  = Int(1)
+    else
+        error("The characteristic cannot be negative!")
+    end
+
+    r = Vector{Int}()
+
+    # Create the sparse zero matrix and return it
+
+    sm = sparse_from_lists(nr, nc, p, tzero, tone, r, r, r)
     return sm
 end
 
@@ -168,6 +204,33 @@ function sparse_show(sm::SparseMatrix)
         end
         println("]")
     end
+end
+
+"""
+    scalar_inverse(s, p::Int)
+
+Compute the inverse of a scalar.
+"""
+function scalar_inverse(s, p::Int)
+    #
+    # Compute the inverse of a scalar
+    #
+    return 1 / s
+end
+
+"""
+    scalar_inverse(s::Int, p::Int)
+
+Compute the inverse of a scalar.
+
+This function computes the inverse in modular arithmetic
+with base `p`.
+"""
+function scalar_inverse(s::Int, p::Int)
+    #
+    # Compute the inverse of a scalar
+    #
+    return invmod(s, p)
 end
 
 # """

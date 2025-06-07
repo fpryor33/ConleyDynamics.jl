@@ -125,7 +125,14 @@ and are therefore by no means exhaustive:
   a sparse identity matrix `A` with `n` rows and `n` columns.
   If the optional characteristic parameter specified and positive,
   then the matrix is considered over the finite field with
-  characteristic `PP``, otherwise it is over the rationals
+  characteristic `PP`, otherwise it is over the rationals
+  ``\mathbb{Q}``.
+- [`sparse_zero`](@ref) creates a sparse zero matrix.
+  It is invoked as `A = sparse_zero(nr, nc, p=PP)`, and returns
+  a sparse zero matrix `A` with `nr` rows and `nc` columns.
+  If the optional characteristic parameter specified and positive,
+  then the matrix is considered over the finite field with
+  characteristic `PP`, otherwise it is over the rationals
   ``\mathbb{Q}``.
 
 Of these methods, the function [`sparse_from_lists`](@ref)
@@ -145,9 +152,11 @@ following commands:
   is invoked using the command `sparse_set_entry!(A,ri,ci,val)`.
   Internally, this commands makes sure that the above-defined
   format of the fields of a sparse matrix is preserved. Note that
-  the data type of `val` has to match the type of `A.zero`. Moreover,
-  if the matrix is considered over a finite field the value `val`
-  has to be given as an integer between `0` and `A.char-1`.
+  the data type of `val` has to match the type of `A.zero`. If
+  the matrix is a sparse matrix over the integers, it is considered
+  as a sparse matrix over a finite field. Thus, the value `val`
+  is automatically reduced modulo `A.char` before being assigned
+  to the entry.
 - [`sparse_get_column`](@ref) is invoked as
   `Acol = sparse_get_column(A,ci)`, and it returns the full `ci`-th
   column of the matrix `A` as a `Vector{T}` of length `A.nrow`.
@@ -166,9 +175,11 @@ following commands:
   they are not allowed to contain repeated indices.
 
 One can also read and set sparse matrix values using the overloaded
-methods `y = A[i,j]` and `A[i,j] = val`. In the latter case, it is
-up to the user to make sure that `val` respects the underlying sparse
-matrix field.
+methods `y = A[i,j]` and `A[i,j] = val`. In the latter case, if the
+matrix is defined as `SparseMatrix{Int}`, then it is interpreted
+as being over a finite field. In this case, the value `val` is 
+automatically reduced via modular arithmetic modulo `A.char` before
+the assignment.
 
 ## Elementary Matrix Operations
 
@@ -218,6 +229,12 @@ that are needed for the functionality of the package:
   scalar and the matrix entries are not of the same type.
   One can also use the operator form `sfac*A` to compute the
   scalar product.
+
+There is also the useful helper function [`scalar_inverse`](@ref)
+which computes the inverse of a scalar. Depending on the input
+type, this is either the rational inverse, or the inverse in
+modular arithmetic. See the function documentation for more 
+details.
 
 As mentioned earlier, additional operations can easily be
 implemented if they become necessary.

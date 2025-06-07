@@ -27,6 +27,7 @@ sparse_low
 sparse_is_zero
 sparse_is_sut
 sparse_identity
+sparse_zero
 sparse_fullness
 sparse_sparsity
 sparse_nonzero_count
@@ -57,5 +58,11 @@ sparse_from_full
 full_from_sparse
 sparse_from_lists
 lists_from_sparse
+```
+
+## Sparse Helper Functions
+
+```@docs
+scalar_inverse
 ```
 
