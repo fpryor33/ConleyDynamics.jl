@@ -70,8 +70,8 @@ structure, a Lefschetz complex. To keep the software framework self-contained,
 special functions for simplicial and cubical complexes have been implemented
 as well.
 
-In the years since Forman introduced combinatorial vector fields, they
-have found numerous applications in areas such as visualization and mesh
+Since they were first introduced by Forman, combinatorial vector fields have
+found numerous applications in areas such as visualization and mesh
 compression, graph braid groups, homology computation, astronomy, the study
 of Cech and Delaunay complexes, and many others. See [@batko:etal:20a] for
 detailed references. Despite these applications, there is no general purpose
@@ -98,26 +98,41 @@ phase space. This leads to more flexible discretizations than the ones
 described in [@boczko:etal:07a].
 
 For the necessary homology computations, the classical algorithm described
-in [@edelsbrunner:harer:10a] is used. There is better-performing software
-available, such as for example [@gudhi:24a]. However, our goal was the
-creation of a unified framework for combinatorial topological dynamics,
-which allows for general fields and Lefschetz complexes. It was therefore
-easier to include the classical algorithm.
+in [@edelsbrunner:harer:10a] is used. Its implementation in
+`ConleyDynamics.jl` allows for computations over general prime finite fields
+or over the rationals, and one can work with arbitrary Lefschetz complexes. 
+Note, however, that there is better-performing software available, such as
+for example [@gudhi:24a]. 
 
 The first algorithm for the computation of connection matrices was
 described in [@harker:etal:21a]. Their software, however, is geared
-towards their specific applications. For this reason, `ConleyDynamics.jl`
+towards specific applications. For this reason, `ConleyDynamics.jl`
 implements the recent method described in [@dey:etal:24a]. Our
 implementation extends their method to general fields and
 Lefschetz complexes.
+
+![Two sample planar flows. The left image shows a gradient system with
+nine equilibrium solutions and many connecting orbits betweeen them. The 
+system depicted on the right has one stable equilibrium at the origin and
+two surrounding periodic orbits.\label{flowfig0}](flowfig0.png)
 
 # Examples
 
 `ConleyDynamics.jl` can determine a combinatorial multivector field which
 encapsulates the possible dynamical behavior of a classical flow, based on
 the underlying vector field and a Lefschetz complex discretization of the
-relevant portion of phase space. \autoref{flowfig1} shows Morse decompositions
-for two sample planar systems, based on underlying random Delaunay triangulations.
+relevant portion of phase space. 
+
+![Morse decompositions for the two planar flows shown in the previous figure.
+In both cases, the underlying Lefschetz complex is a random Delaunay triangulation.
+The identified Morse sets are shown in different colors.\label{flowfig1}](flowfig1.png)
+
+![Morse intervals for the planar gradient flow. The yellow regions provide
+enclosures for heteroclinic orbits in the system.\label{flowfig2}](flowfig2.png)
+
+Consider for example the two planar flows
+depicted in \autoref{flowfig0}. For these systems, \autoref{flowfig1} shows
+Morse decompositions based on underlying random Delaunay triangulations.
 The left system contains nine equilibrium solutions, within the colored
 enclosures. The right panel of \autoref{flowfig1} depicts the Morse decomposition
 of a planar system with two periodic solutions, which circle around an
@@ -130,13 +145,6 @@ orbits between stationary states, for the system in the left panel of
 documentation accompanying [@conleydynamics], and the two recent papers
 [@thorpe:wanner:p24a] and [@thorpe:wanner:p24b]. In addition, all examples 
 in the book [@mrozek:wanner:25a] were computed using `ConleyDynamics.jl`.
-
-![Morse decompositions for two planar flows. In both cases, the underlying
-Lefschetz complex is a random Delaunay triangulation. The identified Morse 
-sets are shown in different colors.\label{flowfig1}](flowfig1.png)
-
-![Morse intervals for a planar gradient flow. The yellow regions provide
-encloures for heteroclinic orbits in the system.\label{flowfig2}](flowfig2.png)
 
 # Acknowledgements
 
