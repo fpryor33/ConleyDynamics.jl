@@ -13,6 +13,10 @@ description, etc.
 
 Release notes:
 
+## v0.3.2 (June 8, 2025)
+
+- Added `sparse_inverse` to compute the inverse of a sparse matrix
+
 ## v0.3.1 (June 7, 2025)
 
 - Added `lefschetz_reduction_maps`. It computes the reduction of a Lefschetz
