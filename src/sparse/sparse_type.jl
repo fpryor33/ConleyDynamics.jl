@@ -12,7 +12,7 @@ The struct has the following fields:
 * `const zero::T`: Number 0 of type `T`
 * `const one::T`:  Number 1 of type `T`
 * `entries::Vector{Vector{T}}`: Matrix entries corresponding to `columns`
-* `columns::Vector{Vector{Int}}`: `column[k]` points to nonzero entries in column k
+* `columns::Vector{Vector{Int}}`: `columns[k]` points to nonzero entries in column k
 * `rows::Vector{Vector{Int}}`: `rows[k]` points to nonzero entries in the k-th row
 """
 mutable struct SparseMatrix{T}

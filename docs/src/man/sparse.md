@@ -229,6 +229,9 @@ that are needed for the functionality of the package:
   scalar and the matrix entries are not of the same type.
   One can also use the operator form `sfac*A` to compute the
   scalar product.
+- [`sparse_inverse`](@ref) computes the inverse matrix of 
+  a sparse matrix. Exceptions are raised if the matrix
+  is not square or not invertible.
 
 There is also the useful helper function [`scalar_inverse`](@ref)
 which computes the inverse of a scalar. Depending on the input

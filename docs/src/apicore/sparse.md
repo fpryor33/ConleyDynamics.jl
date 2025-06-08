@@ -40,6 +40,7 @@ sparse_show
 sparse_add_column!
 sparse_add_row!
 sparse_permute
+sparse_inverse
 sparse_remove!
 sparse_add
 sparse_subtract
