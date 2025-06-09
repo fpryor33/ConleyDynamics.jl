@@ -760,6 +760,11 @@ provide *basic information*:
   Lefschetz complex, including its Euler characteristic and homology,
   as well as cell counts by dimension and sparsity percentage of
   the boundary matrix.
+- [`lefschetz_cell_count`](@ref) returns the number of cells in each
+  dimension in an integer vector of length `lc.dim + 1`. If the optional
+  parameter `bounds=true` is passed, then the function also returns two
+  integer vectors `lo` and `hi`. These contain the beginning and end
+  indices of the cells in each dimension.
 - [`lefschetz_field`](@ref) returns the field ``F`` over which the
   Lefschetz complex is defined as a `String`.
 - [`lefschetz_is_closed`](@ref) determines whether a given Lefschetz
