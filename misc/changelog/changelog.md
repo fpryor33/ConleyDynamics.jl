@@ -13,6 +13,15 @@ description, etc.
 
 Release notes:
 
+## v0.3.3 (June 9, 2025)
+
+- Added `lefschetz_cell_count` which provides cell counts in 
+  each dimension.
+- Added `lefschetz_newbasis` which constructs a new Lefschetz
+  complex via a graded basis change.
+- Added `lefschetz_newbasis_maps` which extends the previous
+  function by also providing the involved isomorphisms.
+
 ## v0.3.2 (June 8, 2025)
 
 - Added `sparse_inverse` to compute the inverse of a sparse matrix
