@@ -761,7 +761,7 @@ provide *basic information*:
   as well as cell counts by dimension and sparsity percentage of
   the boundary matrix.
 - [`lefschetz_cell_count`](@ref) returns the number of cells in each
-  dimension in an integer vector of length `lc.dim + 1`. If the optional
+  dimension in a vector of length `lc.dim + 1`. If the optional
   parameter `bounds=true` is passed, then the function also returns two
   integer vectors `lo` and `hi`. These contain the beginning and end
   indices of the cells in each dimension.
@@ -867,6 +867,17 @@ an existing one using the following functions:
     the identity.
   Note that these maps are constructed in such a way that the
   product `pp * jj` always is the identity.
+- [`lefschetz_newbasis`](@ref) creates a new Lefschetz complex `lcnew`
+  from the given Lefschetz complex `lc` via a change of basis. The new
+  basis has to be specified in the sparse matrix `basis`, whose columns
+  represent the new basis in terms of the existing one. The basis matrix
+  has to respect the grading by dimension, i.e., the cells which are used
+  to form a new basis chain have to have the same dimensions as the cell
+  which is being replaced.
+- [`lefschetz_newbasis_maps`](@ref) extends the previous function
+  in that besides the new Lefschetz complex `lcnew` it also returns
+  the chain maps `pp` and `jj` which are the respective isomorphisms
+  from the original complex `lc` to `lcnew`, and vice versa.
 
 It was shown in [edelsbrunner:mrozek:23a](@cite) that
 suitable reduction pairs for [`lefschetz_reduction`](@ref) can be found

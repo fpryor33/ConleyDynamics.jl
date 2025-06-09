@@ -39,6 +39,8 @@ lefschetz_subcomplex
 lefschetz_closed_subcomplex
 lefschetz_reduction
 lefschetz_reduction_maps
+lefschetz_newbasis
+lefschetz_newbasis_maps
 permute_lefschetz_complex
 ```
 
