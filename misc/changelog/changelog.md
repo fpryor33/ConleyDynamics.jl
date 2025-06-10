@@ -13,6 +13,11 @@ description, etc.
 
 Release notes:
 
+## v0.3.4 (June 10, 2025)
+
+- Added `compose_reductions`.
+- Modified `lefschetz_newbasis_maps`.
+
 ## v0.3.3 (June 9, 2025)
 
 - Added `lefschetz_cell_count` which provides cell counts in 
