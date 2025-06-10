@@ -41,6 +41,7 @@ lefschetz_reduction
 lefschetz_reduction_maps
 lefschetz_newbasis
 lefschetz_newbasis_maps
+compose_reductions
 permute_lefschetz_complex
 ```
 

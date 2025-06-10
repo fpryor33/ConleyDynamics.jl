@@ -12,7 +12,7 @@ new basis chain have to have the same dimensions as the cell which is being
 replaced. The function returns the new Lefschetz complex `lcnew`. If the
 optional parameter `maps = true` is passed, the the function also returns
 the chain maps `pp` and `jj` which are the isomorphisms from `lc` to `lcnew`,
-and vice versa.
+and vice versa, as well as the zero chain homotopy `hh`.
 """
 function lefschetz_newbasis(lc::LefschetzComplex, basis::SparseMatrix; maps::Bool=false)
     #
@@ -56,7 +56,10 @@ function lefschetz_newbasis(lc::LefschetzComplex, basis::SparseMatrix; maps::Boo
     if maps == false
         return lcnew
     else
-        return lcnew, pp, jj
+        n  = lcnew.ncells
+        p  = lcnew.boundary.char
+        hh = sparse_zero(n, n, p=p)
+        return lcnew, pp, jj, hh
     end
 end
 

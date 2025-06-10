@@ -1,4 +1,5 @@
 export lefschetz_reduction_maps
+export compose_reductions
 
 """
     lefschetz_reduction_maps(lc::LefschetzComplex, redpairs::Vector{Vector{Int}})
@@ -183,9 +184,7 @@ function lefschetz_reduction_maps(lc::LefschetzComplex, redpairs::Vector{Vector{
         labelsn = labels[new_cells]
         dimsn   = dims[new_cells]
 
-        ppn = pn * pp
-        jjn = jj * jn
-        hhn = hh + jj * (hn * pp)
+        ppn, jjn, hhn = compose_reductions(pp,jj,hh,pn,jn,hn)
 
         # Update the complex information and chain maps
 
@@ -242,7 +241,8 @@ This method expects that the two cells `r1` and `r2` which form the
 reduction pair are given in index form. The function returns the reduced
 Lefschetz complex, as well as the involved chain maps.
 """
-lefschetz_reduction_maps(lc::LefschetzComplex, r1::Int, r2::Int) = lefschetz_reduction_maps(lc,[[r1,r2]])
+lefschetz_reduction_maps(lc::LefschetzComplex, r1::Int, r2::Int) =
+   lefschetz_reduction_maps(lc,[[r1,r2]])
 
 """
     lefschetz_reduction_maps(lc::LefschetzComplex, r1::String, r2::String)
@@ -254,5 +254,30 @@ This method expects that the two cells `r1` and `r2` which form the
 reduction pair are given in label form. The function returns the reduced
 Lefschetz complex, as well as the involved chain maps.
 """
-lefschetz_reduction_maps(lc::LefschetzComplex, r1::String, r2::String) = lefschetz_reduction_maps(lc,[[r1,r2]])
+lefschetz_reduction_maps(lc::LefschetzComplex, r1::String, r2::String) =
+   lefschetz_reduction_maps(lc,[[r1,r2]])
+
+"""
+    compose_reductions(pp1::SparseMatrix, jj1::SparseMatrix, hh1::SparseMatrix, 
+                       pp2::SparseMatrix, jj2::SparseMatrix, hh2::SparseMatrix)
+
+Combine the chain maps and chain homotopies of two reductions.
+
+The function expects the chain maps and chain homotopies of two Lefschetz
+complex reductions, and computes the chain maps and chain homotopy for the
+composition of both. The maps `ppX`, `jjX`, and `hhX` can be obtained via
+either `lefschetz_reduction_maps` or `lefschetz_newbasis_maps`.
+"""
+function compose_reductions(pp1::SparseMatrix, jj1::SparseMatrix, hh1::SparseMatrix, 
+                            pp2::SparseMatrix, jj2::SparseMatrix, hh2::SparseMatrix)
+    #
+    # Combine the chain maps and chain homotopies of two reductions
+    #
+
+    ppn = pp2 * pp1
+    jjn = jj1 * jj2
+    hhn = hh1 + jj1 * (hh2 * pp1)
+
+    return ppn, jjn, hhn
+end
 

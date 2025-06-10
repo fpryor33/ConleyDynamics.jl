@@ -877,7 +877,13 @@ an existing one using the following functions:
 - [`lefschetz_newbasis_maps`](@ref) extends the previous function
   in that besides the new Lefschetz complex `lcnew` it also returns
   the chain maps `pp` and `jj` which are the respective isomorphisms
-  from the original complex `lc` to `lcnew`, and vice versa.
+  from the original complex `lc` to `lcnew`, and vice versa, as well
+  as the zero chain homotopy `hh`.
+- [`compose_reductions`](@ref) can be used to find the composed
+  chain maps and chain homotopy for a pair of subsequent reductions.
+  These can be produced either via the function
+  [`lefschetz_reduction_maps`](@ref) or the function
+  [`lefschetz_newbasis_maps`](@ref).
 
 It was shown in [edelsbrunner:mrozek:23a](@cite) that
 suitable reduction pairs for [`lefschetz_reduction`](@ref) can be found
