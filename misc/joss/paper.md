@@ -138,12 +138,12 @@ enclosures. The right panel of \autoref{flowfig1} depicts the Morse decompositio
 of a planar system with two periodic solutions, which circle around an
 equilibrium in their center. In both cases, `ConleyDynamics.jl` also
 provides Conley indices and the connection matrix. In addition, one can
-determine additional information on the global dynamics of these system.
+determine information on the global dynamics of these systems.
 For example, \autoref{flowfig2} visualizes enclosures for the connecting
 orbits between stationary states, for the system in the left panel of
 \autoref{flowfig1}. For more details and examples, see the extensive
 documentation accompanying [@conleydynamics], and the two recent papers
-[@thorpe:wanner:p24a] and [@thorpe:wanner:p24b]. In addition, all examples 
+[@thorpe:wanner:p24a] and [@thorpe:wanner:p24b]. All examples 
 in the book [@mrozek:wanner:25a] were computed using `ConleyDynamics.jl`.
 
 # Acknowledgements
