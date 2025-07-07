@@ -13,6 +13,10 @@ description, etc.
 
 Release notes:
 
+## v0.3.5 (July 7, 2025)
+
+This is the official archived version accompanying the JOSS submission.
+
 ## v0.3.4 (June 10, 2025)
 
 - Added `compose_reductions`.
