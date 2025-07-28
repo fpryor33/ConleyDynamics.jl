@@ -73,7 +73,7 @@ as well.
 Since they were first introduced by Forman, combinatorial vector fields have
 found numerous applications in areas such as visualization and mesh
 compression, graph braid groups, homology computation, astronomy, the study
-of Cech and Delaunay complexes, and many others. See [@batko:etal:20a] for
+of Cech and Delaunay complexes, and many others. See @batko:etal:20a for
 detailed references. Despite these applications, there is no general purpose
 software for working with such combinatorial vector fields. While Forman
 vector fields have close ties with classical dynamics [@kaczynski:etal:16a;
@@ -81,8 +81,8 @@ vector fields have close ties with classical dynamics [@kaczynski:etal:16a;
 of a given classical flow. For example, in a combinatorial Forman vector field
 chaos can only be generated through the choice of an appropriate underlying
 combinatorial structure [@mrozek:etal:22a]. For this reason, the notion of
-combinatorial multivector fields was introduced in [@mrozek:17a;
-@lipinski:etal:23a], and it allows for the full spectrum of dynamical
+combinatorial multivector fields was introduced in @mrozek:17a and
+@lipinski:etal:23a, and it allows for the full spectrum of dynamical
 behavior.
 
 `ConleyDynamics.jl` provides functions which analyze the global dynamics
@@ -95,19 +95,19 @@ that use this approach to create a combinatorial multivector field from a
 classical planar or three-dimensional ordinary differential equation, on
 any underlying Lefschetz complex that discretizes the relevant part of
 phase space. This leads to more flexible discretizations than the ones
-described in [@boczko:etal:07a].
+described in @boczko:etal:07a.
 
 For the necessary homology computations, the classical algorithm described
-in [@edelsbrunner:harer:10a] is used. Its implementation in
+in @edelsbrunner:harer:10a is used. Its implementation in
 `ConleyDynamics.jl` allows for computations over general prime finite fields
 or over the rationals, and one can work with arbitrary Lefschetz complexes. 
 Note, however, that there is better-performing software available, such as
-for example [@gudhi:24a]. 
+for example @gudhi:24a. 
 
 The first algorithm for the computation of connection matrices was
-described in [@harker:etal:21a]. Their software, however, is geared
+described in @harker:etal:21a. Their software, however, is geared
 towards specific applications. For this reason, `ConleyDynamics.jl`
-implements the recent method described in [@dey:etal:24a]. Our
+implements the recent method described in @dey:etal:24a. Our
 implementation extends their method to general fields and
 Lefschetz complexes.
 
@@ -142,9 +142,9 @@ determine information on the global dynamics of these systems.
 For example, \autoref{flowfig2} visualizes enclosures for the connecting
 orbits between stationary states, for the system in the left panel of
 \autoref{flowfig1}. For more details and examples, see the extensive
-documentation accompanying [@conleydynamics], and the two recent papers
-[@thorpe:wanner:p24a] and [@thorpe:wanner:p24b]. All examples 
-in the book [@mrozek:wanner:25a] were computed using `ConleyDynamics.jl`.
+documentation accompanying @conleydynamics, and the two recent papers:
+@thorpe:wanner:p24a and @thorpe:wanner:p24b. All examples 
+in the book @mrozek:wanner:25a were computed using `ConleyDynamics.jl`.
 
 # Acknowledgements
 
