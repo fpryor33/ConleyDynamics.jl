@@ -64,7 +64,7 @@ for example triangular meshes. Sometimes cubical complexes
 [@kaczynski:etal:04a] are more convenient, such as in the analysis
 of images or voxel data. However, for the analysis of classical dynamics
 both of these combinatorial structures have disadvantages, as indicated
-in [@boczko:etal:07a]. While one suitable generalization could be CW complexes
+in @boczko:etal:07a. While one suitable generalization could be CW complexes
 [@massey:91a; @dlotko:etal:11a], `ConleyDynamics.jl` provides the most general
 structure, a Lefschetz complex. To keep the software framework self-contained,
 special functions for simplicial and cubical complexes have been implemented
@@ -102,7 +102,7 @@ in @edelsbrunner:harer:10a is used. Its implementation in
 `ConleyDynamics.jl` allows for computations over general prime finite fields
 or over the rationals, and one can work with arbitrary Lefschetz complexes. 
 Note, however, that there is better-performing software available, such as
-for example @gudhi:24a. 
+for example, @gudhi:24a. 
 
 The first algorithm for the computation of connection matrices was
 described in @harker:etal:21a. Their software, however, is geared
