@@ -73,7 +73,8 @@ Depth = 2
 If you use
 [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
 please cite it. There is a JOSS paper published at
-[https://doi.org/10.21105/joss.08085](https://doi.org/10.21105/joss.08085).
+[https://doi.org/10.21105/joss.08085](https://doi.org/10.21105/joss.08085),
+see [wanner:25a](@cite).
 The BibTeX entry for this paper is:
 
 ```bibtex

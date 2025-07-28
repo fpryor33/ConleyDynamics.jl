@@ -6,7 +6,7 @@ It is not meant to be exhaustive, and more details will be
 provided in the more individualized sections. Also, precise mathematical
 definitions will be delayed until then. The presented examples are taken from
 the paper [batko:etal:20a](@cite) and the book [mrozek:wanner:25a](@cite),
-with minor modifications.
+with minor modifications. See also [wanner:25a](@cite).
 
 ## Creating Simplicial Complexes
 
