@@ -68,3 +68,32 @@ Pages = [
 Depth = 2
 ```
 
+## Citation
+
+If you use
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl),
+please cite it. There is a JOSS paper published at
+[https://doi.org/10.21105/joss.08085](https://doi.org/10.21105/joss.08085).
+The BibTeX entry for this paper is:
+
+```bibtex
+@article{wanner:25a,
+   author = {Thomas Wanner},
+   title = {Conley{D}ynamics.jl: {A} {J}ulia package for multivector
+            dynamics on {L}efschetz complexes},
+   journal = {Journal of Open Source Software},
+   doi = {10.21105/joss.08085},
+   volume = {10},
+   number = {111},
+   pages = {8085},
+   url = {https://joss.theoj.org/papers/10.21105/joss.08085},
+   year = {2025}
+   }
+```
+
+## License 
+
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+is provided under an
+[MIT license](https://github.com/almost6heads/ConleyDynamics.jl/blob/main/LICENSE).
+
