@@ -25,6 +25,9 @@ sparse_minor
 sparse_size
 sparse_low
 sparse_is_zero
+sparse_is_identity
+sparse_is_equal
+Base.:(==)(::SparseMatrix,::SparseMatrix)
 sparse_is_sut
 sparse_identity
 sparse_zero

@@ -1,6 +1,6 @@
 export sparse_size, sparse_low, sparse_identity, sparse_zero
 export sparse_fullness, sparse_sparsity, sparse_nz_count
-export sparse_is_zero
+export sparse_is_zero, sparse_is_equal, sparse_is_identity
 export scalar_inverse
 export sparse_show
 
@@ -185,6 +185,72 @@ function sparse_is_zero(sm::SparseMatrix)
     else
         return false
     end
+end
+
+"""
+    sparse_is_equal(A::SparseMatrix, B::SparseMatrix)
+
+Test whether the sparse matrices `A` and `B` are equal.
+
+For equality, the two sparse matrices not only have to have the
+same size and the same entries, they also have to be of the same
+type and be defined over the same field.
+"""
+function sparse_is_equal(A::SparseMatrix, B::SparseMatrix)
+    #
+    # Equality test for sparse matrices
+    #
+    
+    # First check the type and size
+
+    if !(A.nrow == B.nrow); return false end
+    if !(A.ncol == B.ncol); return false end
+    if !(A.char == B.char); return false end
+    if !(typeof(A.one) == typeof(B.one)); return false end
+
+    # Now check the locations of the nonzero entries
+
+    if !(A.columns == B.columns); return false end
+    if !(A.rows == B.rows); return false end   # not necessary
+
+    # Finally check the entries
+
+    if !(A.entries == B.entries); return false end
+
+    # They are the same!
+
+    return true
+end
+
+"""
+    Base.:(==)(A::SparseMatrix,B::SparseMatrix)
+
+Test whether the sparse matrices `A` and `B` are equal.
+
+For equality, the two sparse matrices not only have to have the
+same size and the same entries, they also have to be of the same
+type and be defined over the same field.
+"""
+Base.:(==)(A::SparseMatrix,B::SparseMatrix) = sparse_is_equal(A,B)
+
+"""
+    sparse_is_identity(A::SparseMatrix)
+
+Test whether the sparse matrix `A` is the identity matrix.
+"""
+function sparse_is_identity(A::SparseMatrix)
+    #
+    # Test whether a sparse matrix is the identity
+    #
+    
+    # Create the identity matrix with the same number of rows 
+    # as A, and over the same field
+
+    Imatrix = sparse_identity(A.nrow, p=A.char)
+
+    # Return true if this matrix equals A
+
+    return sparse_is_equal(A,Imatrix)
 end
 
 """
