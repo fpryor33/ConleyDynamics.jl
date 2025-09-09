@@ -13,6 +13,13 @@ description, etc.
 
 Release notes:
 
+## v0.3.6 (September 9, 2025)
+
+- Added `sparse_is_identity` to check whether a sparse matrix is the 
+  identity matrix.
+- Added `sparse_is_equal` to test for equality of sparse matrices.
+  This is also implemented as an extra method for the `==` operator.
+
 ## v0.3.5 (July 7, 2025)
 
 This is the official archived version accompanying the JOSS submission.
