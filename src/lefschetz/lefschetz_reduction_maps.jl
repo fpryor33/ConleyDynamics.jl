@@ -26,7 +26,7 @@ The return values are as follows:
 
 # Examples
 ```jldoctest
-julia> labels = ["a","b","c", "d"];
+julia> labels = ["a","b","c","d"];
 
 julia> simplices = [["a","b"], ["b","c"], ["c","d"]];
 
