@@ -29,3 +29,10 @@ connection_matrix
 cm_reduce!
 ```
 
+## Forman Vector Fields
+
+```@docs
+forman_comb_flow
+forman_stab_flow
+```
+
