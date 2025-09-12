@@ -13,6 +13,13 @@ description, etc.
 
 Release notes:
 
+## v0.3.7 (September 12, 2025)
+
+- Added `forman_comb_flow` to compute Forman's combinatorial flow,
+  and the associated chain homotopy.
+- Added `forman_stab_flow` to compute Forman's stabilized combinatorial
+  flow. Also in this case, the associated chain homotopy is returned.
+
 ## v0.3.6 (September 9, 2025)
 
 - Added `sparse_is_identity` to check whether a sparse matrix is the 
