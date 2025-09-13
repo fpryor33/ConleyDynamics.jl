@@ -34,5 +34,6 @@ cm_reduce!
 ```@docs
 forman_comb_flow
 forman_stab_flow
+chain_vector
 ```
 
