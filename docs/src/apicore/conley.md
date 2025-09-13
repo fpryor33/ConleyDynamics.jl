@@ -35,5 +35,6 @@ cm_reduce!
 forman_comb_flow
 forman_stab_flow
 chain_vector
+chain_support
 ```
 

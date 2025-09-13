@@ -1302,7 +1302,7 @@ associated Matlab code can be found at [isoblockval:website](@cite).
 
 ## Forman's Morse Complex 
 
-Finally, the package
+The package
 [ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
 also provides some support for studying Forman gradient vector fields
 directly, using the notions introduced in [forman:98b](@cite). In this
@@ -1335,6 +1335,33 @@ stabilized version can be computed using the following two functions.
   of iterations has been reached. In the latter case, one just has to
   pass the optional paramter `maxit` with a larger number of allowed
   iterations.
+
+For analyzing or applying Forman's combinatorial flow, one needs to
+work with sparse vector representations of chains. These are elements
+of the chain groups of the underlying Lefschetz complex, which are
+then represented as sparse matrices consisting of exactly one column.
+In this form, they can be multiplied by the matrix of the combinatorial
+flow, which in turn determines the image of the chain under the flow.
+In general, these vectors are extremely sparse, and only contain a
+handfull of nonzero entries.
+[ConleyDynamics.jl](https://almost6heads.github.io/ConleyDynamics.jl)
+therefore provides the following two functions for the creation and
+analysis of sparse chain vectors:
+
+- [`chain_vector`](@ref) is a function that simplifies the creation
+  of a sparse vector representation of a chain. The chain can be specified
+  by simply listing the cells in the support of the chain. If no coefficients
+  are specified, then the chain is just the sum of these cells, each with
+  coefficient `1`. The function has several associated methods: The coefficients
+  of the chain can be omitted or specified, and the cells can be listed in
+  index or label form. More details can be found in the description of each
+  method.
+- [`chain_support`](@ref) extracts the support of a chain given as a sparse
+  vector. In its simplest form, the function returns a `Vector{String}`
+  which contains the labels of all the cells which have nonzero coefficients
+  in the chain. If one passes the optional parameter `coeff=true`, then the
+  function returns two arguments: In addition to the vector of labels as
+  above, it also returns the vector of associated coefficients.
 
 ## [References](@id refconley)
 
