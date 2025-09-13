@@ -13,6 +13,14 @@ description, etc.
 
 Release notes:
 
+## v0.3.8 (September 13, 2025)
+
+- Added `chain_vector` to create a sparse matrix representation of a
+  chain by specifying only the cells in the support, and their 
+  coefficents.
+- Added `chain_support` to extract the cells in the support of a chain,
+  which is given as a sparse vector.
+
 ## v0.3.7 (September 12, 2025)
 
 - Added `forman_comb_flow` to compute Forman's combinatorial flow,
