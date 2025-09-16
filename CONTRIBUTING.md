@@ -26,6 +26,21 @@ always ask for help.
 3. Include appropriate tests 
 4. Try to only do one thing per pull request
 
+When adding new functionality to ConleyDynamics.jl, please follow the following 
+specific steps:
+
+- Create a new Julia file which contains the function, and add the `export`
+  command for your function in its first line.
+- Place the new file in the appropriate folder with the `src` directory,
+  based on what the function implements.
+- Add an `include` line to the file `src/ConleyDynamics.jl` which imports
+  your new file.
+- Within the `docs/src/apicore` folder, add the name of your function to
+  the approriate api file.
+
+If you want to explain the functionality further, you can also add a more
+detailed description to the appropriate file within `docs/src/man`.
+
 ## Performance Improvements
 
 In addition to the guidance above for making a pull request, if your contribution
