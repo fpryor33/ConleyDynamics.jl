@@ -32,8 +32,6 @@ and triangles. If one passes the argument `pv=true`, then in addition
 to saving the file a preview is displayed. Lastly, passing the argument 'ci=true' will 
 color code the Morse sets according to their respective Conley indices.
 """
-
-
 function plot_planar_simplicial_morse(sc::LefschetzComplex,
                                        coords::Vector{<:Vector{<:Real}},
                                        fname::String,
