@@ -4,3 +4,4 @@ Manifest.toml
 memory/
 .claude/
 
+.DS_Store
