@@ -66,11 +66,21 @@ function isolate_cellsubsets(ec::EuclideanComplex,
                     push!(d, dv)
                 end
             end
-            push!(deez, minimum(d))
+            # Skip pairs where every vertex of one set coincides with the
+            # other (e.g. two directly touching Morse sets) — they impose
+            # no lower bound on delta, but other pairs still can.
+            if !isempty(d)
+                push!(deez, minimum(d))
+            end
         end
     end
 
-    delta = minimum(x for x in deez if x > 0)
+    if isempty(deez)
+        error("All selected Morse sets are mutually touching (zero distance) — " *
+              "cannot determine a fattening delta.")
+    end
+
+    delta = minimum(deez)
     println("Delta: $delta")
 
     ##########################################################################
