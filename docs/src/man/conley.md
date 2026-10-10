@@ -610,6 +610,11 @@ using the following commands:
   and the induced multivector field `mvfreduced` on the subcomplex.
   The multivectors of the new multivector field are the
   intersections of the original multivectors and the subcomplex.
+  An error is raised if `lcsub` is not locally closed. This check
+  can be skipped with the optional argument `validate=false`,
+  for example if `lcsub` was computed with [`morse_interval`](@ref).
+  The computational cost is linear in the size of the Lefschetz
+  complex and the multivector field.
 * Finally, the function [`remove_exit_set`](@ref) removes the
   exit set for a multivector field on a Lefschetz subcomplex.
   It is assumed that the Lefschetz complex `lc` is a topological

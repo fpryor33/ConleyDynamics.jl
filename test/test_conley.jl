@@ -130,3 +130,32 @@ end
     @test conley_index(sc, ["DEF"], algorithm="rank") == [0, 0, 1]
     @test conley_index(sc, ["AB","AC","BC","A","B","C"], algorithm="rank") == [1, 1, 0]
 end
+
+@testset "Restricted dynamics" begin
+    for (lc, mvf) in (example_three_cm(), example_clorenz(),
+                      example_torsion_chaos(3, 3)[[1, 3]])
+        mvfI = convert_cellsubsets(lc, mvf)
+        ms = morse_sets(lc, mvfI)
+        mi = morse_interval(lc, mvfI, ms)
+        sub = sort(mi)
+        # Reference: intersect the multivectors with the subcomplex
+        refL = [lc.labels[intersect(mv, sub)] for mv in mvfI]
+        refL = refL[findall(x -> length(x) > 1, refL)]
+        lcr, mvfr = restrict_dynamics(lc, mvfI, mi)
+        @test lcr.labels == lc.labels[sub]
+        @test convert_cellsubsets(lcr, mvfr) == refL
+        lcrL, mvfrL = restrict_dynamics(lc, mvf, lc.labels[mi])
+        @test mvfrL == refL
+        lcrN, mvfrN = restrict_dynamics(lc, mvfI, mi, validate=false)
+        @test mvfrN == mvfr
+        @test full_from_sparse(lcrN.boundary) == full_from_sparse(lcr.boundary)
+        # The Morse sets of the restricted field are the same
+        @test sort(convert_cellsubsets(lcr, morse_sets(lcr, mvfr))) ==
+              sort(convert_cellsubsets(lc, ms))
+    end
+    # Sets which are not locally closed raise an error
+    lc, mvf = example_three_cm()
+    nlc = [lc.indices["A"], lc.indices["ABC"]]
+    @test !lefschetz_is_locally_closed(lc, nlc)
+    @test_throws ErrorException restrict_dynamics(lc, mvf, nlc)
+end
