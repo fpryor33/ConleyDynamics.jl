@@ -1036,7 +1036,10 @@ complex:
 
 - [`lefschetz_subcomplex`](@ref) determines a Lefschetz subcomplex
   from a given Lefschetz complex. The subcomplex has to be locally
-  closed, and it is given by a collection of cells.
+  closed, and it is given by a collection of cells. The check for
+  local closedness can be skipped with the optional argument
+  `validate=false`. The computational cost is proportional to the
+  number of cells in the subcomplex.
 - [`lefschetz_closed_subcomplex`](@ref) extracts a closed Lefschetz
   subcomplex from the given Lefschetz complex. The subcomplex is the
   closure of the specified collection of cells.

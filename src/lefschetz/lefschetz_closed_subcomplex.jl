@@ -22,8 +22,7 @@ function lefschetz_closed_subcomplex(lc::AbstractComplex, subcomp::Vector{Int})
 
     # Construct the new boundary matrix
 
-    bnd = lc.boundary
-    sub_boundary = sparse_minor(bnd, clsubcomp, clsubcomp)
+    sub_boundary = lefschetz_subboundary(lc, clsubcomp)
 
     # Create the new complex and return it
 

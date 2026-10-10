@@ -78,6 +78,20 @@ end
     @test sub2.ncells == 6
     # Circle has homology [1, 1]
     @test homology(sub2) == [1, 1]
+
+    # The subcomplex boundary is the minor of the full boundary matrix,
+    # also over the rationals, and validation can be skipped
+    sc0 = create_simplicial_complex(labels, simplices, p=0)
+    for set in (circle, cl_DEF, ["DE","DEF","EF"], ["AB","AC","BC","A","B","C"])
+        I = sort(convert_cells(sc0, set))
+        sub0 = lefschetz_subcomplex(sc0, set)
+        @test full_from_sparse(sub0.boundary) ==
+              full_from_sparse(sparse_minor(sc0.boundary, I, I))
+        @test sub0.labels == sc0.labels[I]
+        sub0n = lefschetz_subcomplex(sc0, set, validate=false)
+        @test full_from_sparse(sub0n.boundary) == full_from_sparse(sub0.boundary)
+    end
+    @test_throws ErrorException lefschetz_subcomplex(sc, ["D","DEF"])
 end
 
 @testset "Surfaces" begin

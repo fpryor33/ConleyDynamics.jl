@@ -397,9 +397,25 @@ as follows:
   index of an isolated invariant set. It expects a Lefschetz
   complex as its first argument, while the second one has to
   be a list of cells which specifies the isolated invariant 
-  set, and which is either of type `Vector{Vector{Int}}`
-  or `Vector{Vector{String}}`. An error is raised if the second
-  argument does not specify a locally closed set.
+  set, and which is either of type `Vector{Int}`
+  or `Vector{String}`. An error is raised if the second
+  argument does not specify a locally closed set. Since the
+  Conley index of a locally closed set ``S`` is the Lefschetz
+  homology of ``S`` itself, the computation only involves the
+  cells in ``S``, and its cost does not depend on the size of
+  the Lefschetz complex. The function accepts two optional
+  arguments. The argument `algorithm::String` selects the homology
+  algorithm. The choices `"morse"` (the default), `"pmorse"`,
+  and `"matrix"` are as for the function [`homology`](@ref),
+  while `"rank"` computes the Betti numbers directly from the
+  ranks of the boundary maps restricted to ``S``. The latter is
+  the fastest choice for small sets such as single multivectors,
+  while `"morse"` is usually faster for large sets. The argument
+  `validate::Bool=true` controls whether local closedness is
+  checked. Passing `validate=false` skips this check, which is
+  useful if the set is known to be locally closed, for example
+  if it is a multivector or a Morse set. For sets which are not
+  locally closed, the result is then meaningless.
 * The function [`isoinvset_information`](@ref) expects a
   Lefschetz complex `lc::LefschetzComplex`, a multivector
   field `mvf::CellSubsets`, as well as an isolated invariant
@@ -569,6 +585,13 @@ using the following commands:
   Hasse diagram of the poset ``\mathbb{P}``. Note that
   this is the transitive reduction of the full poset, 
   i.e., it only contains necessary relations.
+  Internally, a strongly connected component of the flow
+  digraph is a Morse set if it contains at least two
+  multivectors, or if it is a single multivector with
+  nontrivial Conley index. In the latter case the index
+  is computed with the `"rank"` algorithm and without
+  validation, so that the cost of the whole computation is
+  close to linear in the size of the Lefschetz complex.
 * The function [`morse_interval`](@ref) computes the
   isolated invariant set for a Morse set interval.
   The three input arguments are the underlying Lefschetz
