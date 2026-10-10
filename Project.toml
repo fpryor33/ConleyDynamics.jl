@@ -22,7 +22,7 @@ ConleyDynamicsDelaunayExt = "DelaunayTriangulation"
 ConleyDynamicsPlotsExt = "Plots"
 
 [compat]
-julia = "1"
+julia = "1.10"
 Combinatorics = "1"
 LinearAlgebra = "1"
 Printf = "1"
