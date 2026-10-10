@@ -13,6 +13,18 @@ description, etc.
 
 Release notes:
 
+## v0.7.24 (October 10, 2026)
+
+Various speed improvements:
+
+* `conley_index` now works locally on the given set and accepts 
+  the keywords `algorithm` (including the new `rank`) and `validate`.
+* `lefschetz_subcomplex` accepts `validate` and no longer scans the 
+  whole boundary matrix.
+* `morse_sets` is now close to linear in the size of the complex.
+* `restrict_dynamics` is now linear in the size of the complex 
+  and accepts the keyword `validate`.
+
 ## v0.7.23 (September 17, 2026)
 
 * Added top-layer functions for Morse strata of acyclic
