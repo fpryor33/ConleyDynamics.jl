@@ -71,7 +71,7 @@ function homology(lc::AbstractComplex, subc::Cells;
 
     # Create the subcomplex and compute the homology
 
-    lcsub = lefschetz_subcomplex(lc, subc)
+    lcsub = lefschetz_subcomplex(lc, subc, validate=false)
     filtration = fill(Int(1), lcsub.ncells)
     phs, php = persistent_homology(lcsub, filtration, algorithm=algorithm)
 

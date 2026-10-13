@@ -76,3 +76,86 @@ end
     all_classified = sort(vcat(c, s, t))
     @test all_classified == sort(sc.labels)
 end
+
+@testset "Conley index algorithms and fields" begin
+    # The chaotic Morse set of example_torsion_chaos(3,p) has trivial
+    # index unless p = 3, where it has the index of a periodic orbit
+    for p in (2, 3, 5)
+        sc, vfG, vfC = example_torsion_chaos(3, p)
+        ms = morse_sets(sc, vfC)
+        @test length.(ms) == [1, 26]
+        @test conley_index(sc, ms[2]) == (p == 3 ? [0, 1, 1] : [0, 0, 0])
+        @test [conley_index(sc, m) for m in morse_sets(sc, vfG)] ==
+              [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    end
+
+    # All algorithms agree with relative homology of the clomo pair,
+    # for index and label input, with and without validation
+    l1, m1, l2, m2 = example_moebius(0)
+    for (lc, mvf) in ((example_three_cm()...,), (l2, m2),
+                      (lefschetz_gfp_conversion(l2, 2), m2),
+                      (lefschetz_gfp_conversion(l2, 7), m2))
+        mvfI = convert_cellsubsets(lc, mvf)
+        sets = vcat(mvfI, convert_cellsubsets(lc, morse_sets(lc, mvf)),
+                    [collect(1:lc.ncells)])
+        for s in sets
+            cl, mo = lefschetz_clomo_pair(lc, s)
+            ref = relative_homology(lc, cl, mo)
+            for alg in ("rank", "matrix", "morse", "pmorse")
+                @test conley_index(lc, s, algorithm=alg) == ref
+                @test conley_index(lc, lc.labels[s], algorithm=alg) == ref
+                @test conley_index(lc, s, algorithm=alg, validate=false) == ref
+            end
+        end
+        # Single multivectors in no Morse set have trivial index
+        msI = convert_cellsubsets(lc, morse_sets(lc, mvf))
+        for mv in mvfI
+            if !any(m -> issubset(mv, m), msI)
+                cl, mo = lefschetz_clomo_pair(lc, mv)
+                @test sum(relative_homology(lc, cl, mo)) == 0
+            end
+        end
+    end
+
+    # Errors for sets which are not locally closed and unknown algorithms
+    labels = ["A","B","C","D","E","F"]
+    simplices = [["A","B"],["A","C"],["B","C"],["B","D"],["D","E","F"]]
+    sc = create_simplicial_complex(labels, simplices)
+    @test_throws ErrorException conley_index(sc, ["D","DEF"])
+    @test_throws ErrorException conley_index(sc, ["D","DEF"], algorithm="rank")
+    @test_throws ErrorException conley_index(sc, ["DEF"], algorithm="unknown")
+    @test conley_index(sc, Int[]) == [0, 0, 0]
+    @test conley_index(sc, ["F"], algorithm="rank") == [1, 0, 0]
+    @test conley_index(sc, ["DF"], algorithm="rank") == [0, 1, 0]
+    @test conley_index(sc, ["DEF"], algorithm="rank") == [0, 0, 1]
+    @test conley_index(sc, ["AB","AC","BC","A","B","C"], algorithm="rank") == [1, 1, 0]
+end
+
+@testset "Restricted dynamics" begin
+    for (lc, mvf) in (example_three_cm(), example_clorenz(),
+                      example_torsion_chaos(3, 3)[[1, 3]])
+        mvfI = convert_cellsubsets(lc, mvf)
+        ms = morse_sets(lc, mvfI)
+        mi = morse_interval(lc, mvfI, ms)
+        sub = sort(mi)
+        # Reference: intersect the multivectors with the subcomplex
+        refL = [lc.labels[intersect(mv, sub)] for mv in mvfI]
+        refL = refL[findall(x -> length(x) > 1, refL)]
+        lcr, mvfr = restrict_dynamics(lc, mvfI, mi)
+        @test lcr.labels == lc.labels[sub]
+        @test convert_cellsubsets(lcr, mvfr) == refL
+        lcrL, mvfrL = restrict_dynamics(lc, mvf, lc.labels[mi])
+        @test mvfrL == refL
+        lcrN, mvfrN = restrict_dynamics(lc, mvfI, mi, validate=false)
+        @test mvfrN == mvfr
+        @test full_from_sparse(lcrN.boundary) == full_from_sparse(lcr.boundary)
+        # The Morse sets of the restricted field are the same
+        @test sort(convert_cellsubsets(lcr, morse_sets(lcr, mvfr))) ==
+              sort(convert_cellsubsets(lc, ms))
+    end
+    # Sets which are not locally closed raise an error
+    lc, mvf = example_three_cm()
+    nlc = [lc.indices["A"], lc.indices["ABC"]]
+    @test !lefschetz_is_locally_closed(lc, nlc)
+    @test_throws ErrorException restrict_dynamics(lc, mvf, nlc)
+end

@@ -79,8 +79,11 @@ function remove_exit_set(lc::AbstractComplex, mvf::CellSubsets)
         closurecc = criticalcells
     end
 
+    # The complement of the closed set closurecc is open,
+    # and therefore it is locally closed
+
     lcsub = setdiff(1:lc.ncells, closurecc)
-    lcr, mvfr = restrict_dynamics(lc, mvf, lcsub)
+    lcr, mvfr = restrict_dynamics(lc, mvf, lcsub, validate=false)
 
     # Return the results
 
