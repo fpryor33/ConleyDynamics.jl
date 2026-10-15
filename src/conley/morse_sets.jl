@@ -80,13 +80,15 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false)
     # A strongly connected component which contains at least two
     # multivectors is always nontrivial. Otherwise, it is a single
     # multivector, which is locally closed, and its Conley index
-    # can be determined from the multivector cells alone
+    # can be determined from the multivector cells alone. The
+    # algorithm "auto" uses "rank" for small multivectors and
+    # "morse" for large ones.
 
     Threads.@threads for k = 1:length(scc)
         if length(unique(cell2mv[scc[k]])) > 1
             isnontrivial[k] = 1
         else
-            isnontrivial[k] = sum(conley_index(lc, scc[k], algorithm="rank",
+            isnontrivial[k] = sum(conley_index(lc, scc[k], algorithm="auto",
                                                validate=false))
         end
     end

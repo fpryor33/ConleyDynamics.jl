@@ -62,10 +62,13 @@ An SCC is a Morse set if it carries nontrivial dynamics:
   a genuine recurrent orbit and is always nontrivial.
 - **A single multivector:** it is locally closed, and it is nontrivial exactly
   when its Conley index is nonzero. The index is computed with
-  `conley_index(lc, scc[k], algorithm="rank", validate=false)`. This works
-  only on the set itself and its closure, so the cost depends on the size of
-  the multivector, not of the whole complex. Validation is skipped because
-  local closedness is guaranteed.
+  `conley_index(lc, scc[k], algorithm="auto", validate=false)`. This works
+  only on the set itself, so the cost depends on the size of the
+  multivector, not of the whole complex. The `"auto"` algorithm uses the
+  rank-based method for multivectors with at most 100 cells, where it is
+  fastest, and the Morse-reduction method for larger ones, where the rank
+  method would grow quadratically (see the `conley_index` docstring).
+  Validation is skipped because local closedness is guaranteed.
 
 The SCCs are independent of each other, so this loop runs with
 `Threads.@threads`. Each iteration writes only its own entry of

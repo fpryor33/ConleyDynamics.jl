@@ -1,8 +1,13 @@
 export conley_index
 
+# Largest set size for which `algorithm="auto"` uses the rank algorithm.
+# See the docstring of `conley_index` for the rationale behind this value.
+
+const CONLEY_INDEX_RANK_MAX = 100
+
 """
     conley_index(lc::AbstractComplex, subcomp::Vector{Int};
-                 [algorithm::String="morse", validate::Bool=true])
+                 [algorithm::String="auto", validate::Bool=true])
 
 Determine the Conley index of a Lefschetz complex subset.
 
@@ -16,8 +21,10 @@ computational cost does not depend on the size of `lc`. The
 following optional arguments are supported:
 
 * `algorithm::String` selects the homology algorithm:
+  - `algorithm = "auto"` chooses between `rank` and `morse` based
+    on the size of `subcomp`, see below. This is the default.
   - `algorithm = "morse"` selects an algorithm based on Morse
-    reductions, which is the default,
+    reductions,
   - `algorithm = "pmorse"` selects a parallelized algorithm based
     on Morse reductions,
   - `algorithm = "matrix"` selects the standard matrix algorithm,
@@ -26,24 +33,50 @@ following optional arguments are supported:
     ranks of the boundary maps restricted to `subcomp`, which are
     computed via row reduction. This avoids the construction of a
     subcomplex, and it is the fastest choice for small sets such
-    as individual multivectors, while `morse` is usually faster
+    as individual multivectors, while `morse` is much faster
     for large sets.
 * `validate::Bool` determines whether the function checks that
   `subcomp` is locally closed, and raises an error otherwise.
   The default is `true`. Passing `validate=false` skips this check,
   which should only be done if it is known that the set is locally
   closed, since otherwise the result is meaningless.
+
+All algorithms return the same Betti numbers, they only differ in
+their speed. The choice made by `algorithm = "auto"` is based on the
+following observations. The `rank` algorithm row reduces the boundary
+matrix restricted to `subcomp`, without any further setup. For small
+sets this is very fast, but due to fill-in during the row reduction
+its cost grows roughly quadratically with the size of the set. The
+`morse` algorithm first extracts the subcomplex and constructs a Morse
+matching, which adds a fixed overhead, but afterwards its cost grows
+almost linearly. In benchmarks on cubical and simplicial complexes,
+`rank` is three to seven times faster than `morse` for sets with up
+to about ten cells, which is the typical size of a multivector. The
+two algorithms take about the same time for sets with 100 to 150
+cells, and for larger sets `morse` is faster by a quickly growing
+factor, for example by a factor of 5 to 10 for 1000 cells, and by a
+factor of more than 100 for 50000 cells. Therefore `auto` uses `rank`
+for sets with at most 100 cells, and `morse` for larger sets. Near
+this threshold the two algorithms differ by less than a factor of
+1.5, so its precise value is not critical. The decision only uses
+the number of cells in `subcomp`, and therefore has no cost.
 """
 function conley_index(lc::AbstractComplex, subcomp::Vector{Int};
-                      algorithm::String="morse", validate::Bool=true)
+                      algorithm::String="auto", validate::Bool=true)
     #
     # Determine the Conley index of a Lefschetz complex subset
     #
 
     # Check the algorithm
 
-    if !(algorithm in ["morse", "pmorse", "matrix", "rank"])
+    if !(algorithm in ["auto", "morse", "pmorse", "matrix", "rank"])
         error("Unknown algorithm " * algorithm * "!")
+    end
+
+    # Choose the algorithm based on the size of the set
+
+    if algorithm == "auto"
+        algorithm = length(subcomp) <= CONLEY_INDEX_RANK_MAX ? "rank" : "morse"
     end
 
     # Deal with the trivial case first
@@ -101,7 +134,7 @@ end
 
 """
     conley_index(lc::AbstractComplex, subcomp::Vector{String};
-                 [algorithm::String="morse", validate::Bool=true])
+                 [algorithm::String="auto", validate::Bool=true])
 
 Determine the Conley index of a Lefschetz complex subset.
 
@@ -110,7 +143,7 @@ the same optional arguments `algorithm` and `validate` as the
 method for subsets in index form.
 """
 function conley_index(lc::AbstractComplex, subcomp::Vector{String};
-                      algorithm::String="morse", validate::Bool=true)
+                      algorithm::String="auto", validate::Bool=true)
     #
     # Determine the Conley index of a Lefschetz complex subset
     #

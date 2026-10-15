@@ -131,6 +131,38 @@ end
     @test conley_index(sc, ["AB","AC","BC","A","B","C"], algorithm="rank") == [1, 1, 0]
 end
 
+@testset "Automatic Conley index algorithm" begin
+    # The threshold is the one described in the documentation
+    @test ConleyDynamics.CONLEY_INDEX_RANK_MAX == 100
+    # Locally closed sets on both sides of the threshold: closures
+    # of growing groups of squares, and these minus their boundaries
+    for p in (0, 2, 3)
+        lc, coords = create_cubical_rectangle(12, 12, p=p)
+        squares = findall(isequal(2), lc.dimensions)
+        bnd = lefschetz_closure(lc, manifold_boundary(lc))
+        for nsq in (1, 4, 9, 16, 25, 36, 64, 144)
+            closed = lefschetz_closure(lc, squares[1:nsq])
+            for s in (closed, setdiff(closed, bnd), setdiff(1:lc.ncells, closed))
+                isempty(s) && continue
+                ci = conley_index(lc, s, algorithm="morse")
+                @test conley_index(lc, s) == ci
+                @test conley_index(lc, s, algorithm="auto") == ci
+                @test conley_index(lc, s, algorithm="rank") == ci
+                @test conley_index(lc, lc.labels[s]) == ci
+            end
+        end
+    end
+    # Morse sets of a field with one large multivector
+    lc, coords = create_simplicial_rectangle(10, 10)
+    interior = setdiff(1:lc.ncells, lefschetz_closure(lc, manifold_boundary(lc)))
+    @test length(interior) > ConleyDynamics.CONLEY_INDEX_RANK_MAX
+    @test conley_index(lc, interior) == conley_index(lc, interior, algorithm="rank")
+    # Cells outside the multivector are critical singletons
+    ms = morse_sets(lc, [interior])
+    @test interior in ms
+    @test all(m -> m == interior || length(m) == 1, ms)
+end
+
 @testset "Morse reductions with many Morse sets" begin
     # Planar flow whose number of equilibria grows with the grid size
     for p in (0, 2, 3)
