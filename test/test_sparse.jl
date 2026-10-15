@@ -94,6 +94,47 @@ end
     @test full_from_sparse(Aq2) == Rational{Int}.(2 .* Mq)
 end
 
+@testset "Sparse matrix products" begin
+    # Deterministic pseudo-random sparse matrices of given density
+    function testmatrix(nr, nc, dens, p, seed)
+        r = Int[]; c = Int[]
+        v = p == 0 ? Rational{Int}[] : Int[]
+        state = seed
+        for i in 1:nr, j in 1:nc
+            state = mod(1103515245 * state + 12345, 2^31)
+            if state / 2^31 < dens
+                push!(r, i); push!(c, j)
+                push!(v, p == 0 ? (mod(state, 9) - 4) // (1 + mod(state, 3)) : mod(state, p))
+            end
+        end
+        tzero = p == 0 ? 0//1 : 0
+        tone  = p == 0 ? 1//1 : 1
+        return sparse_from_lists(nr, nc, p, tzero, tone, r, c, v)
+    end
+
+    for p in (0, 2, 3, 7), (n1, n2, n3) in ((1,1,1), (6,8,5), (25,30,20), (0,3,4), (3,0,4), (30,1,25))
+        for (k, dens) in enumerate((0.0, 0.1, 0.4, 1.0))
+            A  = testmatrix(n1, n2, dens, p, 17*k + n1)
+            B  = testmatrix(n2, n3, dens, p, 31*k + n3)
+            AB = A * B
+            ref = full_from_sparse(A) * full_from_sparse(B)
+            @test full_from_sparse(AB) == (p == 0 ? ref : mod.(ref, p))
+            # Sorted columns without stored zeros, consistent rows
+            @test all(issorted, AB.columns) && all(issorted, AB.rows)
+            @test all(e -> all(!iszero, e), AB.entries)
+            @test sort([(i, m) for m in 1:AB.ncol for i in AB.columns[m]]) ==
+                  sort([(i, m) for i in 1:AB.nrow for m in AB.rows[i]])
+        end
+    end
+
+    # A deep copy is independent of the original
+    A = sparse_from_full([1 0 2; 0 3 0], p=5)
+    B = deepcopy(A)
+    B[1,1] = 4
+    @test A[1,1] == 1 && B[1,1] == 4
+    @test sparse_is_equal(deepcopy(A), A)
+end
+
 @testset "Sparse RREF and bases" begin
     # Known matrix over GF(2)
     A = sparse_from_full([1 1 0; 1 0 1; 0 1 1], p=2)

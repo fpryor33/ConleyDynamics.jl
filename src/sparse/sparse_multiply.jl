@@ -27,54 +27,61 @@ function sparse_multiply(A::SparseMatrix, B::SparseMatrix)
         error("The sparse matrices have to be over the same field!")
     end
 
-    # Create row and column index sets
+    # Column m of the product is the linear combination of the columns
+    # of A with the coefficients in column m of B. This only touches
+    # the nonzero entries which actually contribute to the product.
 
-    rset = fill(Set{Int}(), A.nrow)
-    cset = fill(Set{Int}(), B.ncol)
-    for k = 1:A.nrow
-        rset[k] = Set(A.rows[k])
-    end
-    for k = 1:B.ncol
-        cset[k] = Set(B.columns[k])
-    end
+    p       = A.char
+    tzero   = A.zero
+    T       = typeof(tzero)
+    entries = [Vector{T}() for _ in 1:B.ncol]
+    columns = [Vector{Int}() for _ in 1:B.ncol]
 
-    # Perform the matrix product
+    # The columns are split into chunks, and every chunk uses its own
+    # dense accumulator together with the list of rows it touched
 
-    echannel = Channel{Tuple{Int,Int,typeof(A.zero)}}(Inf)
-    tzero    = A.zero
+    nchunks = min(Threads.nthreads(), B.ncol)
+    chunks  = [m:nchunks:B.ncol for m in 1:nchunks]
 
-    Threads.@threads for k=1:A.nrow
-        for m=1:B.ncol
-            dpindex = intersect(rset[k],cset[m])
-            if length(dpindex) > 0
-                dotprod = tzero
-                for j in dpindex
-                    dotprod += A[k,j] * B[j,m]
-                end
-                if !(dotprod == tzero)
-                    put!(echannel, (k,m,dotprod))
+    Threads.@threads for chunk in chunks
+        acc     = fill(tzero, A.nrow)
+        touched = fill(false, A.nrow)
+        rlist   = Vector{Int}()
+        for m in chunk
+            for (j, bval) in zip(B.columns[m], B.entries[m])
+                for (i, aval) in zip(A.columns[j], A.entries[j])
+                    acc[i] = scalar_add(acc[i], scalar_multiply(aval, bval, p), p)
+                    if !touched[i]
+                        touched[i] = true
+                        push!(rlist, i)
+                    end
                 end
             end
+            sort!(rlist)
+            for i in rlist
+                if !(acc[i] == tzero)
+                    push!(columns[m], i)
+                    push!(entries[m], acc[i])
+                end
+                acc[i]     = tzero
+                touched[i] = false
+            end
+            empty!(rlist)
         end
     end
 
-    # Collect the entries
+    # Create the row representation, which is automatically sorted
 
-    close(echannel)
-    entries = collect(echannel)
-    if length(entries) > 0
-        r = [entries[k][1] for k in 1:length(entries)]
-        c = [entries[k][2] for k in 1:length(entries)]
-        v = [entries[k][3] for k in 1:length(entries)]
-    else
-        r = Vector{Int}()
-        c = Vector{Int}()
-        v = Vector{typeof(A.zero)}()
+    rows = [Vector{Int}() for _ in 1:A.nrow]
+    for m in 1:B.ncol
+        for i in columns[m]
+            push!(rows[i], m)
+        end
     end
 
     # Construct and return the sparse product matrix
 
-    sm = sparse_from_lists(A.nrow, B.ncol, A.char, A.zero, A.one, r, c, v)
+    sm = SparseMatrix{T}(A.nrow, B.ncol, p, tzero, A.one, entries, columns, rows)
     return sm
 end
 

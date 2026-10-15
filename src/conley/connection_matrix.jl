@@ -105,15 +105,10 @@ function connection_matrix(lc::AbstractComplex, mvfarg::CellSubsets;
         push!(cmMorseSets,labels[scc[poset_indices[k]]])
     end
 
-    cmPoincare  = Vector{Vector{Int}}()
-    for k=1:length(poset_indices)
-        ppolytemp = fill(Int(0),lcdim+1)
-        for j=1:length(cmPoset)
-            if cmPoset[j] == poset_indices[k]
-                ppolytemp[celldims[cmCols[j]]+1] += 1
-            end
-        end
-        push!(cmPoincare,ppolytemp)
+    cmPoincare  = [fill(Int(0),lcdim+1) for _ in 1:length(poset_indices)]
+    posetpos    = Dict{Int,Int}(poset_indices[k] => k for k in 1:length(poset_indices))
+    for j=1:length(cmPoset)
+        cmPoincare[posetpos[cmPoset[j]]][celldims[cmCols[j]]+1] += 1
     end
 
     # Renumber the poset indices in consecutive order

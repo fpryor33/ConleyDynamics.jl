@@ -131,6 +131,28 @@ end
     @test conley_index(sc, ["AB","AC","BC","A","B","C"], algorithm="rank") == [1, 1, 0]
 end
 
+@testset "Morse reductions with many Morse sets" begin
+    # Planar flow whose number of equilibria grows with the grid size
+    for p in (0, 2, 3)
+        lc, coords = create_cubical_rectangle(24, 24, p=p)
+        vf(x) = [sin(3.0*x[1]), sin(3.0*x[2])]
+        coordsN = convert_planar_coordinates(coords, [0.1, 0.1], [2pi-0.1, 2pi-0.1])
+        mvf = create_planar_mvf(lc, coordsN, vf)
+        cm_dlms = connection_matrix(lc, mvf, algorithm="DLMS")
+        for alg in ("HMS", "pmorse")
+            cm = connection_matrix(lc, mvf, algorithm=alg)
+            @test cm.morse == cm_dlms.morse
+            @test cm.conley == cm_dlms.conley
+        end
+        @test length(cm_dlms.morse) > 10
+        # Persistent homology with the Morse algorithms
+        filt = 1 .+ (create_random_filter(lc) .÷ 5)
+        ph = persistent_homology(lc, filt, algorithm="matrix")
+        @test persistent_homology(lc, filt, algorithm="morse") == ph
+        @test persistent_homology(lc, filt, algorithm="pmorse") == ph
+    end
+end
+
 @testset "Morse set poset" begin
     # Reference Hasse diagram: compute the reachability relation R between
     # the Morse sets by depth-first search, and keep the covers R \ R∘R
