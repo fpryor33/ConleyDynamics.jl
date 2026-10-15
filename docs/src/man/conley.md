@@ -1029,29 +1029,31 @@ for alg in ["morse", "pmorse"]
 end
 ```
 
-With eight threads, `pmorse` is more than twice as fast as `morse`. The
-following table shows representative timings, measured after an initial
-run which includes compilation, for this example as well as for the same
-complex with different numbers of filtration levels:
+With eight threads, `pmorse` is about one and a half times as fast as
+`morse`. The following table shows representative timings, which are
+medians of several runs after an initial run which includes compilation,
+for this example as well as for the same complex with different numbers
+of filtration levels:
 
 | Filtration levels | `morse` (8 threads) | `pmorse` (8 threads) |
 |-------------------|---------------------|----------------------|
-| 4                 | 8.0 s               | 4.0 s                |
-| 8                 | 6.9 s               | 3.1 s                |
-| 16                | 5.5 s               | 2.4 s                |
-| 64                | 1.8 s               | 1.1 s                |
+| 4                 | 0.79 s              | 0.45 s               |
+| 8                 | 0.51 s              | 0.35 s               |
+| 16                | 0.50 s              | 0.38 s               |
+| 64                | 0.49 s              | 0.37 s               |
 
 With a single thread, both algorithms take the same time on these examples.
-With four levels at most four threads can work on the matching at the same
-time, which limits the speedup to a factor of two. With many levels, each
-level is small, and the total work decreases for both algorithms.
+The speedup is largest for four levels, where each of four threads computes
+the matching for one large level. In all cases the gain is moderate, since
+the matching within a single level, as well as the remaining parts of the
+computation, are performed sequentially.
 
 For connection matrices, the levels are given by the Morse sets. The algorithm
 `pmorse` is therefore faster than `HMS` for flows with several large Morse
 sets of comparable size, such as a planar flow with a limit cycle in each of
 a number of identical cells. On a cubical complex with approximately 230,000
 cells and 43 or 101 Morse sets, `pmorse` with eight threads was faster than
-`HMS` by a factor of about 1.25. However, if a single Morse set dominates, or
+`HMS` by a factor of about 1.3. However, if a single Morse set dominates, or
 if there is only a single level as in the computation of ordinary homology,
 then there is no measurable benefit from the parallelization.
 

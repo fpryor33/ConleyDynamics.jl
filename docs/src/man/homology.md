@@ -638,8 +638,8 @@ there are two functions that provide basic persistence functionality:
   which selects the method used for computing persistent
   homology. It has the same options as [`homology`](@ref).
   For filtrations with a few large levels, the parallelized
-  algorithm `pmorse` can be considerably faster than `morse`
-  if Julia is started with multiple threads, see the section
+  algorithm `pmorse` can be faster than `morse` if Julia is
+  started with multiple threads, see the section
   [When Parallelization Pays Off](@ref) for an example.
 - The function [`lefschetz_filtration`](@ref) is meant to simplify
   the construction of the argument `filtration`, especially

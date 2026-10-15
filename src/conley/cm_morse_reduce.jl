@@ -309,6 +309,24 @@ function partial_matching(matrix::SparseMatrix, mind::Vector{Int})
         end
     end
 
+    # A critical cell is the first cell, in the iteration order of
+    # tomatch, without remaining boundary. Since cells are only ever
+    # deleted from tomatch, and deleting from a Set does not change
+    # the order of the remaining elements, this order is fixed. The
+    # cells whose boundary is empty are therefore kept in a heap,
+    # keyed by their position in this order. The heap may contain
+    # cells which have been removed in the meantime, and these are
+    # skipped when they are popped.
+
+    order = collect(tomatch)
+    pos   = Dict{Int,Int}(order[i] => i for i in 1:length(order))
+    zheap = Vector{Int}()   # max-heap of negated positions
+    for k in order
+        if !haskey(bnddict, k)
+            heap_push!(zheap, -pos[k])
+        end
+    end
+
     # Find the matching
 
     while length(tomatch) > 0
@@ -341,9 +359,12 @@ function partial_matching(matrix::SparseMatrix, mind::Vector{Int})
                         delete!(bnddict[cc], c)
                         
                         # If cc now has a boundary of size 1,
-                        # add it to the queue
+                        # add it to the queue, and if it has
+                        # no boundary left, add it to the heap
                         if length(bnddict[cc]) == 1
                             push!(queue, cc)
+                        elseif length(bnddict[cc]) == 0
+                            heap_push!(zheap, -pos[cc])
                         end
                     end
                 end
@@ -358,36 +379,41 @@ function partial_matching(matrix::SparseMatrix, mind::Vector{Int})
 
         if length(tomatch) > 0
             foundit = false
-            for k in tomatch
-                if length(intersect(get(bnddict, k, Set{Int}()), tomatch)) == 0
+            while !isempty(zheap)
+                k = order[-heap_pop!(zheap)]
 
-                    # We found a critical cell!
-                    push!(critical, k)
-                    foundit = true
-                    
-                    # Update the boundary of every cell which has k in
-                    # its boundary
-                    if haskey(cbddict, k)
-                        for ck in cbddict[k]
-                            ck in removed && continue
+                # Skip cells which were removed in the meantime
+                (k in removed || !isempty(get(bnddict, k, Set{Int}()))) && continue
 
-                            # Remove k from the boundary of ck
-                            delete!(bnddict[ck], k)
+                # We found a critical cell!
+                push!(critical, k)
+                foundit = true
 
-                            # If ck now has a boundary of size 1,
-                            # add it to the queue
-                            if length(bnddict[ck]) == 1
-                                push!(queue, ck)
-                            end
+                # Update the boundary of every cell which has k in
+                # its boundary
+                if haskey(cbddict, k)
+                    for ck in cbddict[k]
+                        ck in removed && continue
+
+                        # Remove k from the boundary of ck
+                        delete!(bnddict[ck], k)
+
+                        # If ck now has a boundary of size 1,
+                        # add it to the queue, and if it has
+                        # no boundary left, add it to the heap
+                        if length(bnddict[ck]) == 1
+                            push!(queue, ck)
+                        elseif length(bnddict[ck]) == 0
+                            heap_push!(zheap, -pos[ck])
                         end
                     end
-
-                    # Update the cell lists and coboundary dictionary
-                    push!(removed, k)
-                    delete!(tomatch, k)
-                    delete!(bnddict, k)
-                    break
                 end
+
+                # Update the cell lists and coboundary dictionary
+                push!(removed, k)
+                delete!(tomatch, k)
+                delete!(bnddict, k)
+                break
             end
             @assert foundit "There should have been a critical cell!"
         end

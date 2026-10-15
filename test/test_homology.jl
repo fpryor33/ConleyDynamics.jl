@@ -86,3 +86,28 @@ end
     @test lc2.dim == 2
     @test homology(lc2, ["B","D","BD"]) == [1, 0, 0]
 end
+
+@testset "Morse reductions with many critical cells" begin
+    # Square grids with every other square removed in both directions,
+    # so that the Morse matching has to choose many critical cells
+    for (n, p) in ((12, 2), (10, 0), (8, 3))
+        lc, coords = create_cubical_rectangle(n, n, p=p)
+        squares = findall(isequal(2), lc.dimensions)
+        keep = [s for (k, s) in enumerate(squares) if !(isodd((k-1) % n) && isodd((k-1) ÷ n))]
+        lcc = lefschetz_closed_subcomplex(lc, lefschetz_closure(lc, keep))
+        betti = homology(lcc, algorithm="matrix")
+        @test betti[2] > 5
+        @test homology(lcc, algorithm="morse") == betti
+        @test homology(lcc, algorithm="pmorse") == betti
+        # Persistent homology with a few large levels. The algorithms
+        # may list the persistence intervals in different orders.
+        sorted(ph) = (sort.(ph[1]), sort.(ph[2]))
+        for K in (2, 3, 5)
+            fv0 = [1 + mod(7919 * c, K) for c in 1:lcc.ncells]
+            lcs, fv = lefschetz_filtration(lcc, fv0)
+            ph = sorted(persistent_homology(lcs, fv, algorithm="matrix"))
+            @test sorted(persistent_homology(lcs, fv, algorithm="morse")) == ph
+            @test sorted(persistent_homology(lcs, fv, algorithm="pmorse")) == ph
+        end
+    end
+end
