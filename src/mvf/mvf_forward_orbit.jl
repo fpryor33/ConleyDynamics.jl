@@ -86,12 +86,7 @@ function mvf_forward_orbit(lc::AbstractComplex, mvf::CellSubsets,
 
     # Determine the source multivectors
 
-    srcmv = Vector{Int}()
-    for k in 1:length(mvfI)
-        if length(intersect(mvfI[k], sourcesI)) > 0
-            push!(srcmv, k)
-        end
-    end
+    srcmv = sets_containing(cell_to_sets(lc.ncells, mvfI), sourcesI, length(mvfI))
 
     # Determine the edges in the directed graph
 
@@ -238,12 +233,7 @@ function mvf_backward_orbit(lc::AbstractComplex, mvf::CellSubsets,
 
     # Determine the source multivectors
 
-    srcmv = Vector{Int}()
-    for k in 1:length(mvfI)
-        if length(intersect(mvfI[k], sourcesI)) > 0
-            push!(srcmv, k)
-        end
-    end
+    srcmv = sets_containing(cell_to_sets(lc.ncells, mvfI), sourcesI, length(mvfI))
 
     # Determine the edges in the directed graph
 

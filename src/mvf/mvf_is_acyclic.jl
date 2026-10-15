@@ -24,7 +24,8 @@ function mvf_is_acyclic(lc::AbstractComplex, mvf::CellSubsets)
 
     # Append the missing singletons to the mvf
 
-    critical = setdiff(collect(1:lc.ncells), reduce(vcat, mvfI; init=Int[]))
+    mvfcells = isempty(mvfI) ? Int[] : reduce(vcat, mvfI)
+    critical = setdiff(collect(1:lc.ncells), mvfcells)
     for k in critical
         push!(mvfI, [k])
     end
@@ -33,13 +34,19 @@ function mvf_is_acyclic(lc::AbstractComplex, mvf::CellSubsets)
 
     mvfIcl = map(t -> lefschetz_closure(lc,t), mvfI)
 
-    # Determine the edges in the directed graph
+    # Determine the edges in the directed graph: There is an edge
+    # from k to m whenever the closure of multivector k intersects
+    # multivector m. These are found via the cell-to-multivector lists.
+
+    cell2mv = cell_to_sets(lc.ncells, mvfI)
 
     g = DiGraph(length(mvfI))
     for k = 1:length(mvfI)
-        for m = 1:length(mvfI)
-            if (!(k == m)) && length(intersect(mvfIcl[k], mvfI[m]))>0
-                add_edge!(g, k, m)
+        for c in mvfIcl[k]
+            for m in cell2mv[c]
+                if !(k == m)
+                    add_edge!(g, k, m)
+                end
             end
         end
     end
