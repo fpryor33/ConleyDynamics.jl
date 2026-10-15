@@ -131,6 +131,63 @@ end
     @test conley_index(sc, ["AB","AC","BC","A","B","C"], algorithm="rank") == [1, 1, 0]
 end
 
+@testset "Morse set poset" begin
+    # Reference Hasse diagram: compute the reachability relation R between
+    # the Morse sets by depth-first search, and keep the covers R \ R∘R
+    function hasse_reference(lc, mvfI, msI)
+        bnd  = full_from_sparse(lc.boundary)
+        succ = [findall(!iszero, bnd[:, c]) for c in 1:lc.ncells]
+        for mv in mvfI, m in mv
+            append!(succ[m], mv)
+        end
+        nms = length(msI)
+        R = fill(false, nms, nms)
+        for k in 1:nms
+            seen = fill(false, lc.ncells)
+            stack = copy(msI[k])
+            seen[stack] .= true
+            while !isempty(stack)
+                for w in succ[pop!(stack)]
+                    if !seen[w]
+                        seen[w] = true
+                        push!(stack, w)
+                    end
+                end
+            end
+            for j in 1:nms
+                R[k, j] = (j != k) && seen[msI[j][1]]
+            end
+        end
+        return permutedims(R .& .!((R * R) .> 0))
+    end
+
+    function samplevf(x::Vector{Float64})
+        x1, x2 = x
+        return [x1 * (1.0 - x1*x1 - 3.0*x2*x2), x2 * (1.0 - 3.0*x1*x1 - x2*x2)]
+    end
+
+    cases = Any[example_three_cm(), example_three_cm(1), example_clorenz(),
+                example_multiflow(), example_torsion_chaos(3, 3)[[1, 2]],
+                example_torsion_chaos(3, 3)[[1, 3]], example_dunce_chaos()[[1, 2]],
+                example_dunce_chaos()[[1, 3]]]
+    # Every cell critical: the poset is the face poset of the complex
+    for lc in (create_cubical_rectangle(4, 3)[1], create_simplicial_rectangle(3, 2)[1])
+        push!(cases, (lc, [[k] for k in 1:lc.ncells]))
+    end
+    sc, coords = create_simplicial_rectangle(12, 12)
+    coordsN = convert_planar_coordinates(coords, [-2.0, -2.0], [2.0, 2.0])
+    push!(cases, (sc, create_planar_mvf(sc, coordsN, samplevf)))
+
+    for (lc, mvf) in cases
+        mvfI = mvf isa Vector{Vector{Int}} ? mvf : convert_cellsubsets(lc, mvf)
+        msI, hasse = morse_sets(lc, mvfI, poset=true)
+        @test msI == morse_sets(lc, mvfI)
+        @test hasse == hasse_reference(lc, mvfI, msI)
+        msL, hasseL = morse_sets(lc, mvf, poset=true)
+        @test hasseL == hasse
+    end
+end
+
 @testset "Restricted dynamics" begin
     for (lc, mvf) in (example_three_cm(), example_clorenz(),
                       example_torsion_chaos(3, 3)[[1, 3]])

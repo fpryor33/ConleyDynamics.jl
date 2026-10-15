@@ -99,23 +99,72 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false)
     # Determine the Hasse diagram of the poset
 
     if poset
-        nms = length(morsesets)
-        psadj = fill(false,nms,nms)
-        for k1 in 1:nms
-            vk1 = morsesets[k1][1]
-            for k2 in 1:nms
-                vk2 = morsesets[k2][1]
-                psadj[k1,k2] = has_path(dg, vk1, vk2)
+        nms  = length(morsesets)
+        nscc = length(scc)
+
+        # Map the cells to the strongly connected components,
+        # and the components to the Morse sets (zero if none)
+
+        cell2scc = fill(Int(0), nv(dg))
+        for k = 1:nscc
+            for v in scc[k]
+                cell2scc[v] = k
             end
         end
-        psdg = SimpleDiGraph(psadj)
-        pshasse = transitivereduction(psdg)
 
-        hasse = fill(false,nms,nms)
-        for k1 in 1:nms
-            for k2 in 1:nms
-                hasse[k2,k1] = has_edge(pshasse, k1, k2)
+        scc2ms = fill(Int(0), nscc)
+        scc2ms[ntindices] = 1:nms
+
+        # Process the components in reverse topological order
+        # of the condensation, i.e., successors come first
+
+        sccorder = reverse(topological_sort(condensation(dg, scc)))
+
+        # For every component, find the Morse sets which can be reached
+        # along paths that do not pass through any other Morse set
+
+        firsthit = [Int[] for _ in 1:nscc]
+        stamp    = fill(Int(0), nms)
+
+        for k in sccorder
+            fh = firsthit[k]
+            for v in scc[k]
+                for w in outneighbors(dg, v)
+                    kw = cell2scc[w]
+                    kw == k && continue
+                    targets = scc2ms[kw] > 0 ? (scc2ms[kw]:scc2ms[kw]) : firsthit[kw]
+                    for m in targets
+                        if stamp[m] != k
+                            stamp[m] = k
+                            push!(fh, m)
+                        end
+                    end
+                end
             end
+        end
+
+        # The transitive closure of the first-hit relation is the order
+        # between the Morse sets. A first-hit Morse set is in the Hasse
+        # diagram unless it can be reached via another first-hit Morse set
+
+        reach   = [falses(nms) for _ in 1:nms]
+        covered = falses(nms)
+        hasse   = fill(false,nms,nms)
+
+        for k in sccorder
+            m1 = scc2ms[k]
+            m1 == 0 && continue
+            fill!(covered, false)
+            for m2 in firsthit[k]
+                covered .|= reach[m2]
+            end
+            for m2 in firsthit[k]
+                reach[m1][m2] = true
+                if !covered[m2]
+                    hasse[m2,m1] = true
+                end
+            end
+            reach[m1] .|= covered
         end
     end
 
