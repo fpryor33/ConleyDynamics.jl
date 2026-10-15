@@ -107,3 +107,61 @@ end
     @test homology(simplicial_projective_plane(0)) == [1, 0, 0]
     @test homology(simplicial_projective_plane(2)) == [1, 1, 1]
 end
+
+@testset "Interior, filtrations, and reductions" begin
+    for lc in (create_cubical_rectangle(4, 3)[1], create_simplicial_rectangle(3, 3)[1],
+               example_clorenz()[1])
+        N = lc.ncells
+        cl = [lefschetz_closure(lc, [d]) for d in 1:N]
+        # Deterministic pseudo-random subsets and filtration values
+        pseudo(k, m) = mod(7919 * k + 104729 * m, 101)
+
+        # Interior: cells whose star is contained in the subset
+        for m in 1:3
+            sub  = [c for c in 1:N if pseudo(c, m) < 30 * m]
+            ref  = [c for c in sub if all(d -> !(c in cl[d]) || (d in sub), 1:N)]
+            @test sort(lefschetz_interior(lc, sub)) == ref
+            @test sort(lefschetz_interior(lc, lc.labels[sub])) == sort(lc.labels[ref])
+            @test sort(lefschetz_topboundary(lc, sub)) ==
+                  setdiff(lefschetz_closure(lc, sub), ref)
+        end
+
+        # Filtration: every cell enters at the smallest positive value
+        # of a cell whose closure contains it (0 if there is none)
+        for (lo, K) in ((0, 3), (1, 4), (1, N ÷ 2))
+            fv = [lo + mod(pseudo(c, K), K - lo + 1) for c in 1:N]
+            fv[1:K-lo+1] = lo:K
+            newf = [minimum((fv[d] for d in 1:N if (c in cl[d]) && (fv[d] > 0)); init=typemax(Int))
+                    for c in 1:N]
+            newf[newf .== typemax(Int)] .= 0
+            lcsub, fvsub = lefschetz_filtration(lc, fv)
+            @test lcsub.labels == lc.labels[newf .> 0]
+            @test fvsub == newf[newf .> 0]
+        end
+
+        # Persistent homology with an injective filter
+        filt = create_random_filter(lc)
+        ph = persistent_homology(lc, filt, algorithm="matrix")
+        @test persistent_homology(lc, filt, algorithm="morse") == ph
+        @test persistent_homology(lc, filt, algorithm="pmorse") == ph
+
+        # Reductions along disjoint vertex-edge pairs preserve homology
+        used  = fill(false, N)
+        pairs = Vector{Vector{Int}}()
+        for e in 1:N
+            if lc.dimensions[e] == 1
+                vs = lc.boundary.columns[e]
+                if !any(used[vs])
+                    push!(pairs, isodd(e) ? [vs[1], e] : [e, vs[1]])
+                    used[vs] .= true
+                end
+            end
+        end
+        removed = reduce(vcat, pairs)
+        lcred = lefschetz_reduction(lc, pairs)
+        @test lcred.labels == lc.labels[setdiff(1:N, removed)]
+        @test homology(lcred) == homology(lc)
+        lcredL = lefschetz_reduction(lc, [lc.labels[p] for p in pairs])
+        @test full_from_sparse(lcredL.boundary) == full_from_sparse(lcred.boundary)
+    end
+end

@@ -47,7 +47,7 @@ function lefschetz_reduction(lc::AbstractComplex, redpairs::Vector{Vector{Int}})
 
     # Loop through the elementary reductions
 
-    removed_cells = Vector{Int}()
+    removed = fill(false, lc.ncells)
 
     for redpair in redpairs
 
@@ -59,8 +59,8 @@ function lefschetz_reduction(lc::AbstractComplex, redpairs::Vector{Vector{Int}})
             b, a = redpair
         end
 
-        push!(removed_cells, a)
-        push!(removed_cells, b)
+        removed[a] = true
+        removed[b] = true
 
         # Extract the incidence coefficient
 
@@ -74,14 +74,14 @@ function lefschetz_reduction(lc::AbstractComplex, redpairs::Vector{Vector{Int}})
         # removed cells. Since we have modified the boundary matrix,
         # we need to get the row of bnd directly.
 
-        for c in setdiff(sparse_get_nz_row(bnd,a), removed_cells)
+        for c in filter(c -> !removed[c], sparse_get_nz_row(bnd,a))
             sparse_add_column!(bnd, c, b, -bnd[a,c], lambda)
         end
     end
 
     # Determine the remaining cells
 
-    redcells = setdiff(Vector{Int}(1:lc.ncells), removed_cells)
+    redcells = findall(!, removed)
 
     redlabels = labels[redcells]
     reddims   = dims[redcells]

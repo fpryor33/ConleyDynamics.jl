@@ -20,13 +20,11 @@ function ph_matrix_reduce(lc::AbstractComplex, filtration::Vector{Int})
     # Compute the persistent homology of a Lefschetz complex filtration
     #
 
-    # Find an admissible permutation of the cells
+    # Find an admissible permutation of the cells. Since sortperm
+    # is stable, cells with the same filtration value appear in
+    # increasing order of their indices.
 
-    fvals = sort(unique(filtration))
-    adperm = Vector{Int}([])
-    for kv in fvals
-        append!(adperm, findall(t -> t==kv, filtration))
-    end
+    adperm = sortperm(filtration)
 
     # Create the permuted boundary matrix and make sure it
     # is strictly upper triangular
