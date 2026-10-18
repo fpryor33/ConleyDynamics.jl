@@ -16,6 +16,65 @@
     @test mvf_is_acyclic(sc_singletons, Vector{Int}[])
 end
 
+@testset "MVF graphs agree with brute force" begin
+    # Brute-force references based on pairwise comparisons of multivectors
+    function full_mvf(lc, mvfI)
+        covered = isempty(mvfI) ? Int[] : reduce(vcat, mvfI)
+        return vcat(mvfI, [[k] for k in setdiff(1:lc.ncells, covered)])
+    end
+    function ref_adjacency(lc, mvf, undirected)
+        cl = [lefschetz_closure(lc, mv) for mv in mvf]
+        other = undirected ? cl : mvf
+        return [[m for m in 1:length(mvf) if m != k && !isempty(intersect(cl[k], other[m]))]
+                for k in 1:length(mvf)]
+    end
+    function ref_acyclic(adj)
+        state = fill(0, length(adj))          # 0 new, 1 active, 2 done
+        function visit(k)
+            state[k] = 1
+            for m in adj[k]
+                state[m] == 1 && return false
+                state[m] == 0 && !visit(m) && return false
+            end
+            state[k] = 2
+            return true
+        end
+        return all(k -> state[k] != 0 || visit(k), 1:length(adj))
+    end
+    function ref_reach(adj, mvf, sources, n)
+        dist = fill(typemax(Int), length(adj))
+        front = [k for k in 1:length(mvf) if !isempty(intersect(mvf[k], sources))]
+        dist[front] .= 0
+        for d in 1:n
+            front = unique([m for k in front for m in adj[k] if dist[m] > d])
+            dist[front] .= d
+        end
+        return mvf[findall(d -> d <= n, dist)]
+    end
+
+    function samplevf(x::Vector{Float64})
+        x1, x2 = x
+        return [x1 * (1.0 - x1*x1 - 3.0*x2*x2), x2 * (1.0 - 3.0*x1*x1 - x2*x2)]
+    end
+    lc6, coords6 = create_simplicial_rectangle(6, 6)
+    mvf6 = create_planar_mvf(lc6, convert_planar_coordinates(coords6, [-2.0,-2.0], [2.0,2.0]), samplevf)
+
+    for (lc, mvf) in (example_three_cm(), example_three_cm(1), example_clorenz(),
+                      example_torsion_chaos(3, 3)[[1, 3]], (lc6, mvf6))
+        mvfI = mvf isa Vector{Vector{Int}} ? mvf : convert_cellsubsets(lc, mvf)
+        mvfF = full_mvf(lc, mvfI)
+        fwd = ref_adjacency(lc, mvfF, false)
+        bwd = [[k for k in 1:length(mvfF) if m in fwd[k]] for m in 1:length(mvfF)]
+        und = ref_adjacency(lc, mvfF, true)
+        @test mvf_is_acyclic(lc, mvfI) == ref_acyclic(fwd)
+        for sources in ([1], [lc.ncells], collect(1:5:lc.ncells)), n in 0:3
+            @test mvf_forward_orbit(lc, mvfI, sources, n) == ref_reach(fwd, mvfF, sources, n)
+            @test mvf_backward_orbit(lc, mvfI, sources, n) == ref_reach(bwd, mvfF, sources, n)
+            @test mvf_neighborhood(lc, mvfI, sources, n) == ref_reach(und, mvfF, sources, n)
+        end
+    end
+end
+
 @testset "MVF information" begin
     labels = ["A","B","C","D","E","F"]
     simplices = [["A","B"],["A","C"],["B","C"],["B","D"],["D","E","F"]]

@@ -60,8 +60,15 @@ function lefschetz_filtration(lc::AbstractComplex, fvalues::Vector{Int})
     # Loop through the nonzero filtration values from highest to lowest
     # and fill in the closures
 
+    levels = [Vector{Int}() for _ in 1:maxf]
+    for c in 1:length(fvalues)
+        if fvalues[c] > 0
+            push!(levels[fvalues[c]], c)
+        end
+    end
+
     for k = maxf:-1:1
-        indicesk = findall(x -> x==k, fvalues)
+        indicesk = levels[k]
         clk = lefschetz_closure(lc, indicesk)
         newfvalues[clk] = fill(k, length(clk))
     end

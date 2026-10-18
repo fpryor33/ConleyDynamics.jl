@@ -13,12 +13,13 @@ function lefschetz_interior(lc::AbstractComplex, subcomp::Vector{Int})
     # Initialize the interior
 
     lcinterior = Vector{Int}()
+    subcompset = Set(subcomp)
 
     # For every cell, check whether its open hull is contained in subcomp
 
     for kc in subcomp
         kcopenhull = lefschetz_openhull(lc, [kc])
-        if issubset(kcopenhull, subcomp)
+        if issubset(kcopenhull, subcompset)
             push!(lcinterior, kc)
         end
     end

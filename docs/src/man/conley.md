@@ -405,17 +405,41 @@ as follows:
   cells in ``S``, and its cost does not depend on the size of
   the Lefschetz complex. The function accepts two optional
   arguments. The argument `algorithm::String` selects the homology
-  algorithm. The choices `"morse"` (the default), `"pmorse"`,
-  and `"matrix"` are as for the function [`homology`](@ref),
-  while `"rank"` computes the Betti numbers directly from the
-  ranks of the boundary maps restricted to ``S``. The latter is
-  the fastest choice for small sets such as single multivectors,
-  while `"morse"` is usually faster for large sets. The argument
+  algorithm. The choices `"morse"`, `"pmorse"`, and `"matrix"`
+  are as for the function [`homology`](@ref), while `"rank"`
+  computes the Betti numbers directly from the ranks of the
+  boundary maps restricted to ``S``. The default `"auto"` uses
+  `"rank"` if ``S`` contains at most 100 cells, and `"morse"`
+  otherwise. All choices return the same result, and the reason
+  for this default is explained below. The argument
   `validate::Bool=true` controls whether local closedness is
   checked. Passing `validate=false` skips this check, which is
   useful if the set is known to be locally closed, for example
   if it is a multivector or a Morse set. For sets which are not
   locally closed, the result is then meaningless.
+
+  The default `algorithm="auto"` is motivated by the different
+  scaling of the two fastest algorithms. The `"rank"` algorithm
+  row reduces the boundary matrix restricted to ``S``, without
+  any further setup. For small sets this is very fast, but due
+  to fill-in during the row reduction its cost grows roughly
+  quadratically with the number of cells in ``S``. In contrast,
+  the `"morse"` algorithm first extracts the subcomplex and
+  constructs a Morse matching. This adds a fixed overhead, but
+  afterwards its cost grows almost linearly. In benchmarks on
+  cubical and simplicial complexes, `"rank"` is three to seven
+  times faster than `"morse"` for sets with up to about ten
+  cells, which is the typical size of a multivector. Both take
+  about the same time for sets with 100 to 150 cells. For larger
+  sets `"morse"` is faster by a quickly growing factor, for
+  example by a factor of 5 to 10 for 1000 cells, and by a factor
+  of more than 100 for 50000 cells. The threshold of 100 cells
+  therefore keeps the advantage of `"rank"` for multivectors,
+  while avoiding its quadratic growth for large sets such as
+  Morse sets or large multivectors. Near the threshold the two
+  algorithms differ by less than a factor of 1.5, so its precise
+  value is not critical, and since the decision only uses the
+  number of cells in ``S``, it has no cost.
 * The function [`isoinvset_information`](@ref) expects a
   Lefschetz complex `lc::LefschetzComplex`, a multivector
   field `mvf::CellSubsets`, as well as an isolated invariant
@@ -589,7 +613,7 @@ using the following commands:
   digraph is a Morse set if it contains at least two
   multivectors, or if it is a single multivector with
   nontrivial Conley index. In the latter case the index
-  is computed with the `"rank"` algorithm and without
+  is computed with the `"auto"` algorithm and without
   validation, so that the cost of the whole computation is
   close to linear in the size of the Lefschetz complex.
 * The function [`morse_interval`](@ref) computes the
@@ -882,7 +906,7 @@ structure is relatively straightforward to follow. The Morse-theory-based algori
 before performing the reduction, which introduces some fixed overhead but can pay
 off significantly on larger inputs. The parallelized algorithm `pmorse` additionally
 distributes parts of the Morse matching computation across multiple threads, and
-therefore benefits from starting Julia with `julia --threads N` for some suitable
+can therefore benefit from starting Julia with `julia --threads N` for some suitable
 number of threads `N`.
 
 The following two examples illustrate how the runtime characteristics differ depending
@@ -902,20 +926,22 @@ for alg in ["DLMS", "DHL", "HMS", "pmorse"]
 end
 ```
 
-Representative timings on this example are as follows:
+Representative timings on this example are as follows. They are medians of
+many runs, measured after an initial run which includes compilation:
 
 | Algorithm | Approx. time |
 |-----------|-------------|
-| `DLMS`    | 75 μs       |
-| `DHL`     | 64 μs       |
-| `HMS`     | 1300 μs     |
-| `pmorse`  | 200 μs      |
+| `DLMS`    | 41 μs       |
+| `DHL`     | 27 μs       |
+| `HMS`     | 39 μs       |
+| `pmorse`  | 83 μs       |
 
-On small complexes the matrix-reduction algorithms `DLMS` and `DHL` perform very
-efficiently, since the column and row reductions operate on a small matrix. The
-Morse-based algorithms `HMS` and `pmorse` carry a relatively large overhead at
-this scale from constructing the Morse matching, which does not yet pay off
-for such small inputs.
+On small complexes all four algorithms are fast. The matrix-reduction algorithm
+`DHL` is the fastest, since its column reductions operate on a small matrix, and
+`DLMS` and the Morse-based algorithm `HMS` take about the same time. The parallel
+algorithm `pmorse` is about twice as slow as `HMS`, since the overhead of setting
+up its threaded tasks does not pay off for such small inputs. This overhead is
+present even if Julia runs with a single thread.
 
 ### Large Complexes
 
@@ -941,30 +967,95 @@ end
 ```
 
 This creates a Lefschetz complex with approximately 71,000 cells. Representative
-timings on this example, using four threads for `pmorse`, are as follows:
+timings on this example are as follows. They were measured after an initial run,
+which includes compilation, and for the fast algorithms they are the median of
+several runs:
 
 | Algorithm        | Approx. time |
 |------------------|-------------|
-| `DLMS`           | 49 s        |
-| `DHL`            | 4.8 s       |
-| `HMS`            | 1.6 s       |
-| `pmorse` (1 thread)  | 1.23 s  |
-| `pmorse` (4 threads) | 0.76 s  |
-| `pmorse` (8 threads) | 0.68 s  |
+| `DLMS`           | 39 s        |
+| `DHL`            | 4.7 s       |
+| `HMS`            | 0.12 s      |
+| `pmorse` (1 thread)  | 0.10 s  |
+| `pmorse` (4 threads) | 0.10 s  |
+| `pmorse` (8 threads) | 0.10 s  |
 
 At this scale the picture changes substantially. The Morse-theory-based algorithms
-scale considerably more favorably than the matrix-reduction approaches. Among the
-matrix-based algorithms, `DHL` — due to Dey, Haas, and Lipinski — is significantly
-more efficient than `DLMS`, which performs a complete similarity transformation of
-the matrix. The algorithm `HMS` due to Harker, Mischaikow, and Spendlove, which
-preprocesses the complex using discrete Morse theory, requires much less time at this
-scale. The parallel algorithm `pmorse` achieves a further reduction in wall-clock time
-when multiple threads are available.
+scale considerably more favorably than the matrix-reduction approaches: both `HMS`
+and `pmorse` are 40 to 50 times faster than `DHL`, and several hundred times faster
+than `DLMS`. Among the matrix-based algorithms, `DHL` — due to Dey, Haas, and
+Lipinski — is significantly more efficient than `DLMS`, which performs a complete
+similarity transformation of the matrix. The algorithm `HMS` due to Harker,
+Mischaikow, and Spendlove, as well as its parallelized variant `pmorse`, first
+preprocess the complex using discrete Morse theory, which reduces the remaining
+work to a small fraction. On this example the two take about the same time, and
+additional threads do not noticeably reduce the run time of `pmorse`. At this size,
+most of the remaining time is spent in parts of the computation which are not
+parallelized, such as the determination of an admissible order of the cells.
+Timings in the range of a tenth of a second also vary by about 30 percent
+between runs.
 
 The algorithm `DLMS` is the only one that supports the optional flag `returnbasis=true`,
 which returns the basis of each connection matrix column in terms of the original cell
 labels. When this flag is passed to [`connection_matrix`](@ref), the function
 automatically selects `DLMS` regardless of the `algorithm` keyword.
+
+### When Parallelization Pays Off
+
+The algorithm `pmorse` differs from `HMS` in two places. It constructs the
+Morse matching for the different levels of the underlying filtration in
+parallel, and it computes the columns of the reduced boundary matrix in
+parallel. The matching within a single level is still computed sequentially.
+Therefore `pmorse` can only be faster than `HMS` if the computation involves
+several large levels of comparable size, and if Julia is started with
+multiple threads.
+
+The clearest example of this is persistent homology with a filtration that
+consists of a small number of large levels. The functions
+[`homology`](@ref) and [`persistent_homology`](@ref) use the same reduction
+code as `HMS` for `algorithm = "morse"`, and the same code as `pmorse` for
+`algorithm = "pmorse"`. The following example creates a simplicial complex
+with approximately 270,000 cells, together with a filtration with eight
+levels:
+
+```julia
+using ConleyDynamics, Random
+Random.seed!(7)
+lc, ~ = create_simplicial_rectangle(150, 150)
+lcs, fv = lefschetz_filtration(lc, rand(1:8, lc.ncells))
+for alg in ["morse", "pmorse"]
+    persistent_homology(lcs, fv, algorithm=alg)
+    println(alg, ":  ", @elapsed(persistent_homology(lcs, fv, algorithm=alg)), " s")
+end
+```
+
+With eight threads, `pmorse` is about one and a half times as fast as
+`morse`. The following table shows representative timings, which are
+medians of several runs after an initial run which includes compilation,
+for this example as well as for the same complex with different numbers
+of filtration levels:
+
+| Filtration levels | `morse` (8 threads) | `pmorse` (8 threads) |
+|-------------------|---------------------|----------------------|
+| 4                 | 0.79 s              | 0.45 s               |
+| 8                 | 0.51 s              | 0.35 s               |
+| 16                | 0.50 s              | 0.38 s               |
+| 64                | 0.49 s              | 0.37 s               |
+
+With a single thread, both algorithms take the same time on these examples.
+The speedup is largest for four levels, where each of four threads computes
+the matching for one large level. In all cases the gain is moderate, since
+the matching within a single level, as well as the remaining parts of the
+computation, are performed sequentially.
+
+For connection matrices, the levels are given by the Morse sets. The algorithm
+`pmorse` is therefore faster than `HMS` for flows with several large Morse
+sets of comparable size, such as a planar flow with a limit cycle in each of
+a number of identical cells. On a cubical complex with approximately 230,000
+cells and 43 or 101 Morse sets, `pmorse` with eight threads was faster than
+`HMS` by a factor of about 1.3. However, if a single Morse set dominates, or
+if there is only a single level as in the computation of ordinary homology,
+then there is no measurable benefit from the parallelization.
 
 ## Forman's Morse Complex 
 

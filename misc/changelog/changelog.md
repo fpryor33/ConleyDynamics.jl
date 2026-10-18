@@ -13,6 +13,10 @@ description, etc.
 
 Release notes:
 
+## v0.7.25 (October 15, 2026)
+
+More speed improvements for the central underlying algorithms.
+
 ## v0.7.24 (October 10, 2026)
 
 Various speed improvements:

@@ -131,6 +131,117 @@ end
     @test conley_index(sc, ["AB","AC","BC","A","B","C"], algorithm="rank") == [1, 1, 0]
 end
 
+@testset "Automatic Conley index algorithm" begin
+    # The threshold is the one described in the documentation
+    @test ConleyDynamics.CONLEY_INDEX_RANK_MAX == 100
+    # Locally closed sets on both sides of the threshold: closures
+    # of growing groups of squares, and these minus their boundaries
+    for p in (0, 2, 3)
+        lc, coords = create_cubical_rectangle(12, 12, p=p)
+        squares = findall(isequal(2), lc.dimensions)
+        bnd = lefschetz_closure(lc, manifold_boundary(lc))
+        for nsq in (1, 4, 9, 16, 25, 36, 64, 144)
+            closed = lefschetz_closure(lc, squares[1:nsq])
+            for s in (closed, setdiff(closed, bnd), setdiff(1:lc.ncells, closed))
+                isempty(s) && continue
+                ci = conley_index(lc, s, algorithm="morse")
+                @test conley_index(lc, s) == ci
+                @test conley_index(lc, s, algorithm="auto") == ci
+                @test conley_index(lc, s, algorithm="rank") == ci
+                @test conley_index(lc, lc.labels[s]) == ci
+            end
+        end
+    end
+    # Morse sets of a field with one large multivector
+    lc, coords = create_simplicial_rectangle(10, 10)
+    interior = setdiff(1:lc.ncells, lefschetz_closure(lc, manifold_boundary(lc)))
+    @test length(interior) > ConleyDynamics.CONLEY_INDEX_RANK_MAX
+    @test conley_index(lc, interior) == conley_index(lc, interior, algorithm="rank")
+    # Cells outside the multivector are critical singletons
+    ms = morse_sets(lc, [interior])
+    @test interior in ms
+    @test all(m -> m == interior || length(m) == 1, ms)
+end
+
+@testset "Morse reductions with many Morse sets" begin
+    # Planar flow whose number of equilibria grows with the grid size
+    for p in (0, 2, 3)
+        lc, coords = create_cubical_rectangle(24, 24, p=p)
+        vf(x) = [sin(3.0*x[1]), sin(3.0*x[2])]
+        coordsN = convert_planar_coordinates(coords, [0.1, 0.1], [2pi-0.1, 2pi-0.1])
+        mvf = create_planar_mvf(lc, coordsN, vf)
+        cm_dlms = connection_matrix(lc, mvf, algorithm="DLMS")
+        for alg in ("HMS", "pmorse")
+            cm = connection_matrix(lc, mvf, algorithm=alg)
+            @test cm.morse == cm_dlms.morse
+            @test cm.conley == cm_dlms.conley
+        end
+        @test length(cm_dlms.morse) > 10
+        # Persistent homology with the Morse algorithms
+        filt = 1 .+ (create_random_filter(lc) .÷ 5)
+        ph = persistent_homology(lc, filt, algorithm="matrix")
+        @test persistent_homology(lc, filt, algorithm="morse") == ph
+        @test persistent_homology(lc, filt, algorithm="pmorse") == ph
+    end
+end
+
+@testset "Morse set poset" begin
+    # Reference Hasse diagram: compute the reachability relation R between
+    # the Morse sets by depth-first search, and keep the covers R \ R∘R
+    function hasse_reference(lc, mvfI, msI)
+        bnd  = full_from_sparse(lc.boundary)
+        succ = [findall(!iszero, bnd[:, c]) for c in 1:lc.ncells]
+        for mv in mvfI, m in mv
+            append!(succ[m], mv)
+        end
+        nms = length(msI)
+        R = fill(false, nms, nms)
+        for k in 1:nms
+            seen = fill(false, lc.ncells)
+            stack = copy(msI[k])
+            seen[stack] .= true
+            while !isempty(stack)
+                for w in succ[pop!(stack)]
+                    if !seen[w]
+                        seen[w] = true
+                        push!(stack, w)
+                    end
+                end
+            end
+            for j in 1:nms
+                R[k, j] = (j != k) && seen[msI[j][1]]
+            end
+        end
+        return permutedims(R .& .!((R * R) .> 0))
+    end
+
+    function samplevf(x::Vector{Float64})
+        x1, x2 = x
+        return [x1 * (1.0 - x1*x1 - 3.0*x2*x2), x2 * (1.0 - 3.0*x1*x1 - x2*x2)]
+    end
+
+    cases = Any[example_three_cm(), example_three_cm(1), example_clorenz(),
+                example_multiflow(), example_torsion_chaos(3, 3)[[1, 2]],
+                example_torsion_chaos(3, 3)[[1, 3]], example_dunce_chaos()[[1, 2]],
+                example_dunce_chaos()[[1, 3]]]
+    # Every cell critical: the poset is the face poset of the complex
+    for lc in (create_cubical_rectangle(4, 3)[1], create_simplicial_rectangle(3, 2)[1])
+        push!(cases, (lc, [[k] for k in 1:lc.ncells]))
+    end
+    sc, coords = create_simplicial_rectangle(12, 12)
+    coordsN = convert_planar_coordinates(coords, [-2.0, -2.0], [2.0, 2.0])
+    push!(cases, (sc, create_planar_mvf(sc, coordsN, samplevf)))
+
+    for (lc, mvf) in cases
+        mvfI = mvf isa Vector{Vector{Int}} ? mvf : convert_cellsubsets(lc, mvf)
+        msI, hasse = morse_sets(lc, mvfI, poset=true)
+        @test msI == morse_sets(lc, mvfI)
+        @test hasse == hasse_reference(lc, mvfI, msI)
+        msL, hasseL = morse_sets(lc, mvf, poset=true)
+        @test hasseL == hasse
+    end
+end
+
 @testset "Restricted dynamics" begin
     for (lc, mvf) in (example_three_cm(), example_clorenz(),
                       example_torsion_chaos(3, 3)[[1, 3]])

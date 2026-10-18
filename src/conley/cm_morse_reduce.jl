@@ -143,16 +143,11 @@ function matching(matrix::SparseMatrix, filter::Vector{Int})
     targets  = Set{Int}()
     arrows   = Dict{Int,Int}()
 
-    # Find the filter values
+    # Loop through the filter values and create the matching
 
-    fvalues = sort(unique(filter))
+    for findices in filter_ranges(filter)
+        # Find a partial matching for the subcomplex
 
-    # Loop through the values and create the matching
-
-    for fval in fvalues
-        # Find the subcomplex and a partial matching
-
-        findices = findall(t -> t==fval, filter)
         cp, ap = partial_matching(matrix, findices)
         
         # Update the return variables
@@ -192,20 +187,15 @@ function parallel_matching(matrix::SparseMatrix, filter::Vector{Int})
     targets  = Set{Int}()
     arrows   = Dict{Int,Int}()
 
-    # Find the filter values
-
-    fvalues = sort(unique(filter))
-
-    # Loop through the values and create the matching
+    # Loop through the filter values and create the matching
 
     critical_channel = Channel{Vector{Int}}(Inf)
     arrow_channel = Channel{Dict{Int,Int}}(Inf)
 
-    Threads.@threads for fval in fvalues
+    Threads.@threads for findices in filter_ranges(filter)
 
-        # Find the subcomplex and a partial matching
+        # Find a partial matching for the subcomplex
 
-        findices = findall(t -> t==fval, filter)
         cp, ap = partial_matching(matrix, findices)
         put!(critical_channel, cp)
         put!(arrow_channel, ap)
@@ -237,6 +227,27 @@ function parallel_matching(matrix::SparseMatrix, filter::Vector{Int})
     # Return the results
 
     return Matching(critical, sources, targets, arrows)
+end
+
+
+function filter_ranges(filter::Vector{Int})
+    #
+    # Since the filter is increasing, the cells with the same
+    # filter value form a range of consecutive indices. Return
+    # these index ranges in increasing order of the values.
+    #
+    franges = Vector{Vector{Int}}()
+    n = length(filter)
+    i = 1
+    while i <= n
+        j = i
+        while (j < n) && (filter[j+1] == filter[i])
+            j += 1
+        end
+        push!(franges, collect(i:j))
+        i = j + 1
+    end
+    return franges
 end
 
 
@@ -298,6 +309,24 @@ function partial_matching(matrix::SparseMatrix, mind::Vector{Int})
         end
     end
 
+    # A critical cell is the first cell, in the iteration order of
+    # tomatch, without remaining boundary. Since cells are only ever
+    # deleted from tomatch, and deleting from a Set does not change
+    # the order of the remaining elements, this order is fixed. The
+    # cells whose boundary is empty are therefore kept in a heap,
+    # keyed by their position in this order. The heap may contain
+    # cells which have been removed in the meantime, and these are
+    # skipped when they are popped.
+
+    order = collect(tomatch)
+    pos   = Dict{Int,Int}(order[i] => i for i in 1:length(order))
+    zheap = Vector{Int}()   # max-heap of negated positions
+    for k in order
+        if !haskey(bnddict, k)
+            heap_push!(zheap, -pos[k])
+        end
+    end
+
     # Find the matching
 
     while length(tomatch) > 0
@@ -330,9 +359,12 @@ function partial_matching(matrix::SparseMatrix, mind::Vector{Int})
                         delete!(bnddict[cc], c)
                         
                         # If cc now has a boundary of size 1,
-                        # add it to the queue
+                        # add it to the queue, and if it has
+                        # no boundary left, add it to the heap
                         if length(bnddict[cc]) == 1
                             push!(queue, cc)
+                        elseif length(bnddict[cc]) == 0
+                            heap_push!(zheap, -pos[cc])
                         end
                     end
                 end
@@ -347,36 +379,41 @@ function partial_matching(matrix::SparseMatrix, mind::Vector{Int})
 
         if length(tomatch) > 0
             foundit = false
-            for k in tomatch
-                if length(intersect(get(bnddict, k, Set{Int}()), tomatch)) == 0
+            while !isempty(zheap)
+                k = order[-heap_pop!(zheap)]
 
-                    # We found a critical cell!
-                    push!(critical, k)
-                    foundit = true
-                    
-                    # Update the boundary of every cell which has k in
-                    # its boundary
-                    if haskey(cbddict, k)
-                        for ck in cbddict[k]
-                            ck in removed && continue
+                # Skip cells which were removed in the meantime
+                (k in removed || !isempty(get(bnddict, k, Set{Int}()))) && continue
 
-                            # Remove k from the boundary of ck
-                            delete!(bnddict[ck], k)
+                # We found a critical cell!
+                push!(critical, k)
+                foundit = true
 
-                            # If ck now has a boundary of size 1,
-                            # add it to the queue
-                            if length(bnddict[ck]) == 1
-                                push!(queue, ck)
-                            end
+                # Update the boundary of every cell which has k in
+                # its boundary
+                if haskey(cbddict, k)
+                    for ck in cbddict[k]
+                        ck in removed && continue
+
+                        # Remove k from the boundary of ck
+                        delete!(bnddict[ck], k)
+
+                        # If ck now has a boundary of size 1,
+                        # add it to the queue, and if it has
+                        # no boundary left, add it to the heap
+                        if length(bnddict[ck]) == 1
+                            push!(queue, ck)
+                        elseif length(bnddict[ck]) == 0
+                            heap_push!(zheap, -pos[ck])
                         end
                     end
-
-                    # Update the cell lists and coboundary dictionary
-                    push!(removed, k)
-                    delete!(tomatch, k)
-                    delete!(bnddict, k)
-                    break
                 end
+
+                # Update the cell lists and coboundary dictionary
+                push!(removed, k)
+                delete!(tomatch, k)
+                delete!(bnddict, k)
+                break
             end
             @assert foundit "There should have been a critical cell!"
         end
@@ -386,67 +423,141 @@ function partial_matching(matrix::SparseMatrix, mind::Vector{Int})
 end
 
 
-function morse_gamma(bnd::SparseMatrix, m::Matching, xin::SparseMatrix)
+struct MorseWorkspace{T}
+    x::Vector{T}          # dense work vector
+    touched::Vector{Bool} # rows of x that have been modified
+    rlist::Vector{Int}    # list of the modified rows
+    inheap::Vector{Bool}  # sources which are currently in the heap
+    heap::Vector{Int}     # max-heap of sources with nonzero x entry
+end
+
+MorseWorkspace(bnd::SparseMatrix) =
+    MorseWorkspace(fill(bnd.zero, bnd.nrow), fill(false, bnd.nrow), Vector{Int}(),
+                   fill(false, bnd.nrow), Vector{Int}())
+
+
+function heap_push!(heap::Vector{Int}, v::Int)
+    #
+    # Insert v into the max-heap
+    #
+    push!(heap, v)
+    i = length(heap)
+    while i > 1
+        ip = i >> 1
+        heap[ip] >= heap[i] && break
+        heap[ip], heap[i] = heap[i], heap[ip]
+        i = ip
+    end
+end
+
+
+function heap_pop!(heap::Vector{Int})
+    #
+    # Remove and return the largest element of the max-heap
+    #
+    vmax = heap[1]
+    vlast = pop!(heap)
+    n = length(heap)
+    if n > 0
+        heap[1] = vlast
+        i = 1
+        while true
+            il = 2*i
+            il > n && break
+            ic = (il < n && heap[il+1] > heap[il]) ? il+1 : il
+            heap[i] >= heap[ic] && break
+            heap[i], heap[ic] = heap[ic], heap[i]
+            i = ic
+        end
+    end
+    return vmax
+end
+
+
+function morse_add!(ws::MorseWorkspace, issource::Vector{Bool}, r::Int, val, p::Int)
+    #
+    # Add val to the work vector entry r, and keep track of the
+    # modified rows and the sources with nonzero entry
+    #
+    ws.x[r] = scalar_add(ws.x[r], val, p)
+    if !ws.touched[r]
+        ws.touched[r] = true
+        push!(ws.rlist, r)
+    end
+    if issource[r] && !ws.inheap[r] && !iszero(ws.x[r])
+        ws.inheap[r] = true
+        heap_push!(ws.heap, r)
+    end
+end
+
+
+function morse_psi!(ws::MorseWorkspace, bnd::SparseMatrix, issource::Vector{Bool},
+                    arrows::Dict{Int,Int}, k::Int)
     #
     # This function implements the Gamma algorithm from the paper
     # by Harker, Mischaikow, Mrozek, Nanda (FOCM, 2014). Note that the
     # version in the paper by Harker, Mischaikow, Spendlove (JACT, 2021)
     # is not correct for general fields.
     #
-    @assert bnd.nrow==bnd.ncol "Wrong matrix dimensions!"
-    @assert xin.nrow==bnd.ncol "Matrix-vector product not defined!"
-    @assert xin.ncol==1 "The second argument is not a vector!"
+    # Starting with x = delta e_k, the algorithm repeatedly picks the
+    # largest source Q with x[Q] nonzero, and adds the multiple omega
+    # of the column delta e_K, where K is matched with Q, which makes
+    # x[Q] vanish. If gamma denotes the sum of the multiples omega e_K,
+    # then the final vector x equals
+    #
+    #    delta e_k + delta(gamma(delta e_k)),
+    #
+    # which is the column needed in morse_delta. On return, the
+    # nonzero entries of x are among the rows in ws.rlist. The
+    # sources with nonzero entry are kept in a max-heap, which
+    # may contain sources whose entry has since become zero.
+    #
+    p = bnd.char
 
-    # Initialization
-
-    p    = xin.char
-    n    = xin.nrow
-    x    = fill(xin.zero, n)
-    c    = fill(xin.zero, n)
-    qset = sort(collect(m.sources))
-
-    for j in 1:length(xin.columns[1])
-        x[xin.columns[1][j]] = xin.entries[1][j]
+    for (r, v) in zip(bnd.columns[k], bnd.entries[k])
+        morse_add!(ws, issource, r, v, p)
     end
 
-    # Main loop
+    while !isempty(ws.heap)
+        Q = heap_pop!(ws.heap)
+        ws.inheap[Q] = false
+        iszero(ws.x[Q]) && continue
 
-    while true
-        qi = findlast(t -> !iszero(t), x[qset])
-        qi == nothing && break
+        K     = arrows[Q]
+        omega = scalar_multiply(-ws.x[Q], scalar_inverse(bnd[Q,K],p), p)
 
-        Q     = qset[qi]
-        K     = m.arrows[Q]
-        omega = scalar_multiply(-x[Q], scalar_inverse(bnd[Q,K],p), p)
-        c[K]  = scalar_add(c[K], omega, p)
-
-        for j in 1:length(bnd.columns[K])
-            jr = bnd.columns[K][j]
-            vr = bnd.entries[K][j]
-            x[jr] = scalar_add(x[jr], scalar_multiply(omega, vr, p), p)
+        for (jr, vr) in zip(bnd.columns[K], bnd.entries[K])
+            morse_add!(ws, issource, jr, scalar_multiply(omega, vr, p), p)
         end
     end
-
-    # Construct the result as sparse matrix
-
-    rl = Vector{Int}()
-    cl = Vector{Int}()
-    vl = Vector{typeof(bnd.zero)}()
- 
-    for j = 1:n
-        if !iszero(c[j])
-            push!(rl, j)
-            push!(cl, 1)
-            push!(vl, c[j])
-        end
-    end
-
-    cs = sparse_from_lists(n,1,p,bnd.zero,bnd.one,rl,cl,vl)
-    return cs
 end
 
 
-function morse_delta(bnd::SparseMatrix, match::Matching)
+function morse_delta_columns!(rlist::Vector{Int}, clist::Vector{Int}, vlist::Vector,
+                              ws::MorseWorkspace, bnd::SparseMatrix,
+                              issource::Vector{Bool}, arrows::Dict{Int,Int},
+                              cproj::Vector{Int}, critpos::Vector{Int}, ells)
+    #
+    # Compute the columns ells of the reduced boundary matrix, and
+    # append their nonzero entries in the critical part to the lists
+    #
+    for ell in ells
+        morse_psi!(ws, bnd, issource, arrows, cproj[ell])
+        for r in ws.rlist
+            if critpos[r] > 0 && !iszero(ws.x[r])
+                push!(rlist, critpos[r])
+                push!(clist, ell)
+                push!(vlist, ws.x[r])
+            end
+            ws.x[r]       = bnd.zero
+            ws.touched[r] = false
+        end
+        empty!(ws.rlist)
+    end
+end
+
+
+function morse_delta(bnd::SparseMatrix, match::Matching; parallel::Bool=false)
     #
     # This function computes the reduced boundary matrix
     # induced by the specified matching. In essence, we
@@ -465,95 +576,56 @@ function morse_delta(bnd::SparseMatrix, match::Matching)
     #
     #    delta v + delta(gamma(delta v)),
     #
-    # where delta denotes the boundary operator.
+    # where delta denotes the boundary operator. This vector
+    # is obtained directly in the Gamma algorithm, see morse_psi!.
+    # The work per column is proportional to the number of
+    # entries visited, not to the size of the matrix.
     #
     @assert bnd.nrow==bnd.ncol "Wrong matrix dimensions!"
 
     # Initialization
 
-    p = bnd.char
     cproj = sort(collect(match.critical))
     lproj = length(cproj)
-    brows = Vector{Int}(1:bnd.nrow)
-    rlist = Vector{Int}()
-    clist = Vector{Int}()
-    vlist = Vector{typeof(bnd.zero)}()
 
-    for ell = 1:length(cproj)
+    critpos = fill(Int(0), bnd.nrow)
+    critpos[cproj] = 1:lproj
 
-        # Construct the column vector
+    issource = fill(false, bnd.nrow)
+    for s in match.sources
+        issource[s] = true
+    end
 
-        k    = cproj[ell]
-        bndk = sparse_minor(bnd, brows, [k])
-        psi  = bndk + bnd * morse_gamma(bnd, match, bndk)
+    # Compute the columns, either sequentially or split into
+    # chunks which each have their own workspace
 
-        # Extract the nonzero entries in the critical part
+    nchunks = parallel ? min(Threads.nthreads(), lproj) : min(1, lproj)
+    chunks  = [m:nchunks:lproj for m in 1:nchunks]
+    rlists  = [Vector{Int}() for _ in 1:nchunks]
+    clists  = [Vector{Int}() for _ in 1:nchunks]
+    vlists  = [Vector{typeof(bnd.zero)}() for _ in 1:nchunks]
 
-        for j = 1:lproj
-            if !(psi[cproj[j],1] == 0)
-                push!(rlist, j)
-                push!(clist, ell)
-                push!(vlist, psi[cproj[j],1])
-            end
+    if parallel
+        Threads.@threads for ic in 1:nchunks
+            morse_delta_columns!(rlists[ic], clists[ic], vlists[ic], MorseWorkspace(bnd),
+                                 bnd, issource, match.arrows, cproj, critpos, chunks[ic])
+        end
+    else
+        for ic in 1:nchunks
+            morse_delta_columns!(rlists[ic], clists[ic], vlists[ic], MorseWorkspace(bnd),
+                                 bnd, issource, match.arrows, cproj, critpos, chunks[ic])
         end
     end
 
     # Construct the new boundary matrix
 
-    D = sparse_from_lists(lproj, lproj, bnd.char,
-               bnd.zero, bnd.one, rlist, clist, vlist)
+    D = sparse_from_lists(lproj, lproj, bnd.char, bnd.zero, bnd.one,
+                          reduce(vcat, rlists; init=Int[]),
+                          reduce(vcat, clists; init=Int[]),
+                          reduce(vcat, vlists; init=Vector{typeof(bnd.zero)}()))
     return D, cproj
 end
 
 
-function parallel_morse_delta(bnd::SparseMatrix, match::Matching)
-    #
-    # This function is just a parallelized version of the
-    # one right above.
-    #
-    @assert bnd.nrow==bnd.ncol "Wrong matrix dimensions!"
-
-    # Initialization
-
-    p = bnd.char
-    cproj = sort(collect(match.critical))
-    lproj = length(cproj)
-    brows = Vector{Int}(1:bnd.nrow)
-    rlist = Vector{Int}()
-    clist = Vector{Int}()
-    vlist = Vector{typeof(bnd.zero)}()
-
-    column_channel = Channel{Tuple{Int,SparseMatrix}}(Inf)
-
-    Threads.@threads for ell = 1:length(cproj)
-
-        # Construct the column vector
-
-        k    = cproj[ell]
-        bndk = sparse_minor(bnd, brows, [k])
-        psi  = bndk + bnd * morse_gamma(bnd, match, bndk)
-        put!(column_channel, (ell, psi))
-    end
-
-    close(column_channel)
-    column_chvec = collect(column_channel)
-
-    # Extract the nonzero entries in the critical part
-
-    for (ell, psi) in column_chvec
-        for j = 1:lproj
-            if !(psi[cproj[j],1] == 0)
-                push!(rlist, j)
-                push!(clist, ell)
-                push!(vlist, psi[cproj[j],1])
-            end
-        end
-    end
-
-    # Construct the new boundary matrix
-
-    D = sparse_from_lists(lproj, lproj, bnd.char,
-               bnd.zero, bnd.one, rlist, clist, vlist)
-    return D, cproj
-end
-
+parallel_morse_delta(bnd::SparseMatrix, match::Matching) =
+    morse_delta(bnd, match; parallel=true)

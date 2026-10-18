@@ -26,3 +26,23 @@ mutable struct SparseMatrix{T}
     rows::Vector{Vector{Int}}
 end
 
+
+# Specialized deepcopy for sparse matrices. The generic deepcopy records
+# every inner vector in an IdDict, which is slow for large matrices. The
+# inner vectors of a sparse matrix are never shared, so it suffices to
+# copy them one by one. Entries of non-isbits type are deep copied.
+
+function Base.deepcopy_internal(sm::SparseMatrix{T}, stackdict::IdDict) where T
+    haskey(stackdict, sm) && return stackdict[sm]::SparseMatrix{T}
+    if isbitstype(T)
+        entries = [copy(e) for e in sm.entries]
+    else
+        entries = Base.deepcopy_internal(sm.entries, stackdict)
+    end
+    columns = [copy(c) for c in sm.columns]
+    rows    = [copy(r) for r in sm.rows]
+    smcopy  = SparseMatrix{T}(sm.nrow, sm.ncol, sm.char, sm.zero, sm.one,
+                              entries, columns, rows)
+    stackdict[sm] = smcopy
+    return smcopy
+end

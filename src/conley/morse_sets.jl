@@ -2,7 +2,7 @@ export morse_sets
 
 """
     morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
-               poset_algorithm::Symbol=:pairwise)
+               poset_algorithm::Symbol=:scc_firsthit)
 
 Find the nontrivial Morse sets of a multivector field on a Lefschetz complex.
 
@@ -14,20 +14,32 @@ the Hasse diagram of the underlying poset.
 
 `poset_algorithm` selects how the Hasse diagram is computed when
 `poset=true`:
-* `:pairwise` (default) issues one `has_path` query per ordered pair of
-  Morse sets (`nms^2` total), each a fresh traversal of the full
-  cell-level digraph. Simple, well-tested, but can dominate runtime once
-  `nms` grows into the thousands.
-* `:condensation` computes the same adjacency matrix via one
-  single-source reachability traversal per Morse set (`nms` total,
-  parallelized across threads) instead of `nms^2` -- the reachable set
-  from each representative is computed once and reused for every
-  membership check against the other representatives. Produces
-  identical results to `:pairwise`, just asymptotically cheaper for
-  large `nms`.
+* `:scc_firsthit` (default) computes the Hasse diagram directly in a
+  single topological-order pass over the Tarjan condensation of the
+  cell-level digraph (one node per strongly connected component), using
+  a first-hit dynamic-programming recurrence -- no `nms^2` reachability
+  matrix is ever materialized, and no separate `transitivereduction`
+  post-processing step is needed. This is the fastest and current
+  upstream-default algorithm (from ConleyDynamics 0.7.25).
+* `:pairwise` issues one `has_path` query per ordered pair of Morse sets
+  (`nms^2` total), each a fresh traversal of the full cell-level
+  digraph, followed by a separate `transitivereduction` call. Simple,
+  well-tested, but can dominate runtime once `nms` grows into the
+  thousands -- kept for benchmarking/comparison against the newer
+  algorithms.
+* `:condensation` computes the same `nms^2` adjacency matrix as
+  `:pairwise`, but via one single-source reachability traversal per
+  Morse set (`nms` total, parallelized across threads) instead of
+  `nms^2` -- the reachable set from each representative is computed
+  once and reused for every membership check against the other
+  representatives, then fed through the same `transitivereduction` step
+  as `:pairwise`. Produces identical results to `:pairwise`, cheaper
+  for large `nms`, but still pays for the reachability matrix and the
+  transitive-reduction step that `:scc_firsthit` avoids entirely. Kept
+  for benchmarking/comparison.
 """
 function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
-                    poset_algorithm::Symbol=:pairwise)
+                    poset_algorithm::Symbol=:scc_firsthit)
     #
     # Find the nontrivial Morse sets of a multivector field
     #
@@ -80,7 +92,7 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
     dg = SimpleDiGraph(edgelist)
 
     # Apply Tarjan's algorithm
-    
+
     scc = strongly_connected_components_tarjan(dg)
 
     for k=1:length(scc)
@@ -96,13 +108,15 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
     # A strongly connected component which contains at least two
     # multivectors is always nontrivial. Otherwise, it is a single
     # multivector, which is locally closed, and its Conley index
-    # can be determined from the multivector cells alone
+    # can be determined from the multivector cells alone. The
+    # algorithm "auto" uses "rank" for small multivectors and
+    # "morse" for large ones.
 
     Threads.@threads for k = 1:length(scc)
         if length(unique(cell2mv[scc[k]])) > 1
             isnontrivial[k] = 1
         else
-            isnontrivial[k] = sum(conley_index(lc, scc[k], algorithm="rank",
+            isnontrivial[k] = sum(conley_index(lc, scc[k], algorithm="auto",
                                                validate=false))
         end
     end
@@ -117,14 +131,23 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
     if poset
         nms = length(morsesets)
         reps = [morsesets[k][1] for k in 1:nms]
-        psadj = fill(false,nms,nms)
 
         if poset_algorithm == :pairwise
+            psadj = fill(false,nms,nms)
             for k1 in 1:nms
                 vk1 = reps[k1]
                 for k2 in 1:nms
                     vk2 = reps[k2]
                     psadj[k1,k2] = has_path(dg, vk1, vk2)
+                end
+            end
+            psdg = SimpleDiGraph(psadj)
+            pshasse = transitivereduction(psdg)
+
+            hasse = fill(false,nms,nms)
+            for k1 in 1:nms
+                for k2 in 1:nms
+                    hasse[k2,k1] = has_edge(pshasse, k1, k2)
                 end
             end
         elseif poset_algorithm == :condensation
@@ -136,6 +159,7 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
             # index-based queue (not popfirst!) to avoid O(n)-per-dequeue
             # overhead on a plain Vector.
             nv_dg = nv(dg)
+            psadj = fill(false,nms,nms)
             Threads.@threads for k1 in 1:nms
                 visited = falses(nv_dg)
                 queue = Vector{Int}(undef, nv_dg)
@@ -158,18 +182,96 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
                     psadj[k1,k2] = visited[reps[k2]]
                 end
             end
-        else
-            error("Unknown poset_algorithm $(poset_algorithm) (expected :pairwise or :condensation)")
-        end
+            psdg = SimpleDiGraph(psadj)
+            pshasse = transitivereduction(psdg)
 
-        psdg = SimpleDiGraph(psadj)
-        pshasse = transitivereduction(psdg)
-
-        hasse = fill(false,nms,nms)
-        for k1 in 1:nms
-            for k2 in 1:nms
-                hasse[k2,k1] = has_edge(pshasse, k1, k2)
+            hasse = fill(false,nms,nms)
+            for k1 in 1:nms
+                for k2 in 1:nms
+                    hasse[k2,k1] = has_edge(pshasse, k1, k2)
+                end
             end
+        elseif poset_algorithm == :scc_firsthit
+            # Advisor's fix (upstream 0.7.25): compute the Hasse diagram
+            # directly in a single topological-order pass over the
+            # condensation (one node per strongly connected component),
+            # instead of ever materializing an nms x nms reachability
+            # matrix and then transitively reducing it. For each
+            # component, "firsthit" collects the Morse sets reachable
+            # along paths that do not pass through any other Morse set
+            # first; a first-hit Morse set survives into the Hasse
+            # diagram unless it is also reachable via another first-hit
+            # Morse set (the `covered` check), computed with a `stamp`
+            # array to dedupe targets in O(1) instead of a Set per node.
+
+            nscc = length(scc)
+
+            # Map the cells to the strongly connected components,
+            # and the components to the Morse sets (zero if none)
+
+            cell2scc = fill(Int(0), nv(dg))
+            for k = 1:nscc
+                for v in scc[k]
+                    cell2scc[v] = k
+                end
+            end
+
+            scc2ms = fill(Int(0), nscc)
+            scc2ms[ntindices] = 1:nms
+
+            # Process the components in reverse topological order
+            # of the condensation, i.e., successors come first
+
+            sccorder = reverse(topological_sort(condensation(dg, scc)))
+
+            # For every component, find the Morse sets which can be reached
+            # along paths that do not pass through any other Morse set
+
+            firsthit = [Int[] for _ in 1:nscc]
+            stamp    = fill(Int(0), nms)
+
+            for k in sccorder
+                fh = firsthit[k]
+                for v in scc[k]
+                    for w in outneighbors(dg, v)
+                        kw = cell2scc[w]
+                        kw == k && continue
+                        targets = scc2ms[kw] > 0 ? (scc2ms[kw]:scc2ms[kw]) : firsthit[kw]
+                        for m in targets
+                            if stamp[m] != k
+                                stamp[m] = k
+                                push!(fh, m)
+                            end
+                        end
+                    end
+                end
+            end
+
+            # The transitive closure of the first-hit relation is the order
+            # between the Morse sets. A first-hit Morse set is in the Hasse
+            # diagram unless it can be reached via another first-hit Morse set
+
+            reach   = [falses(nms) for _ in 1:nms]
+            covered = falses(nms)
+            hasse   = fill(false,nms,nms)
+
+            for k in sccorder
+                m1 = scc2ms[k]
+                m1 == 0 && continue
+                fill!(covered, false)
+                for m2 in firsthit[k]
+                    covered .|= reach[m2]
+                end
+                for m2 in firsthit[k]
+                    reach[m1][m2] = true
+                    if !covered[m2]
+                        hasse[m2,m1] = true
+                    end
+                end
+                reach[m1] .|= covered
+            end
+        else
+            error("Unknown poset_algorithm $(poset_algorithm) (expected :scc_firsthit, :pairwise, or :condensation)")
         end
     end
 
@@ -185,4 +287,3 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
         return morsesets
     end
 end
-

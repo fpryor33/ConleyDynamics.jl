@@ -50,22 +50,22 @@ function mvf_neighborhood(lc::AbstractComplex, mvf::CellSubsets,
 
     # Determine the source multivectors
 
-    srcmv = Vector{Int}()
-    for k in 1:length(mvfI)
-        if length(intersect(mvfI[k], sourcesI)) > 0
-            push!(srcmv, k)
-        end
-    end
+    cell2mv = cell_to_sets(lc.ncells, mvfI)
+    srcmv   = sets_containing(cell2mv, sourcesI, length(mvfI))
 
     # Determine the edges in the undirected graph:
     # There is an edge whenever the closures of the
-    # multivectors intersect.
+    # multivectors intersect, i.e., whenever both
+    # closures contain a common cell.
+
+    cell2cl = cell_to_sets(lc.ncells, mvfIcl)
 
     g = Graph(length(mvfI))
-    for k = 1:length(mvfI)
-        for m = 1:length(mvfI)
-            if (!(k == m)) && length(intersect(mvfIcl[k], mvfIcl[m]))>0
-                add_edge!(g, k, m)
+    for c = 1:lc.ncells
+        clmv = cell2cl[c]
+        for i = 1:length(clmv)
+            for j = i+1:length(clmv)
+                add_edge!(g, clmv[i], clmv[j])
             end
         end
     end
