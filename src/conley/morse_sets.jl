@@ -1,7 +1,8 @@
 export morse_sets
 
 """
-    morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false)
+    morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
+               poset_algorithm::Symbol=:pairwise)
 
 Find the nontrivial Morse sets of a multivector field on a Lefschetz complex.
 
@@ -10,8 +11,23 @@ the multivector field. The function returns the nontrivial Morse sets as
 a `Vector{Vector{Int}}`. If the optional argument `poset=true` is added,
 then the function returns both the Morse sets and the adjacency matrix of
 the Hasse diagram of the underlying poset.
+
+`poset_algorithm` selects how the Hasse diagram is computed when
+`poset=true`:
+* `:pairwise` (default) issues one `has_path` query per ordered pair of
+  Morse sets (`nms^2` total), each a fresh traversal of the full
+  cell-level digraph. Simple, well-tested, but can dominate runtime once
+  `nms` grows into the thousands.
+* `:condensation` computes the same adjacency matrix via one
+  single-source reachability traversal per Morse set (`nms` total,
+  parallelized across threads) instead of `nms^2` -- the reachable set
+  from each representative is computed once and reused for every
+  membership check against the other representatives. Produces
+  identical results to `:pairwise`, just asymptotically cheaper for
+  large `nms`.
 """
-function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false)
+function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false,
+                    poset_algorithm::Symbol=:pairwise)
     #
     # Find the nontrivial Morse sets of a multivector field
     #
@@ -100,14 +116,52 @@ function morse_sets(lc::AbstractComplex, mvf::CellSubsets; poset::Bool=false)
 
     if poset
         nms = length(morsesets)
+        reps = [morsesets[k][1] for k in 1:nms]
         psadj = fill(false,nms,nms)
-        for k1 in 1:nms
-            vk1 = morsesets[k1][1]
-            for k2 in 1:nms
-                vk2 = morsesets[k2][1]
-                psadj[k1,k2] = has_path(dg, vk1, vk2)
+
+        if poset_algorithm == :pairwise
+            for k1 in 1:nms
+                vk1 = reps[k1]
+                for k2 in 1:nms
+                    vk2 = reps[k2]
+                    psadj[k1,k2] = has_path(dg, vk1, vk2)
+                end
             end
+        elseif poset_algorithm == :condensation
+            # One single-source reachability traversal per Morse set
+            # (parallelized) instead of nms^2 individual has_path calls --
+            # the reachable set from each representative is computed once
+            # and reused for every membership check, instead of re-deriving
+            # it from scratch for every (k1,k2) pair. Manual BFS with an
+            # index-based queue (not popfirst!) to avoid O(n)-per-dequeue
+            # overhead on a plain Vector.
+            nv_dg = nv(dg)
+            Threads.@threads for k1 in 1:nms
+                visited = falses(nv_dg)
+                queue = Vector{Int}(undef, nv_dg)
+                queue[1] = reps[k1]
+                visited[reps[k1]] = true
+                qhead = 1
+                qtail = 1
+                while qhead <= qtail
+                    u = queue[qhead]
+                    qhead += 1
+                    for v in outneighbors(dg, u)
+                        if !visited[v]
+                            visited[v] = true
+                            qtail += 1
+                            queue[qtail] = v
+                        end
+                    end
+                end
+                for k2 in 1:nms
+                    psadj[k1,k2] = visited[reps[k2]]
+                end
+            end
+        else
+            error("Unknown poset_algorithm $(poset_algorithm) (expected :pairwise or :condensation)")
         end
+
         psdg = SimpleDiGraph(psadj)
         pshasse = transitivereduction(psdg)
 
